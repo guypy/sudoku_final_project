@@ -8,21 +8,50 @@
 #include "CommandManager.h"
 #include "Command.h"
 #include "Game.h"
-
-#define ACTION_SOLVE "solve"
-
-static bool validateSolve(char** args, char* cmd) {
-    //Here we will validate Solve..
-    return false;
-}
+#include "CommandValidations.h"
 
 static bool validateArguments(char** args, char* cmd) {
     if (strcmp(cmd, ACTION_SOLVE) != 0) {
         return validateSolve(args, cmd);
-    } else {
-        printf("Error: invalid command");
-        return false;
     }
+    if (strcmp(cmd, ACTION_MARK_ERRORS) != 0) {
+        return validateMarkErrors(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_PRINT_BOARD) != 0) {
+        return validatePrintBoard(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_SET) != 0) {
+        return validateSet(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_VALIDATE) != 0) {
+        return validateValidate(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_GENERATE) != 0) {
+        return validateGenerate(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_UNDO) != 0) {
+        return validateUndo(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_REDO) != 0) {
+        return validateRedo(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_SAVE) != 0) {
+        return validateSave(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_HINT) != 0) {
+        return validateHint(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_NUM_SOLUTIONS) != 0) {
+        return validateNumSolutions(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_AUTOFILL) != 0) {
+        return validateAutofill(args, cmd);
+    }
+    if (strcmp(cmd, ACTION_RESET) != 0) {
+        return validateReset(args, cmd);
+    }
+    printf("Error: invalid command");
+    return false;
 }
 
 int* getValidModesForAction(const char *action, int *validModes){
