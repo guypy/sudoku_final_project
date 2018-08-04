@@ -60,6 +60,71 @@ int* getValidModesForAction(const char *action, int *validModes){
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
     }
+    if (action == ACTION_MARK_ERRORS) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_PRINT_BOARD) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_SET) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_VALIDATE) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_GENERATE) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_UNDO) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_REDO) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_SAVE) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_HINT) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_NUM_SOLUTIONS) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_AUTOFILL) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_RESET) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
+    if (action == ACTION_EXIT) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 0;
+        validModes[EDIT] = 0;
+    }
     return validModes;
 }
 

@@ -6,69 +6,69 @@
 
 bool validateSolve(char** args, char* cmd) {
     //Here we will validate Solve..
-    return false;
+    return true;
 }
 
 bool validateEdit(char** args, char* cmd) {
     //Here we will validate Edit..
-    return false;
+    return true;
 }
 
 bool validateMarkErrors(char** args, char* cmd) {
     //Here we will validate MarkErrors..
-    return false;
+    return true;
 }
 
 bool validatePrintBoard(char** args, char* cmd) {
     //Here we will validate PrintBoard..
-    return false;
+    return true;
 }
 
 bool validateSet(char** args, char* cmd) {
     //Here we will validate Set..
-    return false;
+    return true;
 }
 
 bool validateValidate(char** args, char* cmd) {
     //Here we will validate Validate..
-    return false;
+    return true;
 }
 
 bool validateGenerate(char** args, char* cmd) {
     //Here we will validate Generate..
-    return false;
+    return true;
 }
 
 bool validateUndo(char** args, char* cmd) {
     //Here we will validate Undo..
-    return false;
+    return true;
 }
 
 bool validateRedo(char** args, char* cmd) {
     //Here we will validate Redo..
-    return false;
+    return true;
 }
 bool validateSave(char** args, char* cmd) {
     //Here we will validate Save..
-    return false;
+    return true;
 }
 bool validateHint(char** args, char* cmd) {
     //Here we will validate Hint..
-    return false;
+    return true;
 }
 bool validateNumSolutions(char** args, char* cmd) {
     //Here we will validate NumSolutions..
-    return false;
+    return true;
 }
 bool validateAutofill(char** args, char* cmd) {
     //Here we will validate Autofill..
-    return false;
+    return true;
 }
 bool validateReset(char** args, char* cmd) {
     //Here we will validate Reset..
-    return false;
+    return true;
 }
 bool validateExit(char** args, char* cmd) {
     //Here we will validate Exit..
-    return false;
+    return true;
 }

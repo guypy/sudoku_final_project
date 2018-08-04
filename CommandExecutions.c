@@ -3,6 +3,7 @@
 //
 
 #include "CommandExecutions.h"
+#include "Game.h"
 
 void executeSolve(Game* game, Command* cmd) {
     //Here we will execute Solve..
@@ -29,7 +30,7 @@ void executeValidate(Game* game, Command* cmd) {
 }
 
 void executeGenerate(Game* game, Command* cmd) {
-    //Here we will execute Generate..
+    printList(game->undoRedoList);
 }
 
 void executeUndo(Game* game, Command* cmd) {

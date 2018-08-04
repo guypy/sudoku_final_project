@@ -16,11 +16,14 @@ int startGame() {
     Game* game = createGame();
     printf("Sudoku\n------\n");
     gameLoop(game);
+    destroyGame(game);
+    return 0;
 }
 
 static bool validateMode(Game *game, Command *cmd) {
     if (cmd->validModes[game->mode] == 0)
         return false;
+    return true;
 }
 
 void executeCommand(Game* game, Command * cmd){
@@ -28,57 +31,56 @@ void executeCommand(Game* game, Command * cmd){
         errPrinter_invalidCommand();
         return;
     }
-    if (strcmp(cmd->action, ACTION_SOLVE) != 0) {
+    if (strcmp(cmd->action, ACTION_SOLVE) == 0) {
         executeSolve(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_MARK_ERRORS) != 0) {
+    if (strcmp(cmd->action, ACTION_MARK_ERRORS) == 0) {
         executeMarkErrors(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_PRINT_BOARD) != 0) {
+    if (strcmp(cmd->action, ACTION_PRINT_BOARD) == 0) {
         executePrintBoard(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_SET) != 0) {
+    if (strcmp(cmd->action, ACTION_SET) == 0) {
         executeSet(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_VALIDATE) != 0) {
+    if (strcmp(cmd->action, ACTION_VALIDATE) == 0) {
         executeValidate(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_GENERATE) != 0) {
+    if (strcmp(cmd->action, ACTION_GENERATE) == 0) {
         executeGenerate(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_UNDO) != 0) {
+    if (strcmp(cmd->action, ACTION_UNDO) == 0) {
         executeUndo(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_REDO) != 0) {
+    if (strcmp(cmd->action, ACTION_REDO) == 0) {
         executeRedo(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_SAVE) != 0) {
+    if (strcmp(cmd->action, ACTION_SAVE) == 0) {
         executeSave(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_HINT) != 0) {
+    if (strcmp(cmd->action, ACTION_HINT) == 0) {
         executeHint(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_NUM_SOLUTIONS) != 0) {
+    if (strcmp(cmd->action, ACTION_NUM_SOLUTIONS) == 0) {
         executeNumSolutions(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_AUTOFILL) != 0) {
+    if (strcmp(cmd->action, ACTION_AUTOFILL) == 0) {
         executeAutofill(game, cmd);
     }
-    if (strcmp(cmd->action, ACTION_RESET) != 0) {
+    if (strcmp(cmd->action, ACTION_RESET) == 0) {
         executeReset(game, cmd);
     }
 }
 
 void gameLoop(Game* game) {
     Command* cmd;
-    while(1){
+    while(1) {
         cmd = cmdMngr_fetchCommand();
-        if (cmd->action == ACTION_EXIT) {
+        if (strcmp(cmd->action,ACTION_EXIT) == 0) {
             cmd_freeCommand(cmd);
             break;
         }
         executeCommand(game, cmd);
-        cmd_freeCommand(cmd); //TODO: When implementing the undo/redo list, we will do the free only once the cmd is removed from the list.
+        append(game->undoRedoList, cmd);
     }
-
 }

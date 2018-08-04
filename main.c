@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include "GameManager.h"
 
 int main() {
-    printf("Hello, World!\n");
+    startGame();
     return 0;
 }
