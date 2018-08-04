@@ -9,9 +9,10 @@ typedef struct {
     char* action;
     char** args; //Array of arguments
     int * validModes;
+    int numOfArgs;
 } Command;
 
-Command* cmd_createCommand(char** args, char * action, int* validModes);
+Command* cmd_createCommand(char** args, char * action, int* validModes, int numOfArgs);
 void cmd_freeCommand(Command* cmd);
 
 #endif //SUDOKU_CONSOLE_COMMAND_H

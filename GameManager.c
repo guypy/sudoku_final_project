@@ -76,7 +76,11 @@ void gameLoop(Game* game) {
     Command* cmd;
     while(1) {
         cmd = cmdMngr_fetchCommand();
-        if (strcmp(cmd->action,ACTION_EXIT) == 0) {
+        if (cmd == NULL) {
+            errPrinter_invalidCommand();
+            continue;
+        }
+        if (strcmp(cmd->action, ACTION_EXIT) == 0) {
             cmd_freeCommand(cmd);
             break;
         }

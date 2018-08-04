@@ -10,47 +10,49 @@
 #include "Game.h"
 #include "CommandValidations.h"
 
-static bool validateArguments(char** args, char* cmd) {
-    if (strcmp(cmd, ACTION_SOLVE) != 0) {
-        return validateSolve(args, cmd);
+static bool validateArguments(char** args, char* cmd, int numOfArgs) {
+    if (strcmp(cmd, ACTION_SOLVE) == 0) {
+        return validateSolve(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_MARK_ERRORS) != 0) {
-        return validateMarkErrors(args, cmd);
+    if (strcmp(cmd, ACTION_MARK_ERRORS) == 0) {
+        return validateMarkErrors(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_PRINT_BOARD) != 0) {
-        return validatePrintBoard(args, cmd);
+    if (strcmp(cmd, ACTION_PRINT_BOARD) == 0) {
+        return validatePrintBoard(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_SET) != 0) {
-        return validateSet(args, cmd);
+    if (strcmp(cmd, ACTION_SET) == 0) {
+        return validateSet(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_VALIDATE) != 0) {
-        return validateValidate(args, cmd);
+    if (strcmp(cmd, ACTION_VALIDATE) == 0) {
+        return validateValidate(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_GENERATE) != 0) {
-        return validateGenerate(args, cmd);
+    if (strcmp(cmd, ACTION_GENERATE) == 0) {
+        return validateGenerate(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_UNDO) != 0) {
-        return validateUndo(args, cmd);
+    if (strcmp(cmd, ACTION_UNDO) == 0) {
+        return validateUndo(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_REDO) != 0) {
-        return validateRedo(args, cmd);
+    if (strcmp(cmd, ACTION_REDO) == 0) {
+        return validateRedo(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_SAVE) != 0) {
-        return validateSave(args, cmd);
+    if (strcmp(cmd, ACTION_SAVE) == 0) {
+        return validateSave(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_HINT) != 0) {
-        return validateHint(args, cmd);
+    if (strcmp(cmd, ACTION_HINT) == 0) {
+        return validateHint(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_NUM_SOLUTIONS) != 0) {
-        return validateNumSolutions(args, cmd);
+    if (strcmp(cmd, ACTION_NUM_SOLUTIONS) == 0) {
+        return validateNumSolutions(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_AUTOFILL) != 0) {
-        return validateAutofill(args, cmd);
+    if (strcmp(cmd, ACTION_AUTOFILL) == 0) {
+        return validateAutofill(args, cmd, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_RESET) != 0) {
-        return validateReset(args, cmd);
+    if (strcmp(cmd, ACTION_RESET) == 0) {
+        return validateReset(args, cmd, numOfArgs);
     }
-    printf("Error: invalid command");
+    if (strcmp(cmd, ACTION_EXIT) == 0) {
+        return validateExit(args, cmd, numOfArgs);
+    }
     return false;
 }
 
@@ -61,8 +63,8 @@ int* getValidModesForAction(const char *action, int *validModes){
         validModes[EDIT] = 0;
     }
     if (action == ACTION_MARK_ERRORS) {
-        validModes[INIT] = 1;
-        validModes[SOLVE] = 0;
+        validModes[INIT] = 0;
+        validModes[SOLVE] = 1;
         validModes[EDIT] = 0;
     }
     if (action == ACTION_PRINT_BOARD) {
@@ -135,7 +137,7 @@ Command* cmdMngr_fetchCommand() {
     char* cmdpt = NULL;
     char* action = malloc(1024 * sizeof(char));
     char* arg;
-    int i = 0;
+    int numOfArgs = 0;
     if (!cmd_str){ /* allocation failed */
         printf("Error: %s has failed\n", "prsr_fetchCmd");
         exit(1);
@@ -153,18 +155,17 @@ Command* cmdMngr_fetchCommand() {
     //Setting args to hold the rest of the input
     arg = strtok(NULL, " \t\r\n");
     while (arg != NULL) {
-        args[i] = arg;
+        args[numOfArgs] = arg;
         arg = strtok(NULL, " \t\r\n");
-        i++;
+        numOfArgs++;
     }
 
-    if (validateArguments(args, action) == 0) {
-        printf("ERROR: invalid command\n");
+    if (validateArguments(args, action, numOfArgs) == 0) {
         return NULL;
     }
 
     int validModes[3];
-    Command* cmd = cmd_createCommand(args, action, getValidModesForAction(action, validModes));
+    Command* cmd = cmd_createCommand(args, action, getValidModesForAction(action, validModes), numOfArgs);
 
     free(cmd_str);
     return cmd;

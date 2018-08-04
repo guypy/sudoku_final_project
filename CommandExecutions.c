@@ -2,8 +2,11 @@
 // Created by Guy Pinchuk on 04/08/2018.
 //
 
+#include <stdlib.h>
+#include <printf.h>
 #include "CommandExecutions.h"
 #include "Game.h"
+#include "Command.h"
 
 void executeSolve(Game* game, Command* cmd) {
     //Here we will execute Solve..
@@ -14,7 +17,7 @@ void executeEdit(Game* game, Command* cmd) {
 }
 
 void executeMarkErrors(Game* game, Command* cmd) {
-    //Here we will execute MarkErrors..
+    game->markErrors = (bool) atoi(cmd->args[0]);
 }
 
 void executePrintBoard(Game* game, Command* cmd) {
