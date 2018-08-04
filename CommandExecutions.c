@@ -18,7 +18,7 @@ void executeMarkErrors(Game* game, Command* cmd) {
 }
 
 void executePrintBoard(Game* game, Command* cmd) {
-    //Here we will execute PrintBoard..
+    sb_print(game->board, (game->markErrors || game->mode == EDIT));
 }
 
 void executeSet(Game* game, Command* cmd) {

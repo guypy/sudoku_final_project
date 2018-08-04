@@ -14,7 +14,7 @@ typedef struct {
     int rows;
     int columns;
     bool markErrors;
-    SudokuBoard* gameBoard;
+    SudokuBoard* board;
     SudokuBoard* solvedBoard;
     LinkedList* undoRedoList;
 } Game;

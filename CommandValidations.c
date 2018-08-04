@@ -20,7 +20,7 @@ bool validateMarkErrors(char** args, char* cmd) {
 }
 
 bool validatePrintBoard(char** args, char* cmd) {
-    //Here we will validate PrintBoard..
+    //No Validations For this command.
     return true;
 }
 
