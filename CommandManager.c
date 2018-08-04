@@ -124,8 +124,8 @@ int* getValidModesForAction(const char *action, int *validModes){
     }
     if (action == ACTION_EXIT) {
         validModes[INIT] = 1;
-        validModes[SOLVE] = 0;
-        validModes[EDIT] = 0;
+        validModes[SOLVE] = 1;
+        validModes[EDIT] = 1;
     }
     return validModes;
 }

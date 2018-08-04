@@ -1,7 +1,3 @@
-//
-// Created by Guy Pinchuk on 04/08/2018.
-//
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "Game.h"
@@ -17,6 +13,7 @@ Game* createGame(){
     game->undoRedoList->head = NULL;
     game->undoRedoList->tail = NULL;
     game->undoRedoList->size = 0;
+    game->markErrors = true;
     return game;
 }
 
