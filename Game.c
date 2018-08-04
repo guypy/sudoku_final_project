@@ -9,7 +9,7 @@
 Game* createGame(){
     Game* game = (Game*) malloc(sizeof(Game));
     if (!game){ /* allocation failed */
-        printf("Error: %s has failed\n", "sb_createSudokuBoard");
+        printf("Error: %s has failed\n", "sb_create");
         exit(1);
     }
     game->mode = INIT;

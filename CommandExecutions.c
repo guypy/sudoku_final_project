@@ -30,7 +30,7 @@ void executeValidate(Game* game, Command* cmd) {
 }
 
 void executeGenerate(Game* game, Command* cmd) {
-    printList(game->undoRedoList);
+    //Here we will execute Generate..
 }
 
 void executeUndo(Game* game, Command* cmd) {

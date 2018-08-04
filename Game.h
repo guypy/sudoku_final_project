@@ -1,6 +1,7 @@
 #ifndef SUDOKU_CONSOLE_GAME_H
 #define SUDOKU_CONSOLE_GAME_H
 
+#include <stdbool.h>
 #include "SudokuBoard.h"
 #include "LinkedList.h"
 
@@ -12,6 +13,7 @@ typedef struct {
     int mode;
     int rows;
     int columns;
+    bool markErrors;
     SudokuBoard* gameBoard;
     SudokuBoard* solvedBoard;
     LinkedList* undoRedoList;
