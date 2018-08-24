@@ -9,10 +9,7 @@ Game* createGame(){
         exit(1);
     }
     game->mode = INIT;
-    game->undoRedoList = (LinkedList*) malloc(sizeof(LinkedList));
-    game->undoRedoList->head = NULL;
-    game->undoRedoList->tail = NULL;
-    game->undoRedoList->size = 0;
+    game->undoRedoList = createList();
     game->markErrors = true;
     return game;
 }

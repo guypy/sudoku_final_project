@@ -3,6 +3,15 @@
 #include "LinkedList.h"
 #include "Command.h"
 
+LinkedList* createList() {
+    LinkedList* list = (LinkedList*) malloc(sizeof(LinkedList));
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
+
+    return list;
+}
+
 void append(LinkedList * lst, Command * cmd) {
     Node *node = (Node *) malloc(sizeof(Node));
     node->next = NULL;
