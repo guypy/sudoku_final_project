@@ -9,7 +9,7 @@
 #define SOLVE 1
 #define EDIT 2
 
-#define DEFAULT_BOARD_SIZE 9
+#define DEFAULT_BLOCK_SIZE 3
 
 typedef struct {
     int mode;

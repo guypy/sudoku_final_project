@@ -11,12 +11,12 @@ typedef struct {
 } Cell;
 
 typedef struct{
-    int rows;
-    int columns;
-    Cell** cells; //Array of size rows*rows*columns*columns
+    int blockRows;
+    int blockColumns;
+    Cell** cells; //Array of size blockRows * blockRows * blockColumns * blockColumns
 } SudokuBoard;
 
-SudokuBoard* sb_create(int rows, int columns);
+SudokuBoard* sb_create(int blockRows, int blockColumns);
 void sb_print(SudokuBoard* sb, bool markErrors);
 void sb_removeUnfixedCells(SudokuBoard *sb);
 void sb_destroyBoard(SudokuBoard* sb);

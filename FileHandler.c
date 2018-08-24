@@ -20,7 +20,7 @@ SudokuBoard *parseFile(FILE *file) {
     fscanf(file, "%d", &n);
     fscanf(file, "%d", &m);
     SudokuBoard* board = sb_create(n, m);
-    for (int i = 0; i < n * m; i++) {
+    for (int i = 0; i < n * n * m * m; i++) {
         Cell* cell = board->cells[i];
         fscanf(file, "%d", &cell->value);
         int c = getc(file);

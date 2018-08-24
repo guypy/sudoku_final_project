@@ -14,7 +14,7 @@ void executeEdit(Game* game, Command* cmd) {
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
     } else {
-        game->board = sb_create(DEFAULT_BOARD_SIZE, DEFAULT_BOARD_SIZE);
+        game->board = sb_create(DEFAULT_BLOCK_SIZE, DEFAULT_BLOCK_SIZE);
     }
 
 }
