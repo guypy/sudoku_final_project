@@ -20,6 +20,7 @@ void append(LinkedList * lst, Command * cmd);
 void delete(LinkedList * lst, Node* node);
 void deleteFromNode(LinkedList* lst, Node *node);
 void destroyList(LinkedList * lst);
+
 void printList(LinkedList * lst);
 
 

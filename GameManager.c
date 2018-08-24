@@ -81,6 +81,6 @@ void gameLoop(Game* game) {
             break;
         }
         executeCommand(game, cmd);
-        append(game->undoRedoList, cmd);
+
     }
 }

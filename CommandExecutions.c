@@ -22,6 +22,7 @@ void executePrintBoard(Game* game, Command* cmd) {
 
 void executeSet(Game* game, Command* cmd) {
     //Here we will execute Set..
+    append(game->undoRedoList, cmd);
 }
 
 void executeValidate(Game* game, Command* cmd) {
@@ -50,6 +51,7 @@ void executeNumSolutions(Game* game, Command* cmd) {
 }
 void executeAutofill(Game* game, Command* cmd) {
     //Here we will execute Autofill..
+    append(game->undoRedoList, cmd);
 }
 void executeReset(Game* game, Command* cmd) {
     //Here we will execute Reset..
