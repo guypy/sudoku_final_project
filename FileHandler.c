@@ -5,8 +5,6 @@
 #include "SudokuBoard.h"
 #include "ErrorPrinter.h"
 
-SudokuBoard *parseFile(FILE *file);
-
 SudokuBoard* fileHandler_readBoardFromFile(char* path) {
     FILE *file = fopen(path, "r");
     if (file == NULL) {
@@ -22,14 +20,15 @@ SudokuBoard *parseFile(FILE *file) {
     fscanf(file, "%d", &n);
     fscanf(file, "%d", &m);
     SudokuBoard* board = sb_create(n, m);
-    assert(board);
-    for (int i = 0; i < n * m * n * m; i++) {
+    for (int i = 0; i < n * m; i++) {
         Cell* cell = board->cells[i];
         fscanf(file, "%d", &cell->value);
         int c = getc(file);
         if (c == '.'){
             cell->fixed = true;
         }
+        cell->valid = true; //TODO: replace with an isValid method.
+
     }
     return board;
 }

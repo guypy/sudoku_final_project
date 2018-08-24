@@ -6,7 +6,7 @@
 typedef struct {
     int value;
     bool fixed; /* boolean value depicting whether the cell on the board is fixed or not */
-    int valid;
+    bool valid;
     int* impossible_values;
 } Cell;
 

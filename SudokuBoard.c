@@ -27,11 +27,12 @@ SudokuBoard* sb_create(int rows, int columns){
 
 void printCell(Cell *cell, bool markErrors) {
     if (cell->value) {
-        printf("%d ", cell->value);
+        printf("%d", cell->value);
         if (cell->fixed)
             printf(".");
         else if (!cell->valid && markErrors)
             printf("*");
+        printf(" ");
     } else {
         printf("   ");
     }
