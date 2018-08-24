@@ -1,7 +1,3 @@
-//
-// Created by Guy Pinchuk on 04/08/2018.
-//
-
 #include <stdlib.h>
 #include <assert.h>
 #include "Command.h"

@@ -1,7 +1,3 @@
-//
-// Created by Guy Pinchuk on 04/08/2018.
-//
-
 #ifndef SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 #define SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 
