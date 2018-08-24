@@ -1,54 +1,55 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
 #include "stdio.h"
 #include "CommandManager.h"
 #include "Command.h"
 #include "Game.h"
 #include "CommandValidations.h"
 
-static bool validateArguments(char** args, char* cmd, int numOfArgs) {
-    if (strcmp(cmd, ACTION_SOLVE) == 0) {
-        return validateSolve(args, cmd, numOfArgs);
+static bool validateArguments(char** args, char* action, int numOfArgs) {
+    if (strcmp(action, ACTION_SOLVE) == 0) {
+        return validateSolve(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_MARK_ERRORS) == 0) {
-        return validateMarkErrors(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_MARK_ERRORS) == 0) {
+        return validateMarkErrors(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_PRINT_BOARD) == 0) {
-        return validatePrintBoard(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_PRINT_BOARD) == 0) {
+        return validatePrintBoard(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_SET) == 0) {
-        return validateSet(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_SET) == 0) {
+        return validateSet(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_VALIDATE) == 0) {
-        return validateValidate(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_VALIDATE) == 0) {
+        return validateValidate(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_GENERATE) == 0) {
-        return validateGenerate(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_GENERATE) == 0) {
+        return validateGenerate(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_UNDO) == 0) {
-        return validateUndo(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_UNDO) == 0) {
+        return validateUndo(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_REDO) == 0) {
-        return validateRedo(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_REDO) == 0) {
+        return validateRedo(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_SAVE) == 0) {
-        return validateSave(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_SAVE) == 0) {
+        return validateSave(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_HINT) == 0) {
-        return validateHint(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_HINT) == 0) {
+        return validateHint(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_NUM_SOLUTIONS) == 0) {
-        return validateNumSolutions(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_NUM_SOLUTIONS) == 0) {
+        return validateNumSolutions(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_AUTOFILL) == 0) {
-        return validateAutofill(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_AUTOFILL) == 0) {
+        return validateAutofill(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_RESET) == 0) {
-        return validateReset(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_RESET) == 0) {
+        return validateReset(args, action, numOfArgs);
     }
-    if (strcmp(cmd, ACTION_EXIT) == 0) {
-        return validateExit(args, cmd, numOfArgs);
+    if (strcmp(action, ACTION_EXIT) == 0) {
+        return validateExit(args, action, numOfArgs);
     }
     return false;
 }
@@ -135,10 +136,10 @@ Command* cmdMngr_fetchCommand() {
     char* action = malloc(1024 * sizeof(char));
     char* arg;
     int numOfArgs = 0;
-    if (!cmd_str){ /* allocation failed */
-        printf("Error: %s has failed\n", "prsr_fetchCmd");
-        exit(1);
-    }
+
+    assert(cmd_str);
+    assert(args);
+    assert(action);
 
     //Split input into tokens, cmdpt pointing to the first token.
     while (cmdpt == NULL) {
@@ -166,5 +167,4 @@ Command* cmdMngr_fetchCommand() {
 
     free(cmd_str);
     return cmd;
-
 };

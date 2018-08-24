@@ -70,7 +70,7 @@ void executeCommand(Game* game, Command * cmd){
 
 void gameLoop(Game* game) {
     Command* cmd;
-    while(1) {
+    while(true) {
         cmd = cmdMngr_fetchCommand();
         if (cmd == NULL) {
             errPrinter_invalidCommand();
@@ -82,5 +82,9 @@ void gameLoop(Game* game) {
         }
         executeCommand(game, cmd);
 
+        if (strcmp(cmd->action, ACTION_AUTOFILL) != 0 &&
+            strcmp(cmd->action, ACTION_SET) != 0) {
+            cmd_freeCommand(cmd);
+        }
     }
 }
