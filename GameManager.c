@@ -30,6 +30,9 @@ void executeCommand(Game* game, Command * cmd){
     if (strcmp(cmd->action, ACTION_SOLVE) == 0) {
         executeSolve(game, cmd);
     }
+    if (strcmp(cmd->action, ACTION_EDIT) == 0) {
+        executeEdit(game, cmd);
+    }
     if (strcmp(cmd->action, ACTION_MARK_ERRORS) == 0) {
         executeMarkErrors(game, cmd);
     }
