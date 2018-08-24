@@ -7,7 +7,6 @@ bool validateSolve(char** args, char* cmd, int numOfArgs) {
 }
 
 bool validateEdit(char** args, char* cmd, int numOfArgs) {
-    //Here we will validate Edit..
     return true;
 }
 

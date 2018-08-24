@@ -3,7 +3,7 @@
 #include "SudokuBoard.h"
 #include "Game.h"
 
-#define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
+#define BOARD_SIZE(rows, columns) ((rows)*(columns))
 
 SudokuBoard* sb_create(int rows, int columns){
     int i;
@@ -27,11 +27,12 @@ SudokuBoard* sb_create(int rows, int columns){
 
 void printCell(Cell *cell, bool markErrors) {
     if (cell->value) {
-        printf("%d ", cell->value);
+        printf("%d", cell->value);
         if (cell->fixed)
             printf(".");
         else if (!cell->valid && markErrors)
             printf("*");
+        printf(" ");
     } else {
         printf("   ");
     }
@@ -41,9 +42,9 @@ void sb_print(SudokuBoard* sb, bool markErrors) {
     int i;
     printf("----------------------------------\n");
     for (i = 0; i < BOARD_SIZE(sb->rows, sb->columns); ++i){
-        if (i % (sb->rows * sb->columns * sb->columns) == 0 && i != 0)
+        if (i % (sb->rows * sb->columns) == 0 && i != 0)
             printf("|\n----------------------------------\n| ");
-        else if (i % (sb->rows * sb->columns) == 0 && i != 0)
+        else if (i % (sb->columns) == 0 && i != 0)
             printf("|\n| ");
         else if (i % sb->rows == 0) {
             printf("| ");

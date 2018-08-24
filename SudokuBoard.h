@@ -5,8 +5,8 @@
 
 typedef struct {
     int value;
-    int fixed; /* boolean value depicting whether the cell on the board is fixed or not */
-    int valid;
+    bool fixed; /* boolean value depicting whether the cell on the board is fixed or not */
+    bool valid;
     int* impossible_values;
 } Cell;
 

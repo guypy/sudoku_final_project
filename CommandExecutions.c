@@ -3,13 +3,20 @@
 #include "CommandExecutions.h"
 #include "Game.h"
 #include "Command.h"
+#include "FileHandler.h"
 
 void executeSolve(Game* game, Command* cmd) {
     //Here we will execute Solve..
 }
 
 void executeEdit(Game* game, Command* cmd) {
-    //Here we will execute Edit..
+    game->mode = EDIT;
+    if (cmd->numOfArgs > 0) {
+        game->board = fileHandler_readBoardFromFile(cmd->args[0]);
+    } else {
+        game->board = sb_create(DEFAULT_BOARD_SIZE, DEFAULT_BOARD_SIZE);
+    }
+
 }
 
 void executeMarkErrors(Game* game, Command* cmd) {

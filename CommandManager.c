@@ -12,6 +12,9 @@ static bool validateArguments(char** args, char* action, int numOfArgs) {
     if (strcmp(action, ACTION_SOLVE) == 0) {
         return validateSolve(args, action, numOfArgs);
     }
+    if (strcmp(action, ACTION_EDIT) == 0) {
+        return validateEdit(args, action, numOfArgs);
+    }
     if (strcmp(action, ACTION_MARK_ERRORS) == 0) {
         return validateMarkErrors(args, action, numOfArgs);
     }
@@ -59,6 +62,11 @@ int* getValidModesForAction(const char *action, int *validModes){
         validModes[INIT] = 1;
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
+    }
+    if (action == ACTION_EDIT) {
+        validModes[INIT] = 1;
+        validModes[SOLVE] = 1;
+        validModes[EDIT] = 1;
     }
     if (action == ACTION_MARK_ERRORS) {
         validModes[INIT] = 0;

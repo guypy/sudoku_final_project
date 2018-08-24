@@ -4,6 +4,7 @@
 #include "Command.h"
 
 #define ACTION_SOLVE "solve"
+#define ACTION_EDIT "edit"
 #define ACTION_MARK_ERRORS "mark_errors"
 #define ACTION_PRINT_BOARD "print_board"
 #define ACTION_SET "set"
