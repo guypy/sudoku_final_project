@@ -60,8 +60,9 @@ bool validateRedo(char** args, char* action, int numOfArgs) {
     //Here we will validate Redo..
     return true;
 }
-bool validateSave(char** args, char* action, int numOfArgs) {
-    //Here we will validate Save..
+bool validateSave(char** args, char* cmd, int numOfArgs) {
+    if (numOfArgs < 1)
+        return false;
     return true;
 }
 bool validateHint(char** args, char* action, int numOfArgs) {

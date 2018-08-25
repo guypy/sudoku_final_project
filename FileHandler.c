@@ -10,7 +10,35 @@ SudokuBoard* fileHandler_readBoardFromFile(char* path) {
     if (file == NULL) {
         return NULL;
     }
-    return parseFile(file);
+    SudokuBoard* board = parseFile(file);
+    fclose(file);
+    return board;
+}
+
+bool fileHandler_saveBoardToFile(SudokuBoard* board, char* path, bool allFixed) {
+    FILE *file = fopen(path, "w");
+    if (file == NULL) {
+        return false;
+    }
+
+    int n = board->blockRows;
+    int m = board->blockColumns;
+    fprintf(file, "%d %d\n", n, m);
+    for (int i = 0; i < n * n * m * m; i++) {
+        Cell* cell = board->cells[i];
+        fprintf(file, "%d", cell->value);
+        if (allFixed || cell->fixed){
+            fprintf(file, ".");
+        }
+        printf("%d", i % (n*m));
+        if (i % (n*m) != n*m - 1){
+            fprintf(file, " ");
+        } else {
+            fprintf(file, "\n");
+        }
+    }
+    fclose(file);
+    return true;
 }
 
 SudokuBoard *parseFile(FILE *file) {

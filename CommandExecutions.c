@@ -54,19 +54,36 @@ void executeUndo(Game* game, Command* cmd) {
 void executeRedo(Game* game, Command* cmd) {
     //Here we will execute Redo..
 }
+
 void executeSave(Game* game, Command* cmd) {
-    //Here we will execute Save..
+    if (game->mode == EDIT) {
+        if (sb_isErroneous(game->board)) {
+            errPrinter_erroneousValues();
+            return;
+        }
+        if (!sb_isSolvable(game->board)) {
+            errPrinter_boardValidationFailed();
+        }
+    }
+    char* path = cmd->args[0];
+    if (!fileHandler_saveBoardToFile(game->board, path, game->mode == EDIT)){
+        errPrinter_cannotCreateOrModifyFile();
+    }
 }
+
 void executeHint(Game* game, Command* cmd) {
     //Here we will execute Hint..
 }
+
 void executeNumSolutions(Game* game, Command* cmd) {
     //Here we will execute NumSolutions..
 }
+
 void executeAutofill(Game* game, Command* cmd) {
     //Here we will execute Autofill..
     append(game->undoRedoList, cmd);
 }
+
 void executeReset(Game* game, Command* cmd) {
     //Here we will execute Reset..
 }
