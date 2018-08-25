@@ -21,7 +21,7 @@ void executeEdit(Game* game, Command* cmd) {
         if (game->board == NULL)
             errPrinter_cannotOpenFile();
     } else {
-        game->board = sb_create(DEFAULT_BLOCK_SIZE, DEFAULT_BLOCK_SIZE);
+        game->board = sb_create(DEFAULT_BLOCK_DIMENSIONS, DEFAULT_BLOCK_DIMENSIONS);
     }
     game->mode = EDIT;
 }

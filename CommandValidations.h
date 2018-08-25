@@ -1,6 +1,7 @@
 #ifndef SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 #define SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 
+bool isNaN(char *arg);
 bool validateSolve(char** args, char* cmd, int numOfArgs);
 bool validateEdit(char** args, char* cmd, int numOfArgs);
 bool validateMarkErrors(char** args, char* cmd, int numOfArgs);

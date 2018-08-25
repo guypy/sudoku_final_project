@@ -9,12 +9,10 @@
 #define SOLVE 1
 #define EDIT 2
 
-#define DEFAULT_BLOCK_SIZE 3
+#define DEFAULT_BLOCK_DIMENSIONS 3
 
 typedef struct {
     int mode;
-    int rows;
-    int columns;
     bool markErrors;
     SudokuBoard* board;
     SudokuBoard* solvedBoard;
