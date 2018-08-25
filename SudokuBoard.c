@@ -115,6 +115,19 @@ int sb_isFull(SudokuBoard *sb){
     return 1;
 }
 
+bool sb_isSolvable(SudokuBoard *board) {
+    return true;
+}
+
+bool sb_isErroneous(SudokuBoard *board) {
+    sb_cellValidations(board);
+    for (int i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i) {
+        if (!board->cells[i]->valid)
+            return true;
+    }
+    return false;
+}
+
 bool sb_cellValidations(SudokuBoard *board){
     int i;
     for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i){

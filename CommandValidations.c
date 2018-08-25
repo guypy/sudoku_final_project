@@ -51,7 +51,8 @@ bool validateRedo(char** args, char* cmd, int numOfArgs) {
     return true;
 }
 bool validateSave(char** args, char* cmd, int numOfArgs) {
-    //Here we will validate Save..
+    if (numOfArgs < 1)
+        return false;
     return true;
 }
 bool validateHint(char** args, char* cmd, int numOfArgs) {
