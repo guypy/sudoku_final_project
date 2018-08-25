@@ -8,8 +8,6 @@
 SudokuBoard* fileHandler_readBoardFromFile(char* path) {
     FILE *file = fopen(path, "r");
     if (file == NULL) {
-        perror("fopen");
-        errPrinter_cannotOpenFile();
         return NULL;
     }
     return parseFile(file);

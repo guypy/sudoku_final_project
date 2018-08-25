@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 bool validateSolve(char** args, char* cmd, int numOfArgs) {
-    //Here we will validate Solve..
+    if (numOfArgs < 1)
+        return false;
     return true;
 }
 

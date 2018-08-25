@@ -4,19 +4,26 @@
 #include "Game.h"
 #include "Command.h"
 #include "FileHandler.h"
+#include "ErrorPrinter.h"
 
 void executeSolve(Game* game, Command* cmd) {
-    //Here we will execute Solve..
+    game->board = fileHandler_readBoardFromFile(cmd->args[0]);
+    if (game->board == NULL) {
+        errPrinter_fileDoesNotExist();
+        return;
+    }
+    game->mode = SOLVE;
 }
 
 void executeEdit(Game* game, Command* cmd) {
-    game->mode = EDIT;
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
+        if (game->board == NULL)
+            errPrinter_cannotOpenFile();
     } else {
         game->board = sb_create(DEFAULT_BLOCK_SIZE, DEFAULT_BLOCK_SIZE);
     }
-
+    game->mode = EDIT;
 }
 
 void executeMarkErrors(Game* game, Command* cmd) {

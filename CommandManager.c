@@ -60,8 +60,8 @@ static bool validateArguments(char** args, char* action, int numOfArgs) {
 int* getValidModesForAction(const char *action, int *validModes){
     if (action == ACTION_SOLVE) {
         validModes[INIT] = 1;
-        validModes[SOLVE] = 0;
-        validModes[EDIT] = 0;
+        validModes[SOLVE] = 1;
+        validModes[EDIT] = 1;
     }
     if (action == ACTION_EDIT) {
         validModes[INIT] = 1;
