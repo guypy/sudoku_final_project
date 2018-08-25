@@ -114,3 +114,74 @@ int sb_isFull(SudokuBoard *sb){
     }
     return 1;
 }
+
+bool sb_cellValidations(SudokuBoard *board){
+    int i;
+    for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i){
+        Cell* cell = board->cells[i];
+        cell->valid = cell_isValid(board, cell, i);
+    }
+}
+
+bool cell_isValid(SudokuBoard *sb, Cell* cell, int idxInBoard){
+    return cell->value == 0 ||
+           (checkRow(sb, cell, idxInBoard)    &&
+            checkColumn(sb, cell, idxInBoard) &&
+            checkBlock(sb, cell, idxInBoard));
+}
+
+bool checkRow(SudokuBoard* sb, Cell* cell, int idxInBoard){
+    int value, i, cellRow;
+    int n = sb->blockRows;
+    int m = sb->blockColumns;
+    cellRow = idxInBoard / (n*m);
+    for (i = 0; i < (n*m); ++i){
+        int checkedCellIdx = cellRow*(n*m) + i;
+        if (idxInBoard == checkedCellIdx)
+            continue;
+        value = sb->cells[checkedCellIdx]->value;
+        if (value == cell->value) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool checkColumn(SudokuBoard* sb, Cell* cell, int idxInBoard) {
+    int value, i, cellColumn;
+    int n = sb->blockRows;
+    int m = sb->blockColumns;
+    cellColumn = idxInBoard % (n*m);
+    for (i = 0; i < (n*m); ++i){
+        int checkedCellIdx = i*(n*m) + cellColumn;
+        if (idxInBoard == checkedCellIdx)
+            continue;
+        value = sb->cells[checkedCellIdx]->value;
+        if (value == cell->value) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool checkBlock(SudokuBoard* sb, Cell* cell, int idxInBoard) {
+    int value, i, j;
+    int n = sb->blockRows;
+    int m = sb->blockColumns;
+    int cellColumn = idxInBoard % (n*m);
+    int cellRow = idxInBoard / (n*m);
+    int columnBlock = cellColumn / m;
+    int rowBlock = cellRow / n;
+    for (i = 0; i < n; ++i){
+        for(j = 0; j < m; ++j) {
+            int checkedCellIdx = (rowBlock * n + i) * n*m + columnBlock * m + j;
+            if (idxInBoard == checkedCellIdx)
+                continue;
+            value = sb->cells[checkedCellIdx]->value;
+            if (value == cell->value) {
+                return false;
+            }
+        }
+    }
+    return true;
+}

@@ -25,8 +25,7 @@ SudokuBoard *parseFile(FILE *file) {
         if (c == '.'){
             cell->fixed = true;
         }
-        cell->valid = true; //TODO: replace with an isValid method.
-
     }
+    sb_cellValidations(board);
     return board;
 }
