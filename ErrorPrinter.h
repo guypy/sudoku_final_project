@@ -15,5 +15,6 @@ void errPrinter_noMovesToUndo();
 void errPrinter_puzzleGeneratorFailed();
 void errPrinter_boardNotEmpty();
 void errPrinter_valueIsNotZeroOrOne();
+void errPrinter_puzzleSolutioinErroneous();
 
 #endif //SUDOKU_CONSOLE_ERRORPRINTER_H

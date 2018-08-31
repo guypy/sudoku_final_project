@@ -60,3 +60,7 @@ void errPrinter_boardNotEmpty(){
 void errPrinter_valueIsNotZeroOrOne(){
     printf("Error: the value should be 0 or 1\n");
 }
+
+void errPrinter_puzzleSolutioinErroneous(){
+    printf("Puzzle solution erroneous\n");
+}

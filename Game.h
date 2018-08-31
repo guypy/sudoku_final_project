@@ -19,6 +19,7 @@ typedef struct {
     SudokuBoard* board;
     SudokuBoard* solvedBoard;
     LinkedList* undoRedoList;
+    Node* currentCommandInList;
 } Game;
 
 Game* createGame();

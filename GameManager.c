@@ -7,6 +7,9 @@
 #include "Command.h"
 #include "ErrorPrinter.h"
 #include "CommandExecutions.h"
+#include "Command.h"
+#include "CommandValidations.h"
+#include "SudokuBoard.h"
 
 int startGame() {
     Game* game = createGame();
@@ -22,11 +25,56 @@ static bool validateMode(Game *game, Command *cmd) {
     return true;
 }
 
-void executeCommand(Game* game, Command * cmd){
-    if (!validateMode(game, cmd)) {
-        errPrinter_invalidCommand();
-        return;
+bool validateCommand(Command *cmd, Game* game) {
+    if (strcmp(cmd->action, ACTION_SOLVE) == 0) {
+        return validateSolve(cmd);
     }
+    if (strcmp(cmd->action, ACTION_EDIT) == 0) {
+        return validateEdit(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_MARK_ERRORS) == 0) {
+        return validateMarkErrors(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_PRINT_BOARD) == 0) {
+        return validatePrintBoard(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_SET) == 0) {
+        return validateSet(cmd, game);
+    }
+    if (strcmp(cmd->action, ACTION_VALIDATE) == 0) {
+        return validateValidate(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_GENERATE) == 0) {
+        return validateGenerate(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_UNDO) == 0) {
+        return validateUndo(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_REDO) == 0) {
+        return validateRedo(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_SAVE) == 0) {
+        return validateSave(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_HINT) == 0) {
+        return validateHint(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_NUM_SOLUTIONS) == 0) {
+        return validateNumSolutions(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_AUTOFILL) == 0) {
+        return validateAutofill(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_RESET) == 0) {
+        return validateReset(cmd);
+    }
+    if (strcmp(cmd->action, ACTION_EXIT) == 0) {
+        return validateExit(cmd);
+    }
+    return false;
+}
+
+void executeCommand(Game* game, Command * cmd){
     if (strcmp(cmd->action, ACTION_SOLVE) == 0) {
         executeSolve(game, cmd);
     }
@@ -75,7 +123,12 @@ void gameLoop(Game* game) {
     Command* cmd;
     while(true) {
         cmd = cmdMngr_fetchCommand();
-        if (cmd == NULL) {
+        if (validateMode(game, cmd) == false) {
+            errPrinter_invalidCommand();
+            cmd_freeCommand(cmd);
+            continue;
+        }
+        if (validateCommand(cmd, game) == false){
             errPrinter_invalidCommand();
             continue;
         }

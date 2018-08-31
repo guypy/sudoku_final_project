@@ -1,77 +1,104 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
+#include "CommandValidations.h"
+#include "ErrorPrinter.h"
+#include "Command.h"
+#include "SudokuBoard.h"
+#include "Game.h"
 
-bool validateSolve(char** args, char* cmd, int numOfArgs) {
-    if (numOfArgs < 1)
+bool validateSolve(Command* cmd) {
+    if (cmd->numOfArgs < 1)
         return false;
     return true;
 }
 
-bool validateEdit(char** args, char* cmd, int numOfArgs) {
+bool validateEdit(Command* cmd) {
     return true;
 }
 
-bool validateMarkErrors(char** args, char* cmd, int numOfArgs) {
+bool validateMarkErrors(Command* cmd) {
     //One argument - can only be 0 or 1.
-    if (numOfArgs != 1)
+    if (cmd->numOfArgs != 1)
         return false;
-    int arg = atoi(args[0]);
+    if (isNaN(cmd->args[0]))
+        return false;
+    int arg = atoi(cmd->args[0]);
     if (arg != 0 && arg != 1)
         return false;
     return true;
 }
 
-bool validatePrintBoard(char** args, char* cmd, int numOfArgs) {
+bool validatePrintBoard(Command* cmd) {
     //No Validations For this command.
     return true;
 }
 
-bool validateSet(char** args, char* cmd, int numOfArgs) {
-    //Here we will validate Set..
+bool validateSet(Command *cmd, Game* game) {
+    Cell* cell;
+    int i, arg, column, row, value_to_enter, idx, blockColumns, blockRows;
+    blockColumns = game->board->blockColumns;
+    blockRows = game->board->blockRows;
+    /* validate arguments are valid integers */
+    for (i = 0; i < 2; ++i){
+        if (isNaN(cmd->args[i])){
+            errPrinter_valueNotInRange(blockColumns*blockRows);
+            return false;
+        }
+    }
+    /* validate cell is not fixed */
+    column = atoi(cmd->args[0]) - 1;
+    row = atoi(cmd->args[1]) - 1;
+    idx = row * (blockColumns*blockRows) + column;
+    cell = game->board->cells[idx];
+    if (isCellFixed(cell)){
+        errPrinter_fixedCell();
+        return false;
+    }
     return true;
 }
 
-bool validateValidate(char** args, char* cmd, int numOfArgs) {
+bool validateValidate(Command* cmd) {
     //Here we will validate Validate..
     return true;
 }
 
-bool validateGenerate(char** args, char* cmd, int numOfArgs) {
+bool validateGenerate(Command* cmd) {
     //Here we will validate Generate..
     return true;
 }
 
-bool validateUndo(char** args, char* cmd, int numOfArgs) {
+bool validateUndo(Command* cmd) {
     //Here we will validate Undo..
     return true;
 }
 
-bool validateRedo(char** args, char* cmd, int numOfArgs) {
+bool validateRedo(Command* cmd) {
     //Here we will validate Redo..
     return true;
 }
-bool validateSave(char** args, char* cmd, int numOfArgs) {
-    if (numOfArgs < 1)
+bool validateSave(Command* cmd) {
+    if (cmd->numOfArgs < 1)
         return false;
     return true;
 }
-bool validateHint(char** args, char* cmd, int numOfArgs) {
+bool validateHint(Command* cmd) {
     //Here we will validate Hint..
     return true;
 }
-bool validateNumSolutions(char** args, char* cmd, int numOfArgs) {
+bool validateNumSolutions(Command* cmd) {
     //Here we will validate NumSolutions..
     return true;
 }
-bool validateAutofill(char** args, char* cmd, int numOfArgs) {
+bool validateAutofill(Command* cmd) {
     //Here we will validate Autofill..
     return true;
 }
-bool validateReset(char** args, char* cmd, int numOfArgs) {
+bool validateReset(Command* cmd) {
     //Here we will validate Reset..
     return true;
 }
-bool validateExit(char** args, char* cmd, int numOfArgs) {
+bool validateExit(Command* cmd) {
     //No Validations For this command.
     return true;
 }

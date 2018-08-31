@@ -5,6 +5,7 @@
 #include "Command.h"
 #include "FileHandler.h"
 #include "ErrorPrinter.h"
+#include "SudokuBoard.h"
 
 void executeSolve(Game* game, Command* cmd) {
     game->board = fileHandler_readBoardFromFile(cmd->args[0]);
@@ -35,8 +36,32 @@ void executePrintBoard(Game* game, Command* cmd) {
 }
 
 void executeSet(Game* game, Command* cmd) {
-    //Here we will execute Set..
+    Cell* cell;
+    int value_to_enter, blockColumns, blockRows, idx, column, row;
+    blockColumns = game->board->blockColumns;
+    blockRows = game->board->blockRows;
+    column = atoi(cmd->args[0]) - 1;
+    row = atoi(cmd->args[1]) - 1;
+    idx = row * (blockColumns*blockRows) + column;
+    cell = game->board->cells[idx];
+    value_to_enter = atoi(cmd->args[2]);
+    if (!cell_isValid(game->board, value_to_enter, idx)){
+        cell->valid = false;
+    }
+    game->board->cells[idx]->value = value_to_enter;
+    deleteFromNode(game->undoRedoList, game->currentCommandInList);
     append(game->undoRedoList, cmd);
+    game->currentCommandInList = game->undoRedoList->tail;
+    sb_print(game->board, game->markErrors);
+    if (sb_isFull(game->board)){
+        if (sb_isErroneous(game->board)){
+            errPrinter_puzzleSolutioinErroneous();
+        }
+        else{
+            printf("Puzzle solved successfully\n");
+            game->mode = INIT;
+        }
+    }
 }
 
 void executeValidate(Game* game, Command* cmd) {

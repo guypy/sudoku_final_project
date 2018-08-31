@@ -25,9 +25,10 @@ int sb_isFull(SudokuBoard *sb);
 bool sb_isSolvable(SudokuBoard *board);
 bool sb_isErroneous(SudokuBoard *board);
 bool sb_cellValidations(SudokuBoard *sb);
-bool cell_isValid(SudokuBoard *sb, Cell* cell, int idxInBoard);
-bool checkRow(SudokuBoard* sb, Cell* cell, int idxInBoard);
-bool checkColumn(SudokuBoard* sb, Cell* cell, int idxInBoard);
-bool checkBlock(SudokuBoard* sb, Cell* cell, int idxInBoard);
+bool cell_isValid(SudokuBoard *sb, int cell_value, int idxInBoard);
+bool checkRow(SudokuBoard* sb, int cell_value, int idxInBoard);
+bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard);
+bool checkBlock(SudokuBoard* sb, int cell_value, int idxInBoard);
+bool isCellFixed(Cell *cell);
 
 #endif //SUDOKU_CONSOLE_SUDOKUBOARD_H

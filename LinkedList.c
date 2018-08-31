@@ -23,6 +23,7 @@ void append(LinkedList * lst, Command * cmd) {
         lst->tail->next = node;
     }
     lst->tail = node;
+    lst->size++;
 }
 
 void delete(LinkedList * lst, Node* node) {
@@ -34,7 +35,7 @@ void delete(LinkedList * lst, Node* node) {
         node->next->prev = node->prev;
     if(node->prev != NULL)
         node->prev->next = node->next;
-
+    lst->size--;
     free(node);
 }
 

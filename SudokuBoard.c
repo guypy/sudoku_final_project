@@ -21,6 +21,7 @@ SudokuBoard* sb_create(int blockRows, int blockColumns){
             printf("Error: %s has failed\n", "sb_create");
             exit(1);
         }
+        res->cells[i]->valid = 1;
     }
     return res;
 }
@@ -37,6 +38,10 @@ void printCell(Cell *cell, bool markErrors) {
     } else {
         printf("    ");
     }
+}
+
+bool isCellFixed(Cell *cell){
+    return cell->fixed;
 }
 
 void printDashes(int n, int m) {
@@ -132,18 +137,18 @@ bool sb_cellValidations(SudokuBoard *board){
     int i;
     for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i){
         Cell* cell = board->cells[i];
-        cell->valid = cell_isValid(board, cell, i);
+        cell->valid = cell_isValid(board, cell->value, i);
     }
 }
 
-bool cell_isValid(SudokuBoard *sb, Cell* cell, int idxInBoard){
-    return cell->value == 0 ||
-           (checkRow(sb, cell, idxInBoard)    &&
-            checkColumn(sb, cell, idxInBoard) &&
-            checkBlock(sb, cell, idxInBoard));
+bool cell_isValid(SudokuBoard *sb, int cell_value, int idxInBoard){
+    return cell_value == 0 ||
+           (checkRow(sb, cell_value, idxInBoard)    &&
+            checkColumn(sb, cell_value, idxInBoard) &&
+            checkBlock(sb, cell_value, idxInBoard));
 }
 
-bool checkRow(SudokuBoard* sb, Cell* cell, int idxInBoard){
+bool checkRow(SudokuBoard* sb, int cell_value, int idxInBoard){
     int value, i, cellRow;
     int n = sb->blockRows;
     int m = sb->blockColumns;
@@ -153,14 +158,14 @@ bool checkRow(SudokuBoard* sb, Cell* cell, int idxInBoard){
         if (idxInBoard == checkedCellIdx)
             continue;
         value = sb->cells[checkedCellIdx]->value;
-        if (value == cell->value) {
+        if (value == cell_value) {
             return false;
         }
     }
     return true;
 }
 
-bool checkColumn(SudokuBoard* sb, Cell* cell, int idxInBoard) {
+bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard) {
     int value, i, cellColumn;
     int n = sb->blockRows;
     int m = sb->blockColumns;
@@ -170,14 +175,14 @@ bool checkColumn(SudokuBoard* sb, Cell* cell, int idxInBoard) {
         if (idxInBoard == checkedCellIdx)
             continue;
         value = sb->cells[checkedCellIdx]->value;
-        if (value == cell->value) {
+        if (value == cell_value) {
             return false;
         }
     }
     return true;
 }
 
-bool checkBlock(SudokuBoard* sb, Cell* cell, int idxInBoard) {
+bool checkBlock(SudokuBoard* sb, int cell_value, int idxInBoard) {
     int value, i, j;
     int n = sb->blockRows;
     int m = sb->blockColumns;
@@ -191,7 +196,7 @@ bool checkBlock(SudokuBoard* sb, Cell* cell, int idxInBoard) {
             if (idxInBoard == checkedCellIdx)
                 continue;
             value = sb->cells[checkedCellIdx]->value;
-            if (value == cell->value) {
+            if (value == cell_value) {
                 return false;
             }
         }
