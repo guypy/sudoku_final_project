@@ -89,8 +89,7 @@ bool validateHint(Command* cmd) {
 bool validateNumSolutions(Command* cmd) {
     return true;
 }
-bool validateAutofill(Command* cmd) {
-    //Here we will validate Autofill..
+bool validateAutofill(Command* cmd, Game* game) {
     return true;
 }
 bool validateReset(Command* cmd) {

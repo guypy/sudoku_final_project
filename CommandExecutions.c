@@ -117,10 +117,22 @@ void executeNumSolutions(Game* game, Command* cmd) {
 }
 
 void executeAutofill(Game* game, Command* cmd) {
-    //Here we will execute Autofill..
-    append(game->undoRedoList, cmd);
+    if (sb_isErroneous(game->board)){
+        errPrinter_erroneousValues();
+    }
+    else{
+
+        append(game->undoRedoList, cmd);
+    }
 }
 
 void executeReset(Game* game, Command* cmd) {
     //Here we will execute Reset..
+}
+
+int* getImpossibleValuesForCell(Game* game, Cell* cell, int index){
+    int blockRows, blockColumns;
+    blockRows = game->board->blockRows;
+    blockColumns = game ->board->blockColumns;
+
 }
