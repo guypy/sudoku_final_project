@@ -141,14 +141,14 @@ bool sb_cellValidations(SudokuBoard *board){
     }
 }
 
-bool cell_isValid(SudokuBoard *sb, int cell_value, int idxInBoard){
-    return cell_value == 0 ||
-           (checkRow(sb, cell_value, idxInBoard)    &&
-            checkColumn(sb, cell_value, idxInBoard) &&
-            checkBlock(sb, cell_value, idxInBoard));
+bool cell_isValid(SudokuBoard *sb, int cellValue, int idxInBoard){
+    return cellValue == 0 ||
+           (checkRow(sb, cellValue, idxInBoard)    &&
+            checkColumn(sb, cellValue, idxInBoard) &&
+            checkBlock(sb, cellValue, idxInBoard));
 }
 
-bool checkRow(SudokuBoard* sb, int cell_value, int idxInBoard){
+bool checkRow(SudokuBoard* sb, int cellValue, int idxInBoard){
     int value, i, cellRow;
     int n = sb->blockRows;
     int m = sb->blockColumns;
@@ -158,14 +158,14 @@ bool checkRow(SudokuBoard* sb, int cell_value, int idxInBoard){
         if (idxInBoard == checkedCellIdx)
             continue;
         value = sb->cells[checkedCellIdx]->value;
-        if (value == cell_value) {
+        if (value == cellValue) {
             return false;
         }
     }
     return true;
 }
 
-bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard) {
+bool checkColumn(SudokuBoard* sb, int cellValue, int idxInBoard) {
     int value, i, cellColumn;
     int n = sb->blockRows;
     int m = sb->blockColumns;
@@ -175,14 +175,14 @@ bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard) {
         if (idxInBoard == checkedCellIdx)
             continue;
         value = sb->cells[checkedCellIdx]->value;
-        if (value == cell_value) {
+        if (value == cellValue) {
             return false;
         }
     }
     return true;
 }
 
-bool checkBlock(SudokuBoard* sb, int cell_value, int idxInBoard) {
+bool checkBlock(SudokuBoard* sb, int cellValue, int idxInBoard) {
     int value, i, j;
     int n = sb->blockRows;
     int m = sb->blockColumns;
@@ -196,7 +196,7 @@ bool checkBlock(SudokuBoard* sb, int cell_value, int idxInBoard) {
             if (idxInBoard == checkedCellIdx)
                 continue;
             value = sb->cells[checkedCellIdx]->value;
-            if (value == cell_value) {
+            if (value == cellValue) {
                 return false;
             }
         }
