@@ -102,3 +102,14 @@ bool validateExit(Command* cmd) {
     //No Validations For this command.
     return true;
 }
+bool isNaN(char *arg){
+    int i;
+    char c;
+    for (i = 0; i < strlen(arg); ++i){
+        c = arg[i];
+        if (c < 48 || c > 57){
+            return true;
+        }
+    }
+    return false;
+}
