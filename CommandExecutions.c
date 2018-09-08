@@ -37,18 +37,18 @@ void executePrintBoard(Game* game, Command* cmd) {
 
 void executeSet(Game* game, Command* cmd) {
     Cell* cell;
-    int value_to_enter, blockColumns, blockRows, idx, column, row;
+    int valueToSet, blockColumns, blockRows, idx, column, row;
     blockColumns = game->board->blockColumns;
     blockRows = game->board->blockRows;
     column = atoi(cmd->args[0]) - 1;
     row = atoi(cmd->args[1]) - 1;
     idx = row * (blockColumns*blockRows) + column;
     cell = game->board->cells[idx];
-    value_to_enter = atoi(cmd->args[2]);
-    if (!cell_isValid(game->board, value_to_enter, idx)){
+    valueToSet = atoi(cmd->args[2]);
+    if (!cell_isValid(game->board, valueToSet, idx)){
         cell->valid = false;
     }
-    game->board->cells[idx]->value = value_to_enter;
+    game->board->cells[idx]->value = valueToSet;
     deleteFromNode(game->undoRedoList, game->currentCommandInList);
     append(game->undoRedoList, cmd);
     game->currentCommandInList = game->undoRedoList->tail;
