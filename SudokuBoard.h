@@ -7,7 +7,7 @@ typedef struct {
     int value;
     bool fixed; /* boolean value depicting whether the cell on the board is fixed or not */
     bool valid;
-    int* impossible_values;
+    int* exhaustedValues;
 } Cell;
 
 typedef struct{
@@ -24,7 +24,7 @@ SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb);
 int sb_isFull(SudokuBoard *sb);
 bool sb_isSolvable(SudokuBoard *board);
 bool sb_isErroneous(SudokuBoard *board);
-bool sb_cellValidations(SudokuBoard *sb);
+void sb_cellValidations(SudokuBoard *sb);
 bool cell_isValid(SudokuBoard *sb, int cell_value, int idxInBoard);
 bool checkRow(SudokuBoard* sb, int cell_value, int idxInBoard);
 bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard);

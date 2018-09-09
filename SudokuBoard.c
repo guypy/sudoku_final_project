@@ -17,12 +17,14 @@ SudokuBoard* sb_create(int blockRows, int blockColumns){
     res->cells = malloc(sizeof(Cell*) * BOARD_SIZE(blockRows, blockColumns));
     for (i = 0; i < BOARD_SIZE(blockRows, blockColumns); ++i){
         res->cells[i] = (Cell*)calloc(1, sizeof(Cell));
+        res->cells[i]->exhaustedValues = calloc(1, sizeof(int) * BOARD_SIZE(blockRows, blockColumns));
         if(!res->cells[i]){ /* allocation failed */
             printf("Error: %s has failed\n", "sb_create");
             exit(1);
         }
         res->cells[i]->valid = 1;
     }
+
     return res;
 }
 
@@ -87,7 +89,7 @@ SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb){
         new_sb->cells[i]->fixed = template_sb->cells[i]->fixed;
         /* clone impossible values array of cell */
         for (j = 0; j < (template_sb->blockRows * template_sb->blockColumns); ++j){
-            new_sb->cells[i]->impossible_values[j] = template_sb->cells[i]->impossible_values[j];
+            new_sb->cells[i]->exhaustedValues[j] = template_sb->cells[i]->exhaustedValues[j];
         }
     }
     return new_sb;
@@ -133,7 +135,7 @@ bool sb_isErroneous(SudokuBoard *board) {
     return false;
 }
 
-bool sb_cellValidations(SudokuBoard *board){
+void sb_cellValidations(SudokuBoard *board){
     int i;
     for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i){
         Cell* cell = board->cells[i];

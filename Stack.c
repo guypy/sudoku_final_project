@@ -10,27 +10,29 @@ Stack* stack_create(){
     return stack;
 }
 
-void* stack_pop(Stack* stack){
+StackItem* stack_pop(Stack* stack){
     if (stack->size == 0)
         return NULL;
     StackItem* removedItem = stack->ptr;
-    void* data = removedItem->data;
     stack->ptr = removedItem->prev;
-    free(removedItem);
     stack->size--;
 
-    return data;
+    return removedItem;
 }
 
-void stack_push(Stack* stack, void* item){
+void stack_push(Stack* stack, int cellIdx, int value){
     StackItem* stackItem = (StackItem*) malloc(sizeof(StackItem));
-    stackItem->data = item;
+    stackItem->cellIdx = cellIdx;
+    stackItem->cellValue = value;
     stackItem->prev = stack->ptr;
     stack->ptr = stackItem;
     stack->size++;
 }
 
 void stack_destroy(Stack* stack) {
-    while (stack_pop(stack) != NULL);
+    StackItem* popped;
+    while ((popped = stack_pop(stack)) != NULL) {
+        free(popped);
+    }
     free(stack);
 }

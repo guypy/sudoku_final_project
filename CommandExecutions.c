@@ -6,6 +6,7 @@
 #include "FileHandler.h"
 #include "ErrorPrinter.h"
 #include "SudokuBoard.h"
+#include "BTSolver.h"
 
 void executeSolve(Game* game, Command* cmd) {
     game->board = fileHandler_readBoardFromFile(cmd->args[0]);
@@ -101,7 +102,7 @@ void executeHint(Game* game, Command* cmd) {
 }
 
 void executeNumSolutions(Game* game, Command* cmd) {
-    //Here we will execute NumSolutions..
+    printf("%d\n", BT_numberOfSolutions(game->board));
 }
 
 void executeAutofill(Game* game, Command* cmd) {

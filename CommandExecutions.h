@@ -1,5 +1,5 @@
-#ifndef SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
-#define SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
+#ifndef SUDOKU_CONSOLE_COMMANDEXECUTIONS_H
+#define SUDOKU_CONSOLE_COMMANDEXECUTIONS_H
 
 #include "Command.h"
 #include "Game.h"
@@ -19,4 +19,4 @@ void executeNumSolutions(Game* game, Command* cmd);
 void executeAutofill(Game* game, Command* cmd);
 void executeReset(Game* game, Command* cmd);
 
-#endif //SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
+#endif //SUDOKU_CONSOLE_COMMANDEXECUTIONS_H

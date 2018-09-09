@@ -1,9 +1,9 @@
 #ifndef SUDOKU_CONSOLE_STACK_H
 #define SUDOKU_CONSOLE_STACK_H
-#define INITIAL_MAX_LENGTH 1024
 
 typedef struct StackItem{
-    void* data;
+    int cellIdx;
+    int cellValue;
     struct StackItem* prev;
 } StackItem;
 
@@ -13,8 +13,8 @@ typedef struct {
 } Stack;
 
 Stack* stack_create();
-void* stack_pop(Stack* stack);
-void stack_push(Stack* stack, void* item);
+StackItem* stack_pop(Stack* stack);
+void stack_push(Stack* stack, int cellIdx, int value);
 void stack_destroy(Stack* stack);
 
 

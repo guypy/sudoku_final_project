@@ -26,4 +26,6 @@ add_executable(sudoku_console
                 FileHandler.c
                 FileHandler.h
                 Stack.c
-                Stack.h)
+                Stack.h
+                BTSolver.c
+                BTSolver.h)
