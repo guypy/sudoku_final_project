@@ -90,7 +90,7 @@ int* getValidModesForAction(const char *action, int *validModes){
 Command* cmdMngr_fetchCommand() {
     printf("Enter your command:\n");
     char* cmd_str = malloc(1024 * sizeof(char));
-    char** args = malloc(1024 * sizeof(char));
+    char** args = malloc(1024 * sizeof(char*));
     char* cmdpt = NULL;
     char* action = malloc(1024 * sizeof(char));
     char* arg;
@@ -108,6 +108,12 @@ Command* cmdMngr_fetchCommand() {
 
     //action holds the Command action name
     strcpy(action, cmdpt);
+
+    "save sdfalsdkfl";
+    args = ["sdfalsdkfl"];
+    "set 12 2 3"
+    args = ["12", "2", "3"];
+    128
 
     //Setting args to hold the rest of the input
     arg = strtok(NULL, " \t\r\n");

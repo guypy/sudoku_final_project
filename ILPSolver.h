@@ -1,0 +1,6 @@
+#ifndef SUDOKU_CONSOLE_ILPSOLVER_H
+#define SUDOKU_CONSOLE_ILPSOLVER_H
+
+#include "SudokuBoard.h"
+
+#endif //SUDOKU_CONSOLE_ILPSOLVER_H

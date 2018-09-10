@@ -13,8 +13,6 @@
 
 typedef struct {
     int mode;
-    int rows;
-    int columns;
     bool markErrors;
     SudokuBoard* board;
     SudokuBoard* solvedBoard;
