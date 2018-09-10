@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <printf.h>
 #include <assert.h>
+#include <string.h>
 #include "CommandExecutions.h"
 #include "Game.h"
 #include "Command.h"
@@ -49,9 +50,7 @@ void executeSet(Game* game, Command* cmd) {
     idx = row * (blockColumns*blockRows) + column;
     cell = game->board->cells[idx];
     valueToSet = atoi(cmd->args[2]);
-    if (!cell_isValid(game->board, valueToSet, idx)){
-        cell->valid = false;
-    }
+    cell->valid = cell_isValid(game->board, valueToSet, idx);
     game->board->cells[idx]->value = valueToSet;
     undoRedoListPointer = game->undoRedoListPointer;
     if (undoRedoListPointer != NULL){
@@ -128,7 +127,7 @@ void executeAutofill(Game* game, Command* cmd) {
     LinkedList* valuesToFill = createList();
     Command* valueToSetCmd;
     char** args;
-    char row, column, valueToSet;
+    char *row, *column, *valueToSet;
 
     if (sb_isErroneous(game->board)){
         errPrinter_erroneousValues();
@@ -136,8 +135,11 @@ void executeAutofill(Game* game, Command* cmd) {
     else{
         blockRows = game->board->blockRows;
         blockColumns = game->board->blockColumns;
-        numOfCells = (blockRows ^ 2) * (blockColumns ^ 2);
+        numOfCells = (blockRows * blockRows) * (blockColumns * blockColumns);
         for (i = 0; i < numOfCells; ++i){
+            if (game->board->cells[i]->value != 0){
+                continue;
+            }
             impossibleValues = (int*)calloc((size_t) (blockColumns * blockRows), sizeof(int));
             assert(impossibleValues);
             updateImpossibleValuesForCell(game, game->board->cells[i], i, impossibleValues);
@@ -145,12 +147,18 @@ void executeAutofill(Game* game, Command* cmd) {
             if (value != -1) { // there is only one possible value
                 args = malloc(1024 * sizeof(char));
                 assert(args);
-                column = (char) ('0' + (i % (blockRows * blockColumns)));
-                row = (char) ('0' + i / (blockRows * blockColumns));
-                valueToSet = (char) ('0' + value);
-                args[0] = &column; // column to set
-                args[1] = &row; // row to set
-                args[2] = &valueToSet; // value to set
+                args[0] =(char*)malloc(snprintf(NULL, 0, "%d", (i % (blockRows * blockColumns))));
+                sprintf(args[0], "%d", (i % (blockRows * blockColumns)));
+                args[1] = (char*)malloc(snprintf(NULL, 0, "%d", i / (blockRows * blockColumns)));
+                sprintf(args[1], "%d", i / (blockRows * blockColumns));
+                args[2] = (char*)malloc(snprintf(NULL, 0, "%d", value));
+                sprintf(args[2], "%d", value);
+//                column = (char) ('0' + (i % (blockRows * blockColumns)));
+//                row = (char) ('0' + i / (blockRows * blockColumns));
+//                valueToSet = (char) ('0' + value);
+//                args[0] = &column; // column to set
+//                args[1] = &row; // row to set
+//                args[2] = &valueToSet; // value to set
                 valueToSetCmd = cmd_createCommand(args, "SET", NULL, 3);
                 append(valuesToFill, valueToSetCmd);
             }
@@ -158,6 +166,7 @@ void executeAutofill(Game* game, Command* cmd) {
         }
         autoFillValues(valuesToFill, game);
         append(game->undoRedoList, cmd);
+        game->undoRedoList->tail->autoFillList = valuesToFill;
     }
 }
 
@@ -212,7 +221,9 @@ void updateImpValuesInCol(int *impossibleValues, int cellCol, int blockRows, int
     for (i = 0; i < (blockRows * blockColumns); ++i){
         checkedCellIdx = i * (blockRows*blockColumns) + cellCol;
         checkedCellValue = (cells[checkedCellIdx])->value;
-        impossibleValues[checkedCellValue - 1] = 1;
+        if (checkedCellValue > 0){
+            impossibleValues[checkedCellValue - 1] = 1;
+        }
     }
 }
 
@@ -221,7 +232,9 @@ void updateImpValuesInRow(int *impossibleValues, int cellRow, int blockRows, int
     for (i = 0; i< (blockRows * blockColumns); ++i){
         checkedCellIdx = cellRow * (blockColumns * blockRows) + i;
         checkedCellValue = (cells[checkedCellIdx])->value;
-        impossibleValues[checkedCellValue - 1] = 1;
+        if (checkedCellValue > 0){
+            impossibleValues[checkedCellValue - 1] = 1;
+        }
     }
 }
 
@@ -233,7 +246,9 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
         for (j = 0; j < blockColumns; ++j){
             checkedCellIdx = (blockRowIdx * blockRows + i) * blockRows*blockColumns + blockColIdx * blockColumns + j;
             checkedCellValue = (cells[checkedCellIdx])->value;
-            impossibleValues[checkedCellValue - 1] = 1;
+            if (checkedCellValue > 0){
+                impossibleValues[checkedCellValue - 1] = 1;
+            }
         }
     }
 }
