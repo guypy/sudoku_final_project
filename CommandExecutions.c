@@ -127,47 +127,40 @@ void executeAutofill(Game* game, Command* cmd) {
     LinkedList* valuesToFill = createList();
     Command* valueToSetCmd;
     char** args;
-    char *row, *column, *valueToSet;
 
     if (sb_isErroneous(game->board)){
         errPrinter_erroneousValues();
+        return;
     }
-    else{
-        blockRows = game->board->blockRows;
-        blockColumns = game->board->blockColumns;
-        numOfCells = (blockRows * blockRows) * (blockColumns * blockColumns);
-        for (i = 0; i < numOfCells; ++i){
-            if (game->board->cells[i]->value != 0){
-                continue;
-            }
-            impossibleValues = (int*)calloc((size_t) (blockColumns * blockRows), sizeof(int));
-            assert(impossibleValues);
-            updateImpossibleValuesForCell(game, game->board->cells[i], i, impossibleValues);
-            value = getPossValueForCell(impossibleValues, (blockRows * blockColumns));
-            if (value != -1) { // there is only one possible value
-                args = malloc(1024 * sizeof(char));
-                assert(args);
-                args[0] =(char*)malloc(snprintf(NULL, 0, "%d", (i % (blockRows * blockColumns))));
-                sprintf(args[0], "%d", (i % (blockRows * blockColumns)));
-                args[1] = (char*)malloc(snprintf(NULL, 0, "%d", i / (blockRows * blockColumns)));
-                sprintf(args[1], "%d", i / (blockRows * blockColumns));
-                args[2] = (char*)malloc(snprintf(NULL, 0, "%d", value));
-                sprintf(args[2], "%d", value);
-//                column = (char) ('0' + (i % (blockRows * blockColumns)));
-//                row = (char) ('0' + i / (blockRows * blockColumns));
-//                valueToSet = (char) ('0' + value);
-//                args[0] = &column; // column to set
-//                args[1] = &row; // row to set
-//                args[2] = &valueToSet; // value to set
-                valueToSetCmd = cmd_createCommand(args, "SET", NULL, 3);
-                append(valuesToFill, valueToSetCmd);
-            }
-            free(impossibleValues);
+    blockRows = game->board->blockRows;
+    blockColumns = game->board->blockColumns;
+    numOfCells = (blockRows * blockRows) * (blockColumns * blockColumns);
+    for (i = 0; i < numOfCells; ++i){
+        if (game->board->cells[i]->value != 0){
+            continue;
         }
-        autoFillValues(valuesToFill, game);
-        append(game->undoRedoList, cmd);
-        game->undoRedoList->tail->autoFillList = valuesToFill;
+        impossibleValues = (int*)calloc((size_t) (blockColumns * blockRows), sizeof(int));
+        assert(impossibleValues);
+        updateImpossibleValuesForCell(game, game->board->cells[i], i, impossibleValues);
+        value = getPossValueForCell(impossibleValues, (blockRows * blockColumns));
+        if (value != -1) { // there is only one possible value
+            args = malloc(1024 * sizeof(char));
+            assert(args);
+            args[0] =(char*)malloc(snprintf(NULL, 0, "%d", (i % (blockRows * blockColumns))));
+            sprintf(args[0], "%d", (i % (blockRows * blockColumns)));
+            args[1] = (char*)malloc(snprintf(NULL, 0, "%d", i / (blockRows * blockColumns)));
+            sprintf(args[1], "%d", i / (blockRows * blockColumns));
+            args[2] = (char*)malloc(snprintf(NULL, 0, "%d", value));
+            sprintf(args[2], "%d", value);
+            valueToSetCmd = cmd_createCommand(args, "SET", NULL, 3);
+            append(valuesToFill, valueToSetCmd);
+        }
+        free(impossibleValues);
     }
+    autoFillValues(valuesToFill, game);
+    append(game->undoRedoList, cmd);
+    game->undoRedoList->tail->autoFillList = valuesToFill;
+    sb_print(game->board, game->markErrors);
 }
 
 void autoFillValues(LinkedList* valuesToFill, Game* game){
