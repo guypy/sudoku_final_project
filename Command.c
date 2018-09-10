@@ -16,5 +16,6 @@ Command* cmd_createCommand(char** args, char * action, int* validModes, int numO
 void cmd_freeCommand(Command* cmd) {
     free(cmd->action);
     free(cmd->args);
+    free(cmd->validModes);
     free(cmd);
 }

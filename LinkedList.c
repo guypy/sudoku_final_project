@@ -17,6 +17,7 @@ void append(LinkedList * lst, Command * cmd) {
     node->next = NULL;
     node->data = cmd;
     node->prev = lst->tail;
+    node->autoFillList = NULL;
     if (lst->head == NULL)
         lst->head = node;
     if (lst->tail != NULL) {
@@ -26,29 +27,36 @@ void append(LinkedList * lst, Command * cmd) {
     lst->size++;
 }
 
-void delete(LinkedList * lst, Node* node) {
+void destroyNode(LinkedList *lst, Node *node) {
     if(lst->head == NULL || node == NULL)
         return;
-    if(lst->head == node)
+    if(lst->head == node){
         lst->head = node->next;
-    if(node->next != NULL)
+    }
+    if(node->next != NULL){
         node->next->prev = node->prev;
-    if(node->prev != NULL)
+    }
+    if(node->prev != NULL){
         node->prev->next = node->next;
+    }
     lst->size--;
+
+    if (node->autoFillList != NULL){
+        destroyList(node->autoFillList);
+    }
     free(node);
 }
 
-void deleteFromNode(LinkedList* lst, Node *node) {
+void destroyFromNode(LinkedList *lst, Node *node) {
     if (node == NULL) {
         return;
     }
-    deleteFromNode(lst, node->next);
-    delete(lst, node);
+    destroyFromNode(lst, node->next);
+    destroyNode(lst, node);
 }
 
 void destroyList(LinkedList * lst) {
-    deleteFromNode(lst, lst->head);
+    destroyFromNode(lst, lst->head);
     free(lst);
 }
 

@@ -11,7 +11,7 @@ Game* createGame(){
     game->mode = INIT;
     game->undoRedoList = createList();
     game->markErrors = true;
-    game->currentCommandInList = game->undoRedoList->tail;
+    game->undoRedoListPointer = game->undoRedoList->tail;
     return game;
 }
 

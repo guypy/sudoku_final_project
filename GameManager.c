@@ -63,7 +63,7 @@ bool validateCommand(Command *cmd, Game* game) {
         return validateNumSolutions(cmd);
     }
     if (strcmp(cmd->action, ACTION_AUTOFILL) == 0) {
-        return validateAutofill(cmd);
+        return validateAutofill(cmd, game);
     }
     if (strcmp(cmd->action, ACTION_RESET) == 0) {
         return validateReset(cmd);

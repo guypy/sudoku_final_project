@@ -7,6 +7,7 @@ typedef struct Node  {
     Command * data;
     struct Node* next;
     struct Node* prev;
+    struct LinkedList* autoFillList;
 } Node;
 
 typedef struct LinkedList {
@@ -17,8 +18,8 @@ typedef struct LinkedList {
 
 LinkedList* createList();
 void append(LinkedList * lst, Command * cmd);
-void delete(LinkedList * lst, Node* node);
-void deleteFromNode(LinkedList* lst, Node *node);
+void destroyNode(LinkedList *lst, Node *node);
+void destroyFromNode(LinkedList *lst, Node *node);
 void destroyList(LinkedList * lst);
 
 void printList(LinkedList * lst);

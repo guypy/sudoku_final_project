@@ -9,77 +9,77 @@
 #include "CommandValidations.h"
 
 int* getValidModesForAction(const char *action, int *validModes){
-    if (action == ACTION_SOLVE) {
+    if (strcmp(action, ACTION_SOLVE) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 1;
     }
-    if (action == ACTION_EDIT) {
+    if (strcmp(action, ACTION_EDIT) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 1;
     }
-    if (action == ACTION_MARK_ERRORS) {
+    if (strcmp(action, ACTION_MARK_ERRORS) == 0) {
         validModes[INIT] = 0;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 0;
     }
-    if (action == ACTION_PRINT_BOARD) {
+    if (strcmp(action, ACTION_PRINT_BOARD) == 0) {
         validModes[INIT] = 0;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 1;
     }
-    if (action == ACTION_SET) {
+    if (strcmp(action, ACTION_SET) == 0) {
         validModes[INIT] = 0;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 1;
     }
-    if (action == ACTION_VALIDATE) {
+    if (strcmp(action, ACTION_VALIDATE) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
     }
-    if (action == ACTION_GENERATE) {
+    if (strcmp(action, ACTION_GENERATE) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
     }
-    if (action == ACTION_UNDO) {
+    if (strcmp(action, ACTION_UNDO) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
     }
-    if (action == ACTION_REDO) {
+    if (strcmp(action, ACTION_REDO) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
     }
-    if (action == ACTION_SAVE) {
+    if (strcmp(action, ACTION_SAVE) == 0) {
         validModes[INIT] = 0;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 1;
     }
-    if (action == ACTION_HINT) {
+    if (strcmp(action, ACTION_HINT) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
     }
-    if (action == ACTION_NUM_SOLUTIONS) {
+    if (strcmp(action, ACTION_NUM_SOLUTIONS) == 0) {
         validModes[INIT] = 0;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 1;
     }
-    if (action == ACTION_AUTOFILL) {
+    if (strcmp(action, ACTION_AUTOFILL) == 0) {
+        validModes[INIT] = 0;
+        validModes[SOLVE] = 1;
+        validModes[EDIT] = 0;
+    }
+    if (strcmp(action, ACTION_RESET) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 0;
         validModes[EDIT] = 0;
     }
-    if (action == ACTION_RESET) {
-        validModes[INIT] = 1;
-        validModes[SOLVE] = 0;
-        validModes[EDIT] = 0;
-    }
-    if (action == ACTION_EXIT) {
+    if (strcmp(action, ACTION_EXIT) == 0) {
         validModes[INIT] = 1;
         validModes[SOLVE] = 1;
         validModes[EDIT] = 1;
@@ -117,8 +117,8 @@ Command* cmdMngr_fetchCommand() {
         numOfArgs++;
     }
 
-    int validModes[3];
-    Command* cmd = cmd_createCommand(args, action, getValidModesForAction(action, validModes), numOfArgs);
+    int* validModes = (int*)calloc(3, sizeof(int));
+    Command* cmd = cmd_createCommand(args, action, getValidModesForAction(action, &validModes[0]), numOfArgs);
 
     free(cmd_str);
     return cmd;

@@ -151,12 +151,12 @@ bool cell_isValid(SudokuBoard *sb, int cellValue, int idxInBoard){
 }
 
 bool checkRow(SudokuBoard* sb, int cellValue, int idxInBoard){
-    int value, i, cellRow;
+    int value, i, cellRow, checkedCellIdx;
     int n = sb->blockRows;
     int m = sb->blockColumns;
     cellRow = idxInBoard / (n*m);
     for (i = 0; i < (n*m); ++i){
-        int checkedCellIdx = cellRow*(n*m) + i;
+        checkedCellIdx = cellRow*(n*m) + i;
         if (idxInBoard == checkedCellIdx)
             continue;
         value = sb->cells[checkedCellIdx]->value;
