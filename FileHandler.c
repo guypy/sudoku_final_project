@@ -27,10 +27,9 @@ bool fileHandler_saveBoardToFile(SudokuBoard* board, char* path, bool allFixed) 
     for (int i = 0; i < n * n * m * m; i++) {
         Cell* cell = board->cells[i];
         fprintf(file, "%d", cell->value);
-        if (allFixed || cell->fixed){
+        if (cell->value != 0 && (allFixed || cell->fixed)){
             fprintf(file, ".");
         }
-        printf("%d", i % (n*m));
         if (i % (n*m) != n*m - 1){
             fprintf(file, " ");
         } else {

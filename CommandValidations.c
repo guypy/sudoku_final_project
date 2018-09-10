@@ -87,7 +87,6 @@ bool validateHint(Command* cmd) {
     return true;
 }
 bool validateNumSolutions(Command* cmd) {
-    //Here we will validate NumSolutions..
     return true;
 }
 bool validateAutofill(Command* cmd) {

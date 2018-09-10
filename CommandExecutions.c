@@ -102,7 +102,18 @@ void executeHint(Game* game, Command* cmd) {
 }
 
 void executeNumSolutions(Game* game, Command* cmd) {
-    printf("%d\n", BT_numberOfSolutions(game->board));
+    int numOfSolutions;
+    if (sb_isErroneous(game->board)) {
+        errPrinter_erroneousValues();
+        return;
+    }
+    numOfSolutions = BT_numberOfSolutions(game->board);
+    printf("Number of solutions: %d\n", numOfSolutions);
+    if (numOfSolutions == 1) {
+        printf("This is a good board!\n");
+    } else {
+        printf("The puzzle has more than 1 solution, try to edit it further\n");
+    }
 }
 
 void executeAutofill(Game* game, Command* cmd) {
