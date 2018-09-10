@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <printf.h>
 #include "CommandExecutions.h"
 #include "Game.h"
@@ -7,6 +8,8 @@
 #include "ErrorPrinter.h"
 #include "SudokuBoard.h"
 #include "BTSolver.h"
+
+void updateImpValuesInRow(int *impossibleValues);
 
 void executeSolve(Game* game, Command* cmd) {
     game->board = fileHandler_readBoardFromFile(cmd->args[0]);
@@ -131,8 +134,15 @@ void executeReset(Game* game, Command* cmd) {
 }
 
 int* getImpossibleValuesForCell(Game* game, Cell* cell, int index){
-    int blockRows, blockColumns;
+    int blockRows, blockColumns, cellRow;
+    int* impossibleValues;
     blockRows = game->board->blockRows;
     blockColumns = game ->board->blockColumns;
+    impossibleValues = (int*)calloc((size_t) (blockColumns * blockRows), sizeof(int));
+    cellRow = index / (blockRows*blockColumns);
+//    updateImpValuesInRow(impossibleValues, cellRow);
+}
+
+void updateImpValuesInRow(int *impossibleValues) {
 
 }
