@@ -222,7 +222,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
 
     copySolution(solvedBoard, solutionMatrix);
 
-    freeResources(env,model, NULL, solutionMatrix);
+    /*freeResources(env, model, NULL, solutionMatrix);*/
     *resultCode = SOLVED;
     return solvedBoard;
 }
