@@ -374,5 +374,3 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
 void executeReset(Game* game, Command* cmd) {
     /*Here we will execute Reset..*/
 }
-
-#pragma clang diagnostic pop

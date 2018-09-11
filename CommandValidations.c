@@ -3,8 +3,6 @@
 #include <string.h>
 #include "CommandValidations.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
 bool validateSolve(Command* cmd) {
     if (cmd->numOfArgs < 1)
         return false;
@@ -102,5 +100,3 @@ bool isNaN(char *arg){
     }
     return false;
 }
-
-#pragma clang diagnostic pop
