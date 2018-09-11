@@ -4,73 +4,6 @@
 #include "ILPSolver.h"
 #include "gurobi_c.h"
 
-#define SOLVED 2
-
-SudokuBoard* ILP_solve(SudokuBoard* board) {
-    board = sb_deepCloneBoard(board);
-    GRBenv   *env   = NULL;
-    GRBmodel *model = NULL;
-    int error, optimizationStatus;
-    int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
-    double *solutionMatrix = calloc(boardSize, sizeof(double));
-    assert(solutionMatrix);
-
-    error = GRBloadenv(&env, "sudokuModel.log");
-    if (error) {
-        return NULL;
-    }
-
-    error = GRBnewmodel(env, &model, "sudokuModel", 0, NULL, NULL, NULL, NULL, NULL);
-    if (error) {
-        return NULL;
-    }
-
-    if (!addVariablesToModel(model, boardSize)) {
-        return NULL;
-    }
-
-    if(!addConstraints(model, board)) {
-        return NULL;
-    }
-
-    if (GRBsetintattr(model, GRB_INT_ATTR_MODELSENSE, GRB_MAXIMIZE) ||
-        GRBupdatemodel(model) ||
-        GRBoptimize(model) ||
-        GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimizationStatus)) {
-        return NULL;
-    }
-
-    if(optimizationStatus == SOLVED){
-        /* Get the solved board */
-        error = GRBgetdblattrarray(model, GRB_DBL_ATTR_X, 0, boardSize * board->blockRows * board->blockColumns, solutionMatrix);
-        if (error) {
-            return 0;
-        }
-    } else{
-        freeResources(env,model,val,obj,vtype,lb,ind);
-        return -1;
-    }
-    updateBoard(game, board, solutionMatrix);
-    free(ind); free(lb); free(vtype); free(obj); free(val);
-    GRBfreemodel(model);
-    GRBfreeenv(env);
-    /*freeResources(env,model,val,obj,vtype,lb,ind);*/
-    return 1;
-
-
-    return NULL;
-}
-
-bool addConstraints(GRBmodel *model, SudokuBoard* board) {
-    if (addNoEmptyCellConstraint(model, board->blockRows, board->blockColumns) &&
-        addRowConstraint(model, board->blockRows, board->blockColumns)         &&
-        addColumnConstraint(model, board->blockRows, board->blockColumns)      &&
-        addBlockConstraint (model, board->blockRows, board->blockColumns)) {
-        return true;
-    }
-    return false;
-}
-
 bool addVariablesToModel(GRBmodel *model, int boardSize) {
     int* coeffs;
     char* variableTypes;
@@ -197,3 +130,98 @@ bool addBlockConstraint(GRBmodel *model, int blockRows, int blockColumns){
     return true;
 }
 
+bool addConstraints(GRBmodel *model, SudokuBoard* board) {
+    if (addNoEmptyCellConstraint(model, board->blockRows, board->blockColumns) &&
+        addRowConstraint(model, board->blockRows, board->blockColumns)         &&
+        addColumnConstraint(model, board->blockRows, board->blockColumns)      &&
+        addBlockConstraint (model, board->blockRows, board->blockColumns)) {
+        return true;
+    }
+    return false;
+}
+
+void copySolution(SudokuBoard* board, const double *solutionMatrix) {
+    int row, column, k;
+    for (row = 0; row < board->blockRows * board->blockColumns; row++) {
+        for (column = 0; column < board->blockRows * board->blockColumns; column++) {
+            for (k = 1; k <= board->blockRows * board->blockColumns; k++) {
+                if(solutionMatrix[row*board->blockRows * board->blockColumns*board->blockRows * board->blockColumns + column*board->blockRows * board->blockColumns + k-1]){
+                    board->cells[row * (board->blockColumns * board->blockRows) + column]->value = k;
+                }
+            }
+        }
+    }
+}
+
+void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* solutionsMatrix) {
+    if (env != NULL)             GRBfreeenv(env);
+    if (model != NULL)           GRBfreemodel(model);
+    if (board != NULL)           sb_destroyBoard(board);
+    if (solutionsMatrix != NULL) free(solutionsMatrix);
+}
+
+SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
+    SudokuBoard* solvedBoard = sb_deepCloneBoard(board);
+    GRBenv   *env   = NULL;
+    GRBmodel *model = NULL;
+    int errorCode, optimizationStatus;
+    int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
+    double *solutionMatrix = calloc((size_t) boardSize, sizeof(double));
+    assert(solutionMatrix);
+
+    errorCode = GRBloadenv(&env, "sudokuModel.log");
+    if (errorCode) {
+        freeResources(env, model, solvedBoard, solutionMatrix);
+        *resultCode = ERROR;
+        return NULL;
+    }
+
+    errorCode = GRBnewmodel(env, &model, "sudokuModel", 0, NULL, NULL, NULL, NULL, NULL);
+    if (errorCode) {
+        freeResources(env, model, solvedBoard, solutionMatrix);
+        *resultCode = ERROR;
+        return NULL;
+    }
+
+    if (!addVariablesToModel(model, boardSize)) {
+        freeResources(env, model, solvedBoard, solutionMatrix);
+        *resultCode = ERROR;
+        return NULL;
+    }
+
+    if(!addConstraints(model, board)) {
+        freeResources(env, model, solvedBoard, solutionMatrix);
+        *resultCode = ERROR;
+        return NULL;
+    }
+
+    if (GRBsetintattr(model, GRB_INT_ATTR_MODELSENSE, GRB_MAXIMIZE) ||
+        GRBupdatemodel(model) ||
+        GRBoptimize(model) ||
+        GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimizationStatus)) {
+        freeResources(env, model, solvedBoard, solutionMatrix);
+        *resultCode = ERROR;
+        return NULL;
+    }
+
+    if(optimizationStatus == SOLVED){
+        errorCode = GRBgetdblattrarray(model, GRB_DBL_ATTR_X, 0, boardSize * board->blockRows * board->blockColumns, solutionMatrix);
+        if (errorCode) {
+            freeResources(env, model, solvedBoard, solutionMatrix);
+            *resultCode = ERROR;
+            return NULL;
+        }
+    } else{
+        freeResources(env, model, solvedBoard, solutionMatrix);
+        *resultCode = NO_SOLUTION;
+        return NULL;
+    }
+
+    copySolution(solvedBoard, solutionMatrix);
+
+    GRBfreemodel(model);
+    GRBfreeenv(env);
+    freeResources(env,model, NULL, solutionMatrix);
+    *resultCode = SOLVED;
+    return solvedBoard;
+}
