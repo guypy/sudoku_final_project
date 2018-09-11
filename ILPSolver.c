@@ -25,7 +25,7 @@ int createModel(GRBenv* env, GRBmodel* model, SudokuBoard* board){
             }
         }
     }
-    return GRBnewmodel(env, &model, NULL, 0, NULL, NULL, NULL, NULL, NULL);
+    return GRBnewmodel(env, &model, NULL, pow3(dim), NULL, lb, NULL, vtype, NULL);
 }
 
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
