@@ -31,7 +31,7 @@ void executeMarkErrors(Game* game, Command* cmd) {
     game->markErrors = (bool) atoi(cmd->args[0]);
 }
 
-void executePrintBoard(Game* game, Command __unused * cmd) {
+void executePrintBoard(Game* game, Command* cmd) {
     sb_print(game->board, (game->markErrors || game->mode == EDIT));
 }
 

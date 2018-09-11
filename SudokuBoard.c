@@ -3,6 +3,8 @@
 #include "SudokuBoard.h"
 #include "Game.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
 #define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
 
 SudokuBoard* sb_create(int blockRows, int blockColumns){
@@ -123,7 +125,7 @@ int sb_isFull(SudokuBoard *sb){
     return 1;
 }
 
-bool sb_isSolvable(SudokuBoard  __unused *board) {
+bool sb_isSolvable(SudokuBoard* board) {
     return true;
 }
 
@@ -207,3 +209,5 @@ bool checkBlock(SudokuBoard* sb, int cellValue, int idxInBoard) {
     }
     return true;
 }
+
+#pragma clang diagnostic pop
