@@ -8,6 +8,7 @@
 #include "Command.h"
 
 void executeSolve(Game* game, Command* cmd) {
+    restartGame(game);
     game->board = fileHandler_readBoardFromFile(cmd->args[0]);
     if (game->board == NULL) {
         errPrinter_fileDoesNotExist();
@@ -17,6 +18,7 @@ void executeSolve(Game* game, Command* cmd) {
 }
 
 void executeEdit(Game* game, Command* cmd) {
+    restartGame(game);
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
         if (game->board == NULL)
@@ -92,7 +94,7 @@ void executeGenerate(Game* game, Command* cmd) {
     /*//Here we will execute Generate..*/
 }
 
-void executeUndo(Game* game, Command* cmd) {
+void executeUndo(Game *game, bool shouldPrint) {
     Node* currentNode;
     char* action;
     currentNode = game->undoRedoListPointer;
@@ -102,14 +104,14 @@ void executeUndo(Game* game, Command* cmd) {
     }
     action = currentNode->data->action;
     if (strcmp(action, "set") == 0){
-        undoSetCmd(game);
+        undoSetCmd(game, shouldPrint);
     }
     if (strcmp(action, "autofill") == 0){
-        undoAutofillCmd(game);
+        undoAutofillCmd(game, shouldPrint);
     }
 }
 
-void undoAutofillCmd(Game* game){
+void undoAutofillCmd(Game* game, bool shouldPrint){
     int currentValue, prevValue, column, row, blockRows, blockColumns, idxToUndo;
     Node* nodeToUndo, *currentAutoFillNode;
     LinkedList* autoFillList;
@@ -127,7 +129,9 @@ void undoAutofillCmd(Game* game){
         game->board->cells[idxToUndo]->valid = cell_isValid(game->board, prevValue, idxToUndo);
         currentAutoFillNode = currentAutoFillNode->next;
     }
-    sb_print(game->board, game->markErrors);
+    if (shouldPrint == true){
+        sb_print(game->board, game->markErrors);
+    }
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
         currentValue = atoi(currentAutoFillNode->data->args[2]);
@@ -135,14 +139,16 @@ void undoAutofillCmd(Game* game){
         column = atoi(currentAutoFillNode->data->args[0]);
         row = atoi(currentAutoFillNode->data->args[1]);
 
-        printUndoStep(currentValue, prevValue, column, row);
+        if (shouldPrint == true){
+            printUndoStep(currentValue, prevValue, column, row);
+        }
 
         currentAutoFillNode = currentAutoFillNode->next;
     }
     game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
 
-void undoSetCmd(Game* game){
+void undoSetCmd(Game* game, bool shouldPrint){
     int currentValue, prevValue, column, row, idxToUndo, blockColumns, blockRows;
     Node* nodeToUndo;
     nodeToUndo = game->undoRedoListPointer;
@@ -156,9 +162,11 @@ void undoSetCmd(Game* game){
     game->board->cells[idxToUndo]->value = prevValue;
     game->board->cells[idxToUndo]->valid = cell_isValid(game->board, prevValue, idxToUndo);
 
-    sb_print(game->board, game->markErrors);
+    if (shouldPrint == true){
+        sb_print(game->board, game->markErrors);
 
-    printUndoStep(currentValue, prevValue, column, row);
+        printUndoStep(currentValue, prevValue, column, row);
+    }
 
     game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
@@ -524,5 +532,13 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
 }
 
 void executeReset(Game* game, Command* cmd) {
-    /*Here we will execute Reset..*/
+    bool shouldPrint = false;
+    Node* currentNode = game->undoRedoListPointer;
+    while (currentNode != NULL){
+        executeUndo(game, shouldPrint);
+        currentNode = currentNode->prev;
+    }
+    destroyList(game->undoRedoList);
+    game->undoRedoList = createList();
+    printf("Board reset\n");
 }
