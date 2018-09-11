@@ -115,7 +115,6 @@ void gameLoop(Game* game) {
     Command* cmd;
     while(true) {
         cmd = cmdMngr_fetchCommand();
-        printf("in gameloop args are %s %s %s\n", cmd->args[0],cmd->args[1],cmd->args[2]);
         if (validateMode(game, cmd) == false) {
             errPrinter_invalidCommand();
             cmd_freeCommand(cmd);

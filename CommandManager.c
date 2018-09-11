@@ -121,8 +121,6 @@ Command* cmdMngr_fetchCommand() {
     }
     validModes = (int*)calloc(3, sizeof(int));
     cmd = cmd_createCommand(args, action, getValidModesForAction(action, &validModes[0]), numOfArgs);
-    printf("before free args are %s %s %s\n", cmd->args[0],cmd->args[1],cmd->args[2]);
     free(cmd_str);
-    printf("after free args are %s %s %s\n", cmd->args[0],cmd->args[1],cmd->args[2]);
     return cmd;
 }

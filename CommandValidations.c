@@ -38,7 +38,6 @@ bool validateSet(Command *cmd, Game* game) {
     blockColumns = game->board->blockColumns;
     blockRows = game->board->blockRows;
     /* validate arguments are valid integers */
-    printf("set args are %s, %s, %s\n", cmd->args[0], cmd->args[1], cmd->args[2]);
     for (i = 0; i < 2; ++i){
         if (isNaN(cmd->args[i])){
             errPrinter_valueNotInRange(blockColumns*blockRows);
@@ -97,7 +96,6 @@ bool isNaN(char *arg){
     char c;
     for (i = 0; i < strlen(arg); ++i){
         c = arg[i];
-        printf("debug: c=%ec\n", c);
         if (c < 48 || c > 57){
             return true;
         }

@@ -2,31 +2,30 @@
 #include <assert.h>
 #include "stdio.h"
 #include "ILPSolver.h"
+#include "SudokuBoard.h"
 
-bool addVariablesToModel(GRBmodel *model, int boardSize) {
-    int* coeffs;
-    char* variableTypes;
-    int i;
+#define pow3(x) x*x*x
 
-    coeffs = calloc((size_t) boardSize, sizeof(int));
-    assert(coeffs);
-    variableTypes = calloc((size_t ) boardSize, sizeof(char));
-    assert(variableTypes);
+int createModel(GRBenv* env, GRBmodel* model, SudokuBoard* board){
+    int dim = board->blockColumns * board->blockRows;
+    char *vtype = (char*)calloc((size_t) pow3(dim), sizeof(char));
+    double *lb = (double*)calloc((size_t) pow3(dim), sizeof(double));
+    int row, column, value;
 
-    for (i = 0; i < boardSize; i++) {
-        coeffs[i] = 1;
-        variableTypes[i] = GRB_BINARY;
+    for (row = 0; row < dim; row++) {
+        for (column = 0; column < dim; column++) {
+            for (value = 1; value <= dim; value++) {
+                if (board->cells[row * (dim) + column]->value == value){
+                    lb[row*dim*dim+column*dim+value-1] = 1;
+                }
+                else{
+                    lb[row*dim*dim+column*dim+value-1] = 0;
+                }
+                vtype[row*dim*dim+column*dim+value-1] = GRB_BINARY;
+            }
+        }
     }
-    if (GRBaddvars(model, boardSize, 0, NULL, NULL, NULL, NULL, NULL, NULL, variableTypes, NULL) ||
-        GRBupdatemodel(model)) {
-        free(coeffs);
-        free(variableTypes);
-        return false;
-    }
-
-    free(coeffs);
-    free(variableTypes);
-    return true;
+    return GRBnewmodel(env, &model, NULL, 0, NULL, NULL, NULL, NULL, NULL);
 }
 
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
@@ -159,8 +158,8 @@ void copySolution(SudokuBoard* board, const double *solutionMatrix) {
 }
 
 void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* solutionsMatrix) {
-    if (env != NULL)             GRBfreeenv(env);
     if (model != NULL)           GRBfreemodel(model);
+    if (env != NULL)             GRBfreeenv(env);
     if (board != NULL)           sb_destroyBoard(board);
     if (solutionsMatrix != NULL) free(solutionsMatrix);
 }
@@ -182,18 +181,11 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
         return NULL;
     }
 
-    errorCode = GRBnewmodel(env, &model, NULL, 0, NULL, NULL, NULL, NULL, NULL);
+    errorCode = createModel(env, model, board);
     if (errorCode) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
         errPrinter_puzzleGurobiFailure("Create Model", errorCode);
-        return NULL;
-    }
-
-    if (!addVariablesToModel(model, boardSize)) {
-        freeResources(env, model, solvedBoard, solutionMatrix);
-        *resultCode = ERROR;
-        errPrinter_puzzleGurobiFailure("Adding variables to model", errorCode);
         return NULL;
     }
 

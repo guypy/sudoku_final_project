@@ -15,7 +15,11 @@ Command* cmd_createCommand(char** args, char * action, int* validModes, int numO
 }
 
 void cmd_freeCommand(Command* cmd) {
+    int i = 0;
     free(cmd->action);
+    for (i; i < cmd->numOfArgs; i++) {
+        free(cmd->args[i]);
+    }
     free(cmd->args);
     free(cmd->validModes);
     free(cmd);
