@@ -43,10 +43,11 @@ bool fileHandler_saveBoardToFile(SudokuBoard* board, char* path, bool allFixed) 
 
 SudokuBoard *parseFile(FILE *file) {
     int n = 0, m = 0, i = 0, c = 0;
-    SudokuBoard* board = sb_create(n, m);
+    SudokuBoard* board;
     Cell* cell;
     fscanf(file, "%d", &n);
     fscanf(file, "%d", &m);
+    board = sb_create(n, m);
     for (i = 0; i < n * n * m * m; i++) {
         cell = board->cells[i];
         fscanf(file, "%d", &cell->value);

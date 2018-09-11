@@ -101,7 +101,10 @@ Command* cmdMngr_fetchCommand() {
     printf("Enter your command:\n");
     /* Split input into tokens, cmdpt pointing to the first token. */
     while (cmdpt == NULL) {
-        fgets(cmd_str, 1024, stdin);
+        if (fgets(cmd_str, 1024, stdin) == NULL) {
+            errPrinter_invalidCommand();
+            return NULL;
+        }
         cmdpt = strtok(cmd_str, " \t\r\n");
     }
 
