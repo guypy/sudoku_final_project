@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "SudokuBoard.h"
 #include "Game.h"
+#include "ILPSolver.h"
 
 #define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
 
@@ -124,7 +125,11 @@ int sb_isFull(SudokuBoard *sb){
 }
 
 bool sb_isSolvable(SudokuBoard* board) {
-    return true;
+    int resultCode = 0;
+    ILP_solve(board, &resultCode);
+    if (resultCode == SOLVED)
+        return true;
+    return false;
 }
 
 bool sb_isErroneous(SudokuBoard *board) {
