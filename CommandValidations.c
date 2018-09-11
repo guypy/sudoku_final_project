@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "CommandValidations.h"
 
@@ -94,6 +95,7 @@ bool isNaN(char *arg){
     char c;
     for (i = 0; i < strlen(arg); ++i){
         c = arg[i];
+        printf("debug: c=%c\n", c);
         if (c < 48 || c > 57){
             return true;
         }
