@@ -1,7 +1,9 @@
 #ifndef SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 #define SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 
+#include "ErrorPrinter.h"
 #include "Command.h"
+#include "SudokuBoard.h"
 #include "Game.h"
 
 bool isNaN(char *arg);

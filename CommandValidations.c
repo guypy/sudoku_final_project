@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "CommandValidations.h"
-#include "ErrorPrinter.h"
-#include "Command.h"
-#include "SudokuBoard.h"
-#include "Game.h"
 
 bool validateSolve(Command* cmd) {
     if (cmd->numOfArgs < 1)

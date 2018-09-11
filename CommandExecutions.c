@@ -4,13 +4,6 @@
 #include <assert.h>
 #include <string.h>
 #include "CommandExecutions.h"
-#include "Game.h"
-#include "Command.h"
-#include "FileHandler.h"
-#include "ErrorPrinter.h"
-#include "SudokuBoard.h"
-#include "BTSolver.h"
-#include "ILPSolver.h"
 
 void destroyNextNodesBeforeAppend(const Game *game);
 

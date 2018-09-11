@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "FileHandler.h"
-#include "SudokuBoard.h"
-#include "ErrorPrinter.h"
 
 SudokuBoard* fileHandler_readBoardFromFile(char* path) {
     FILE *file = fopen(path, "r");

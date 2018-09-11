@@ -4,9 +4,6 @@
 #include <assert.h>
 #include "stdio.h"
 #include "CommandManager.h"
-#include "Command.h"
-#include "Game.h"
-#include "CommandValidations.h"
 
 int* getValidModesForAction(const char *action, int *validModes){
     if (strcmp(action, ACTION_SOLVE) == 0) {

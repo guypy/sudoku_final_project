@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include "BTSolver.h"
-#include "Stack.h"
-#include "SudokuBoard.h"
 
 void clearExhaustedValues(Cell* cell, int len){
     int i;

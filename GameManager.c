@@ -2,14 +2,6 @@
 #include <string.h>
 #include "stdio.h"
 #include "GameManager.h"
-#include "Game.h"
-#include "CommandManager.h"
-#include "Command.h"
-#include "ErrorPrinter.h"
-#include "CommandExecutions.h"
-#include "Command.h"
-#include "CommandValidations.h"
-#include "SudokuBoard.h"
 
 int startGame() {
     Game* game = createGame();

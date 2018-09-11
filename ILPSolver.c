@@ -2,8 +2,6 @@
 #include <assert.h>
 #include "stdio.h"
 #include "ILPSolver.h"
-#include "gurobi_c.h"
-#include "ErrorPrinter.h"
 
 bool addVariablesToModel(GRBmodel *model, int boardSize) {
     int* coeffs;
