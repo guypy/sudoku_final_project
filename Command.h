@@ -3,13 +3,13 @@
 
 typedef struct {
     char* action;
-    char** args; //Array of arguments
+    char** args;
     int * validModes;
     int numOfArgs;
-    int prevValue; //relevant only for commands that change the value of a cell - set, autofill
+    int prevValue; /* Relevant only for commands that change the value of a cell - set, autofill */
 } Command;
 
 Command* cmd_createCommand(char** args, char * action, int* validModes, int numOfArgs);
 void cmd_freeCommand(Command* cmd);
 
-#endif //SUDOKU_CONSOLE_COMMAND_H
+#endif

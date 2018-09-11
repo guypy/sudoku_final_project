@@ -22,7 +22,4 @@ void destroyNode(LinkedList *lst, Node *node);
 void destroyFromNode(LinkedList *lst, Node *node);
 void destroyList(LinkedList * lst);
 
-void printList(LinkedList * lst);
-
-
-#endif //SUDOKU_CONSOLE_LINKEDLIST_H
+#endif

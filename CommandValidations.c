@@ -1,11 +1,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "CommandValidations.h"
-#include "ErrorPrinter.h"
 #include "Command.h"
-#include "SudokuBoard.h"
-#include "Game.h"
 
 bool validateSolve(Command* cmd) {
     if (cmd->numOfArgs < 1)
@@ -18,25 +16,25 @@ bool validateEdit(Command* cmd) {
 }
 
 bool validateMarkErrors(Command* cmd) {
-    //One argument - can only be 0 or 1.
+    /*One argument - can only be 0 or 1.*/
+    int arg;
     if (cmd->numOfArgs != 1)
         return false;
     if (isNaN(cmd->args[0]))
         return false;
-    int arg = atoi(cmd->args[0]);
+    arg = atoi(cmd->args[0]);
     if (arg != 0 && arg != 1)
         return false;
     return true;
 }
 
 bool validatePrintBoard(Command* cmd) {
-    //No Validations For this command.
     return true;
 }
 
 bool validateSet(Command *cmd, Game* game) {
     Cell* cell;
-    int i, arg, column, row, value_to_enter, idx, blockColumns, blockRows;
+    int i, column, row, idx, blockColumns, blockRows;
     blockColumns = game->board->blockColumns;
     blockRows = game->board->blockRows;
     /* validate arguments are valid integers */
@@ -59,12 +57,10 @@ bool validateSet(Command *cmd, Game* game) {
 }
 
 bool validateValidate(Command* cmd) {
-    //Here we will validate Validate..
     return true;
 }
 
 bool validateGenerate(Command* cmd) {
-    //Here we will validate Generate..
     return true;
 }
 
@@ -73,7 +69,6 @@ bool validateUndo(Command* cmd) {
 }
 
 bool validateRedo(Command* cmd) {
-    //Here we will validate Redo..
     return true;
 }
 bool validateSave(Command* cmd) {
@@ -82,7 +77,6 @@ bool validateSave(Command* cmd) {
     return true;
 }
 bool validateHint(Command* cmd) {
-    //Here we will validate Hint..
     return true;
 }
 bool validateNumSolutions(Command* cmd) {
@@ -92,15 +86,13 @@ bool validateAutofill(Command* cmd, Game* game) {
     return true;
 }
 bool validateReset(Command* cmd) {
-    //Here we will validate Reset..
     return true;
 }
 bool validateExit(Command* cmd) {
-    //No Validations For this command.
     return true;
 }
 bool isNaN(char *arg){
-    int i;
+    size_t i;
     char c;
     for (i = 0; i < strlen(arg); ++i){
         c = arg[i];

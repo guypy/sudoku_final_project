@@ -2,6 +2,8 @@
 #define SUDOKU_CONSOLE_INPUTMANAGER_H
 
 #include "Command.h"
+#include "Game.h"
+#include "CommandValidations.h"
 
 #define ACTION_SOLVE "solve"
 #define ACTION_EDIT "edit"
@@ -21,7 +23,7 @@
 
 Command* cmdMngr_fetchCommand();
 
-#endif //SUDOKU_CONSOLE_INPUTMANAGER_H
+#endif
 
 
 

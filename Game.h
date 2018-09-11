@@ -13,8 +13,6 @@
 
 typedef struct {
     int mode;
-    int rows;
-    int columns;
     bool markErrors;
     SudokuBoard* board;
     SudokuBoard* solvedBoard;
@@ -25,4 +23,4 @@ typedef struct {
 Game* createGame();
 void destroyGame(Game * game);
 
-#endif //SUDOKU_CONSOLE_GAME_H
+#endif

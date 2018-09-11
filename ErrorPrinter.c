@@ -64,3 +64,7 @@ void errPrinter_valueIsNotZeroOrOne(){
 void errPrinter_puzzleSolutioinErroneous(){
     printf("Puzzle solution erroneous\n");
 }
+
+void errPrinter_puzzleGurobiFailure(char* error, int errorCode){
+    printf("Puzzle solving failed due to gurobi failure: %s, %d\n", error, errorCode);
+}

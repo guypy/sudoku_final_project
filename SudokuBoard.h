@@ -13,7 +13,7 @@ typedef struct {
 typedef struct{
     int blockRows;
     int blockColumns;
-    Cell** cells; //Array of size blockRows * blockRows * blockColumns * blockColumns
+    Cell** cells;
 } SudokuBoard;
 
 SudokuBoard* sb_create(int blockRows, int blockColumns);
@@ -31,4 +31,4 @@ bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard);
 bool checkBlock(SudokuBoard* sb, int cell_value, int idxInBoard);
 bool isCellFixed(Cell *cell);
 
-#endif //SUDOKU_CONSOLE_SUDOKUBOARD_H
+#endif

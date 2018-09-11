@@ -1,8 +1,13 @@
 #ifndef SUDOKU_CONSOLE_COMMANDEXECUTIONS_H
 #define SUDOKU_CONSOLE_COMMANDEXECUTIONS_H
 
-#include "Command.h"
 #include "Game.h"
+#include "Command.h"
+#include "FileHandler.h"
+#include "ErrorPrinter.h"
+#include "SudokuBoard.h"
+#include "BTSolver.h"
+#include "ILPSolver.h"
 
 void executeSolve(Game* game, Command* cmd);
 void executeEdit(Game* game, Command* cmd);
@@ -28,4 +33,4 @@ void undoSetCmd(Game* game);
 void printUndoStep(int currentValue, int prevValue, int column, int row);
 void undoAutofillCmd(Game* game);
 
-#endif //SUDOKU_CONSOLE_COMMANDEXECUTIONS_H
+#endif

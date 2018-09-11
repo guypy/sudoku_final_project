@@ -1,7 +1,9 @@
 #ifndef SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 #define SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
 
+#include "ErrorPrinter.h"
 #include "Command.h"
+#include "SudokuBoard.h"
 #include "Game.h"
 
 bool isNaN(char *arg);
@@ -21,4 +23,4 @@ bool validateAutofill(Command* cmd, Game* game);
 bool validateReset(Command* cmd);
 bool validateExit(Command* cmd);
 
-#endif //SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
+#endif

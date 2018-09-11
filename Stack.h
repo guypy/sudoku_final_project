@@ -18,4 +18,4 @@ void stack_push(Stack* stack, int cellIdx, int value);
 void stack_destroy(Stack* stack);
 
 
-#endif //SUDOKU_CONSOLE_STACK_H
+#endif

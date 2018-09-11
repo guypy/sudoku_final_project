@@ -47,7 +47,8 @@ bool isCellFixed(Cell *cell){
 }
 
 void printDashes(int n, int m) {
-    for (int i = 0; i < 4 * n * n + m + 1; i++)
+    int i;
+    for (i = 0; i < 4 * n * n + m + 1; i++)
         printf("-");
 }
 
@@ -122,13 +123,14 @@ int sb_isFull(SudokuBoard *sb){
     return 1;
 }
 
-bool sb_isSolvable(SudokuBoard *board) {
+bool sb_isSolvable(SudokuBoard* board) {
     return true;
 }
 
 bool sb_isErroneous(SudokuBoard *board) {
+    int i;
     sb_cellValidations(board);
-    for (int i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i) {
+    for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i) {
         if (!board->cells[i]->valid)
             return true;
     }
