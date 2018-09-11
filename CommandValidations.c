@@ -59,7 +59,6 @@ bool validateSet(Command *cmd, Game* game) {
 }
 
 bool validateValidate(Command* cmd) {
-    //Here we will validate Validate..
     return true;
 }
 

@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "ILPSolver.h"
 #include "gurobi_c.h"
+#include "ErrorPrinter.h"
 
 bool addVariablesToModel(GRBmodel *model, int boardSize) {
     int* coeffs;
@@ -169,29 +170,33 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
     double *solutionMatrix = calloc((size_t) boardSize, sizeof(double));
     assert(solutionMatrix);
 
-    errorCode = GRBloadenv(&env, "sudokuModel.log");
+    errorCode = GRBloadenv(&env, NULL);
     if (errorCode) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
+        errPrinter_puzzleGurobiFailure("Load env");
         return NULL;
     }
 
-    errorCode = GRBnewmodel(env, &model, "sudokuModel", 0, NULL, NULL, NULL, NULL, NULL);
+    errorCode = GRBnewmodel(env, &model, NULL, 0, NULL, NULL, NULL, NULL, NULL);
     if (errorCode) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
+        errPrinter_puzzleGurobiFailure("Create Model");
         return NULL;
     }
 
     if (!addVariablesToModel(model, boardSize)) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
+        errPrinter_puzzleGurobiFailure("Adding variables to model");
         return NULL;
     }
 
     if(!addConstraints(model, board)) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
+        errPrinter_puzzleGurobiFailure("Adding constraints");
         return NULL;
     }
 
@@ -201,6 +206,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
         GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimizationStatus)) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
+        errPrinter_puzzleGurobiFailure("Running Optimization");
         return NULL;
     }
 
@@ -209,6 +215,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
         if (errorCode) {
             freeResources(env, model, solvedBoard, solutionMatrix);
             *resultCode = ERROR;
+            errPrinter_puzzleGurobiFailure("Getting solution");
             return NULL;
         }
     } else{

@@ -10,6 +10,7 @@
 #include "ErrorPrinter.h"
 #include "SudokuBoard.h"
 #include "BTSolver.h"
+#include "ILPSolver.h"
 
 void destroyNextNodesBeforeAppend(const Game *game);
 
@@ -71,7 +72,23 @@ void executeSet(Game* game, Command* cmd) {
 }
 
 void executeValidate(Game* game, Command* cmd) {
-    //Here we will execute Validate..
+    int resultCode = 0;
+    if (sb_isErroneous(game->board)) {
+        errPrinter_erroneousValues();
+        return;
+    }
+    SudokuBoard* solved = ILP_solve(game->board, &resultCode);
+    switch (resultCode) {
+        case SOLVED:
+            game->solvedBoard = solved;
+            printf("Validation passed: board is solvable\n");
+            break;
+        case NO_SOLUTION:
+            printf("Validation failed: board is unsolvable\n");
+        case ERROR:
+        default:
+            return;
+    }
 }
 
 void executeGenerate(Game* game, Command* cmd) {

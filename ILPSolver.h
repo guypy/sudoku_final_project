@@ -6,5 +6,6 @@
 #define NO_SOLUTION 1
 #define ERROR 0
 
+SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode);
 
 #endif //SUDOKU_CONSOLE_ILPSOLVER_H
