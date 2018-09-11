@@ -3,8 +3,9 @@
 #include <assert.h>
 #include <string.h>
 #include "CommandExecutions.h"
-
-void destroyNextNodesBeforeAppend(const Game *game);
+#include "Game.h"
+#include "SudokuBoard.h"
+#include "Command.h"
 
 void executeSolve(Game* game, Command* cmd) {
     game->board = fileHandler_readBoardFromFile(cmd->args[0]);
@@ -39,11 +40,14 @@ void executeSet(Game* game, Command* cmd) {
     int valueToSet, blockColumns, blockRows, idx, column, row, oldValue;
     blockColumns = game->board->blockColumns;
     blockRows = game->board->blockRows;
+
     column = atoi(cmd->args[0]) - 1;
     row = atoi(cmd->args[1]) - 1;
     idx = row * (blockColumns*blockRows) + column;
+
     cell = game->board->cells[idx];
     valueToSet = atoi(cmd->args[2]);
+
     cell->valid = cell_isValid(game->board, valueToSet, idx);
     oldValue = game->board->cells[idx]->value;
     cmd->prevValue = oldValue;
@@ -54,7 +58,7 @@ void executeSet(Game* game, Command* cmd) {
     sb_print(game->board, game->markErrors);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
-            errPrinter_puzzleSolutioinErroneous();
+            errPrinter_puzzleSolutionErroneous();
         }
         else{
             printf("Puzzle solved successfully\n");
@@ -195,7 +199,40 @@ void executeSave(Game* game, Command* cmd) {
 }
 
 void executeHint(Game* game, Command* cmd) {
-    /*Here we will execute Hint..*/
+    int blockColumns, blockRows, cellIdx, cellColumn, cellRow, resultCode;
+    SudokuBoard* solved;
+    blockColumns = game->board->blockColumns;
+    blockRows = game->board->blockRows;
+
+    cellColumn = atoi(cmd->args[0]) - 1;
+    cellRow = atoi(cmd->args[1]) - 1;
+
+    if (sb_isErroneous(game->board)) {
+        errPrinter_erroneousValues();
+        return;
+    }
+
+    cellIdx = cellRow * (blockColumns*blockRows) + cellColumn;
+    if(game->board->cells[cellIdx]->fixed) {
+        errPrinter_fixedCell();
+        return;
+    }
+    if(game->board->cells[cellIdx]->value) {
+        errPrinter_cellContainsValue();
+        return;
+    }
+
+    solved = ILP_solve(game->board, &resultCode);
+    switch (resultCode) {
+        case SOLVED:
+            printf("Hint: set cell to %d\n", solved->cells[cellIdx]->value);
+            break;
+        case NO_SOLUTION:
+            errPrinter_unsolvableBoard();
+        case ERROR:
+        default:
+            return;
+    }
 }
 
 void executeNumSolutions(Game* game, Command * cmd) {
@@ -259,7 +296,7 @@ void executeAutofill(Game* game, Command* cmd) {
     sb_print(game->board, game->markErrors);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
-            errPrinter_puzzleSolutioinErroneous();
+            errPrinter_puzzleSolutionErroneous();
         }
         else{
             printf("Puzzle solved successfully\n");
@@ -321,7 +358,6 @@ int getPossValueForCell(int *impossibleValues, int size){
     return possValue;
 }
 
-
 void updateImpossibleValuesForCell(Game *game, Cell *cell, int index, int *impossibleValues){
     int blockRows, blockColumns, cellRow, cellCol;
     blockRows = game->board->blockRows;
@@ -372,4 +408,16 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
 
 void executeReset(Game* game, Command* cmd) {
     /*Here we will execute Reset..*/
+}
+
+bool isNaN(char *arg){
+    size_t i;
+    char c;
+    for (i = 0; i < strlen(arg); ++i){
+        c = arg[i];
+        if (c < 48 || c > 57){
+            return true;
+        }
+    }
+    return false;
 }

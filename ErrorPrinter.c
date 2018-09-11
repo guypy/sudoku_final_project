@@ -61,7 +61,7 @@ void errPrinter_valueIsNotZeroOrOne(){
     printf("Error: the value should be 0 or 1\n");
 }
 
-void errPrinter_puzzleSolutioinErroneous(){
+void errPrinter_puzzleSolutionErroneous(){
     printf("Puzzle solution erroneous\n");
 }
 

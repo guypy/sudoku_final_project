@@ -4,6 +4,8 @@
 #include <string.h>
 #include "CommandValidations.h"
 #include "Command.h"
+#include "Game.h"
+#include "SudokuBoard.h"
 
 bool validateSolve(Command* cmd) {
     if (cmd->numOfArgs < 1)
@@ -16,15 +18,19 @@ bool validateEdit(Command* cmd) {
 }
 
 bool validateMarkErrors(Command* cmd) {
-    /*One argument - can only be 0 or 1.*/
     int arg;
-    if (cmd->numOfArgs != 1)
+    if (cmd->numOfArgs < 1) {
         return false;
-    if (isNaN(cmd->args[0]))
+    }
+    if (isNaN(cmd->args[0])) {
+        errPrinter_valueIsNotZeroOrOne();
         return false;
+    }
     arg = atoi(cmd->args[0]);
-    if (arg != 0 && arg != 1)
+    if (arg != 0 && arg != 1){
+        errPrinter_valueIsNotZeroOrOne();
         return false;
+    }
     return true;
 }
 
@@ -35,6 +41,10 @@ bool validatePrintBoard(Command* cmd) {
 bool validateSet(Command *cmd, Game* game) {
     Cell* cell;
     int i, column, row, idx, blockColumns, blockRows;
+
+    if(cmd->numOfArgs < 3) {
+        return false;
+    }
     blockColumns = game->board->blockColumns;
     blockRows = game->board->blockRows;
     /* validate arguments are valid integers */
@@ -71,34 +81,48 @@ bool validateUndo(Command* cmd) {
 bool validateRedo(Command* cmd) {
     return true;
 }
+
 bool validateSave(Command* cmd) {
     if (cmd->numOfArgs < 1)
         return false;
     return true;
 }
-bool validateHint(Command* cmd) {
+
+bool validateHint(Command* cmd, Game* game) {
+    int cellColumn, cellRow;
+    int blockColumns = game->board->blockColumns;
+    int blockRows = game->board->blockRows;
+
+    if (cmd->numOfArgs < 2)
+        return false;
+
+    if (isNaN(cmd->args[0]) || isNaN(cmd->args[1])){
+        errPrinter_valueNotInRange(blockColumns * blockRows);
+        return false;
+    }
+
+    cellColumn = atoi(cmd->args[0]);
+    cellRow = atoi(cmd->args[1]);
+
+    if (cellColumn > blockColumns * blockRows || cellColumn < 1 || cellRow > blockColumns * blockRows || cellRow < 1) {
+        errPrinter_valueNotInRange(blockColumns * blockRows);
+        return false;
+    }
     return true;
 }
+
 bool validateNumSolutions(Command* cmd) {
     return true;
 }
+
 bool validateAutofill(Command* cmd, Game* game) {
     return true;
 }
+
 bool validateReset(Command* cmd) {
     return true;
 }
+
 bool validateExit(Command* cmd) {
     return true;
-}
-bool isNaN(char *arg){
-    size_t i;
-    char c;
-    for (i = 0; i < strlen(arg); ++i){
-        c = arg[i];
-        if (c < 48 || c > 57){
-            return true;
-        }
-    }
-    return false;
 }

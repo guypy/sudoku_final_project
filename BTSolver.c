@@ -17,7 +17,8 @@ void setAllFilledCellsAsFixed(SudokuBoard* board){
     }
 }
 
-int BT_numberOfSolutions(SudokuBoard* board){
+SudokuBoard* BT_numberOfSolutions(SudokuBoard* board){
+/*int BT_numberOfSolutions(SudokuBoard* board){*/
     int i = 0, numOfSolutions = 0, value;
     const int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
     Stack * stack = stack_create();
@@ -25,7 +26,6 @@ int BT_numberOfSolutions(SudokuBoard* board){
     Cell* cell;
     board = sb_deepCloneBoard(board);
     setAllFilledCellsAsFixed(board);
-
 
     while (i < boardSize && board->cells[i]->fixed != 0){
         ++i;
@@ -35,7 +35,8 @@ int BT_numberOfSolutions(SudokuBoard* board){
         cell = board->cells[i];
 
         if (i == boardSize){
-            ++numOfSolutions;
+            return board;
+            /*++numOfSolutions;*/
         } else {
             /*Pushing all non-exhausted values of the cell to the stack.*/
             for (value = 1; value < board->blockRows * board->blockColumns + 1; value++) {
@@ -74,5 +75,6 @@ int BT_numberOfSolutions(SudokuBoard* board){
 
     stack_destroy(stack);
     sb_destroyBoard(board);
-    return numOfSolutions;
+    return board;
+    /*return numOfSolutions;*/
 }

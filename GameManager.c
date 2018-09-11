@@ -49,7 +49,7 @@ bool validateCommand(Command *cmd, Game* game) {
         return validateSave(cmd);
     }
     if (strcmp(cmd->action, ACTION_HINT) == 0) {
-        return validateHint(cmd);
+        return validateHint(cmd, game);
     }
     if (strcmp(cmd->action, ACTION_NUM_SOLUTIONS) == 0) {
         return validateNumSolutions(cmd);

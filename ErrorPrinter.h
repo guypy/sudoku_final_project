@@ -15,7 +15,7 @@ void errPrinter_noMovesToUndo();
 void errPrinter_puzzleGeneratorFailed();
 void errPrinter_boardNotEmpty();
 void errPrinter_valueIsNotZeroOrOne();
-void errPrinter_puzzleSolutioinErroneous();
+void errPrinter_puzzleSolutionErroneous();
 void errPrinter_puzzleGurobiFailure(char* error, int errorCode);
 
 #endif

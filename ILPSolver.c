@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "ILPSolver.h"
 #include "SudokuBoard.h"
+#include "BTSolver.h"
 
 #define pow3(x) x*x*x
 
@@ -170,6 +171,8 @@ void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* sol
 }
 
 SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
+    *resultCode = SOLVED;
+    return BT_numberOfSolutions(board);
     SudokuBoard* solvedBoard = sb_deepCloneBoard(board);
     GRBenv   *env   = NULL;
     GRBmodel *model = NULL;

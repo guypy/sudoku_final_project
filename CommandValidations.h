@@ -17,7 +17,7 @@ bool validateGenerate(Command* cmd);
 bool validateUndo(Command* cmd);
 bool validateRedo(Command* cmd);
 bool validateSave(Command* cmd);
-bool validateHint(Command* cmd);
+bool validateHint(Command* cmd, Game* game);
 bool validateNumSolutions(Command* cmd);
 bool validateAutofill(Command* cmd, Game* game);
 bool validateReset(Command* cmd);

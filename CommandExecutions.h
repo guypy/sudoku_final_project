@@ -32,5 +32,7 @@ void autoFillValues(LinkedList* valuesToFill, Game* game);
 void undoSetCmd(Game* game);
 void printUndoStep(int currentValue, int prevValue, int column, int row);
 void undoAutofillCmd(Game* game);
+void destroyNextNodesBeforeAppend(const Game *game);
+bool isNaN(char *arg);
 
 #endif
