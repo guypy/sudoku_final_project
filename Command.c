@@ -9,7 +9,7 @@ Command* cmd_createCommand(char** args, char * action, int* validModes, int numO
     cmd->args = args;
     cmd->validModes = validModes;
     cmd->numOfArgs = numOfArgs;
-
+    cmd->prevValue = -1;
     return cmd;
 }
 

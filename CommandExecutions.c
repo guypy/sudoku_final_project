@@ -41,7 +41,7 @@ void executePrintBoard(Game* game, Command* cmd) {
 
 void executeSet(Game* game, Command* cmd) {
     Cell* cell;
-    int valueToSet, blockColumns, blockRows, idx, column, row;
+    int valueToSet, blockColumns, blockRows, idx, column, row, oldValue;
     Node* undoRedoListPointer;
     blockColumns = game->board->blockColumns;
     blockRows = game->board->blockRows;
@@ -51,6 +51,8 @@ void executeSet(Game* game, Command* cmd) {
     cell = game->board->cells[idx];
     valueToSet = atoi(cmd->args[2]);
     cell->valid = cell_isValid(game->board, valueToSet, idx);
+    oldValue = game->board->cells[idx]->value;
+    cmd->prevValue = oldValue;
     game->board->cells[idx]->value = valueToSet;
     undoRedoListPointer = game->undoRedoListPointer;
     if (undoRedoListPointer != NULL){
@@ -79,7 +81,46 @@ void executeGenerate(Game* game, Command* cmd) {
 }
 
 void executeUndo(Game* game, Command* cmd) {
-    //Here we will execute Undo..
+//    Node* currentNode;
+//    char* action;
+//    currentNode = game->undoRedoListPointer;
+//    if (currentNode == NULL){
+//        errPrinter_noMovesToUndo();
+//        return;
+//    }
+//    action = currentNode->data->action;
+//    if (strcmp(action, "set") == 0){
+//        undoNode(game, currentNode);
+//    }
+//    if (strcmp(action, "autofill") == 0){
+//        asdjfalsd
+//    }
+}
+
+void undoNode(Game* game, Node* nodeToUndo){
+    int row, column, currentValue, prevValue, idxToUndo, blockRows, blockColumns;
+    blockRows = game->board->blockRows;
+    blockColumns = game->board->blockColumns;
+    column = atoi(nodeToUndo->data->args[0]);
+    row = atoi(nodeToUndo->data->args[1]);
+    currentValue = atoi(nodeToUndo->data->args[2]);
+    prevValue = nodeToUndo->data->prevValue;
+    idxToUndo = row * (blockColumns*blockRows) + column;
+    game->board->cells[idxToUndo]->value = prevValue;
+    game->board->cells[idxToUndo]->valid = cell_isValid(game->board, prevValue, idxToUndo);
+    if (currentValue == 0 && prevValue == 0){
+        printf("Undo %d,%d: from _ to _\n", column, row);
+    }
+    if (currentValue == 0 && prevValue != 0){
+        printf("Undo %d,%d: from _ to %d\n", column, row, prevValue);
+    }
+    if (currentValue != 0 && prevValue == 0){
+        printf("Undo %d,%d: from %d to _\n", column, row, currentValue);
+    }
+    if (currentValue != 0 && prevValue != 0){
+        printf("Undo %d,%d: from %d to %d\n", column, row, currentValue, prevValue);
+    }
+    game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
 
 void executeRedo(Game* game, Command* cmd) {
@@ -157,16 +198,35 @@ void executeAutofill(Game* game, Command* cmd) {
         }
         free(impossibleValues);
     }
-    autoFillValues(valuesToFill, game);
-    append(game->undoRedoList, cmd);
-    game->undoRedoList->tail->autoFillList = valuesToFill;
+    if (valuesToFill->size > 0){
+        autoFillValues(valuesToFill, game);
+        if (game->undoRedoListPointer != NULL){
+            destroyFromNode(game->undoRedoList, game->undoRedoListPointer->next);
+        }
+        append(game->undoRedoList, cmd);
+        game->undoRedoList->tail->autoFillList = valuesToFill; /* make the 'autofill node' in the undoRedoList have a valuesToFill list */
+        game->undoRedoListPointer = game->undoRedoList->tail;
+    }
     sb_print(game->board, game->markErrors);
+    if (sb_isFull(game->board)){
+        if (sb_isErroneous(game->board)){
+            errPrinter_puzzleSolutioinErroneous();
+        }
+        else{
+            printf("Puzzle solved successfully\n");
+            game->mode = INIT;
+        }
+    }
 }
 
 void autoFillValues(LinkedList* valuesToFill, Game* game){
-    int idxToSet, row, column, blockRows, blockColumns, valueToSet;
-    Node* currentNode = valuesToFill->head;
+    int idxToSet, row, column, blockRows, blockColumns, valueToSet, oldValue;
+    Node* currentNode;
     Command* currentCmd;
+    if (valuesToFill->size == 0){
+        return;
+    }
+    currentNode = valuesToFill->head;
     blockRows = game->board->blockRows;
     blockColumns = game->board->blockColumns;
     while (currentNode != NULL){
@@ -175,7 +235,10 @@ void autoFillValues(LinkedList* valuesToFill, Game* game){
         column = atoi(currentCmd->args[0]);
         idxToSet = row * (blockColumns*blockRows) + column;
         valueToSet = atoi(currentCmd->args[2]);
+        oldValue = game->board->cells[idxToSet]->value;
+        currentCmd->prevValue = oldValue;
         game->board->cells[idxToSet]->value = valueToSet;
+        game->board->cells[idxToSet]->valid = cell_isValid(game->board, valueToSet, idxToSet);
         currentNode = currentNode->next;
     }
 }

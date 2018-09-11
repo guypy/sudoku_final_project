@@ -69,7 +69,6 @@ bool validateGenerate(Command* cmd) {
 }
 
 bool validateUndo(Command* cmd) {
-    //Here we will validate Undo..
     return true;
 }
 
