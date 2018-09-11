@@ -30,7 +30,7 @@ bool addVariablesToModel(GRBmodel *model, int boardSize) {
 }
 
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
-    int i, j, k;
+    int i, j, k, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
     assert(indexes);
@@ -42,7 +42,9 @@ bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) 
                 indexes[k] = i * blockRows * blockColumns * blockRows * blockColumns + j * blockRows * blockColumns + k;
                 values[k] = 1.0;
             }
-            if(GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL)) {
+            errorCode = GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL);
+            if(errorCode) {
+                errPrinter_puzzleGurobiFailure("No Empty Cell Constraint", errorCode);
                 free(indexes);
                 free(values);
                 return false;
@@ -53,7 +55,7 @@ bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) 
 }
 
 bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
-    int i, j, k;
+    int i, j, k, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
     assert(indexes);
@@ -65,8 +67,9 @@ bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
                 indexes[i] = i * blockRows * blockColumns * blockRows * blockColumns + j * blockRows * blockColumns + k;
                 values[i] = 1.0;
             }
-
-            if(GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL)) {
+            errorCode = GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL);
+            if(errorCode) {
+                errPrinter_puzzleGurobiFailure("Row Constraint", errorCode);
                 free(indexes);
                 free(values);
                 return false;
@@ -77,7 +80,7 @@ bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
 }
 
 int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
-    int i, j, k;
+    int i, j, k, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
     assert(indexes);
@@ -89,8 +92,9 @@ int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
                 indexes[j] = i * blockRows * blockColumns * blockRows * blockColumns + j * blockRows * blockColumns + k;
                 values[j] = 1.0;
             }
-
-            if(GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL)) {
+            errorCode = GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL);
+            if(errorCode) {
+                errPrinter_puzzleGurobiFailure("Column Constraint", errorCode);
                 free(indexes);
                 free(values);
                 return false;
@@ -101,7 +105,7 @@ int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
 }
 
 bool addBlockConstraint(GRBmodel *model, int blockRows, int blockColumns){
-    int m, n, i, j, k, count;
+    int m, n, i, j, k, count, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
     assert(indexes);
@@ -118,7 +122,9 @@ bool addBlockConstraint(GRBmodel *model, int blockRows, int blockColumns){
                         count++;
                     }
                 }
-                if(GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL)) {
+                errorCode = GRBaddconstr(model, blockRows * blockColumns, indexes, values, GRB_EQUAL, 1.0, NULL);
+                if(errorCode) {
+                    errPrinter_puzzleGurobiFailure("Block Constraint", errorCode);
                     free(indexes);
                     free(values);
                     return false;
@@ -172,7 +178,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
     if (errorCode) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
-        errPrinter_puzzleGurobiFailure("Load env");
+        errPrinter_puzzleGurobiFailure("Load env", errorCode);
         return NULL;
     }
 
@@ -180,21 +186,21 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
     if (errorCode) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
-        errPrinter_puzzleGurobiFailure("Create Model");
+        errPrinter_puzzleGurobiFailure("Create Model", errorCode);
         return NULL;
     }
 
     if (!addVariablesToModel(model, boardSize)) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
-        errPrinter_puzzleGurobiFailure("Adding variables to model");
+        errPrinter_puzzleGurobiFailure("Adding variables to model", errorCode);
         return NULL;
     }
 
     if(!addConstraints(model, board)) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
-        errPrinter_puzzleGurobiFailure("Adding constraints");
+        errPrinter_puzzleGurobiFailure("Adding constraints", errorCode);
         return NULL;
     }
 
@@ -204,7 +210,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
         GRBgetintattr(model, GRB_INT_ATTR_STATUS, &optimizationStatus)) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
-        errPrinter_puzzleGurobiFailure("Running Optimization");
+        errPrinter_puzzleGurobiFailure("Running Optimization", errorCode);
         return NULL;
     }
 
@@ -213,7 +219,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
         if (errorCode) {
             freeResources(env, model, solvedBoard, solutionMatrix);
             *resultCode = ERROR;
-            errPrinter_puzzleGurobiFailure("Getting solution");
+            errPrinter_puzzleGurobiFailure("Getting solution", errorCode);
             return NULL;
         }
     } else{
