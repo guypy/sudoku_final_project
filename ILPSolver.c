@@ -158,10 +158,15 @@ void copySolution(SudokuBoard* board, const double *solutionMatrix) {
 }
 
 void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* solutionMatrix) {
+    printf("1\n");
     if (solutionMatrix != NULL) free(solutionMatrix);
+    printf("2\n");
     if (model != NULL)           GRBfreemodel(model);
+    printf("3\n");
     if (env != NULL)             GRBfreeenv(env);
+    printf("4\n");
     if (board != NULL)           sb_destroyBoard(board);
+    printf("5\n");
 }
 
 SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
@@ -222,7 +227,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
 
     copySolution(solvedBoard, solutionMatrix);
 
-    /*freeResources(env, model, NULL, solutionMatrix);*/
+    freeResources(env, model, NULL, solutionMatrix);
     *resultCode = SOLVED;
     return solvedBoard;
 }
