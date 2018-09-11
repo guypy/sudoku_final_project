@@ -24,6 +24,8 @@ void updateImpValuesInCol(int *impossibleValues, int cellCol, int blockRows, int
 void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, int blockRows, int blockColumns, Cell** cells);
 int getPossValueForCell(int *impossibleValues, int size);
 void autoFillValues(LinkedList* valuesToFill, Game* game);
-void undoNode(Game* game, Node* nodeToUndo);
+void undoSetCmd(Game* game);
+void printUndoStep(int currentValue, int prevValue, int column, int row);
+void undoAutofillCmd(Game* game);
 
 #endif //SUDOKU_CONSOLE_COMMANDEXECUTIONS_H
