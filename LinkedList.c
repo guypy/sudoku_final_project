@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "LinkedList.h"
-#include "Command.h"
 
 LinkedList* createList() {
     LinkedList* list = (LinkedList*) malloc(sizeof(LinkedList));
@@ -58,13 +57,4 @@ void destroyFromNode(LinkedList *lst, Node *node) {
 void destroyList(LinkedList * lst) {
     destroyFromNode(lst, lst->head);
     free(lst);
-}
-
-//For Debugging purposes
-void printList(LinkedList * lst) {
-    Node * node = lst->head;
-    while (node != NULL) {
-        printf("%s", node->data->action);
-        node = node->next;
-    }
 }
