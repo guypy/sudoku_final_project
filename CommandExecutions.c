@@ -64,7 +64,7 @@ void executeSet(Game* game, Command* cmd) {
     }
 }
 
-void executeValidate(Game* game, Command __unused * cmd) {
+void executeValidate(Game* game, Command * cmd) {
     int resultCode = 0;
     SudokuBoard* solved;
     if (sb_isErroneous(game->board)) {
@@ -199,7 +199,7 @@ void executeHint(Game* game, Command* cmd) {
     /*Here we will execute Hint..*/
 }
 
-void executeNumSolutions(Game* game, Command __unused * cmd) {
+void executeNumSolutions(Game* game, Command * cmd) {
     int numOfSolutions;
     if (sb_isErroneous(game->board)) {
         errPrinter_erroneousValues();
