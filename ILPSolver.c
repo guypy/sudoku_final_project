@@ -175,7 +175,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
     GRBmodel *model = NULL;
     int errorCode, optimizationStatus;
     int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
-    double *solutionMatrix = calloc((size_t) boardSize, sizeof(double));
+    double *solutionMatrix = calloc((size_t) pow3(board->blockRows * board->blockColumns), sizeof(double));
     assert(solutionMatrix);
 
     errorCode = GRBloadenv(&env, NULL);
