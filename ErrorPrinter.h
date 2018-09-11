@@ -18,4 +18,4 @@ void errPrinter_valueIsNotZeroOrOne();
 void errPrinter_puzzleSolutioinErroneous();
 void errPrinter_puzzleGurobiFailure(char* error);
 
-#endif //SUDOKU_CONSOLE_ERRORPRINTER_H
+#endif

@@ -23,7 +23,7 @@
 
 Command* cmdMngr_fetchCommand();
 
-#endif //SUDOKU_CONSOLE_INPUTMANAGER_H
+#endif
 
 
 

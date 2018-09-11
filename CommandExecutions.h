@@ -12,15 +12,15 @@
 void executeSolve(Game* game, Command* cmd);
 void executeEdit(Game* game, Command* cmd);
 void executeMarkErrors(Game* game, Command* cmd);
-void executePrintBoard(Game* game, Command* cmd);
+void executePrintBoard(Game* game, Command __unused * cmd);
 void executeSet(Game* game, Command* cmd);
-void executeValidate(Game* game, Command* cmd);
+void executeValidate(Game* game, Command __unused * cmd);
 void executeGenerate(Game* game, Command* cmd);
 void executeUndo(Game* game, Command* cmd);
 void executeRedo(Game* game, Command* cmd);
 void executeSave(Game* game, Command* cmd);
 void executeHint(Game* game, Command* cmd);
-void executeNumSolutions(Game* game, Command* cmd);
+void executeNumSolutions(Game* game, Command __unused * cmd);
 void executeAutofill(Game* game, Command* cmd);
 void executeReset(Game* game, Command* cmd);
 void updateImpossibleValuesForCell(Game *game, Cell *cell, int index, int *impossibleValues);
@@ -33,4 +33,4 @@ void undoSetCmd(Game* game);
 void printUndoStep(int currentValue, int prevValue, int column, int row);
 void undoAutofillCmd(Game* game);
 
-#endif //SUDOKU_CONSOLE_COMMANDEXECUTIONS_H
+#endif

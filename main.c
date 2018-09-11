@@ -3,7 +3,7 @@
 #include "GameManager.h"
 
 int main() {
-    srand(NULL);
+    srand((unsigned) NULL);
     startGame();
     return 0;
 }

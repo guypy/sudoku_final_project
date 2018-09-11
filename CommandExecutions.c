@@ -31,7 +31,7 @@ void executeMarkErrors(Game* game, Command* cmd) {
     game->markErrors = (bool) atoi(cmd->args[0]);
 }
 
-void executePrintBoard(Game* game, Command* cmd) {
+void executePrintBoard(Game* game, Command __unused * cmd) {
     sb_print(game->board, (game->markErrors || game->mode == EDIT));
 }
 
@@ -64,7 +64,7 @@ void executeSet(Game* game, Command* cmd) {
     }
 }
 
-void executeValidate(Game* game, Command* cmd) {
+void executeValidate(Game* game, Command __unused * cmd) {
     int resultCode = 0;
     if (sb_isErroneous(game->board)) {
         errPrinter_erroneousValues();
@@ -198,7 +198,7 @@ void executeHint(Game* game, Command* cmd) {
     //Here we will execute Hint..
 }
 
-void executeNumSolutions(Game* game, Command* cmd) {
+void executeNumSolutions(Game* game, Command __unused * cmd) {
     int numOfSolutions;
     if (sb_isErroneous(game->board)) {
         errPrinter_erroneousValues();

@@ -23,4 +23,4 @@ bool validateAutofill(Command* cmd, Game* game);
 bool validateReset(Command* cmd);
 bool validateExit(Command* cmd);
 
-#endif //SUDOKU_CONSOLE_COMMANDVALIDATIONS_H
+#endif

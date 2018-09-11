@@ -11,4 +11,4 @@
 
 SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode);
 
-#endif //SUDOKU_CONSOLE_ILPSOLVER_H
+#endif

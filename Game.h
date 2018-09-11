@@ -23,4 +23,4 @@ typedef struct {
 Game* createGame();
 void destroyGame(Game * game);
 
-#endif //SUDOKU_CONSOLE_GAME_H
+#endif
