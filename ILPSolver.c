@@ -6,7 +6,7 @@
 
 #define pow3(x) x*x*x
 
-int createModel(GRBenv* env, GRBmodel* model, SudokuBoard* board){
+int createModel(GRBenv* env, GRBmodel** model, SudokuBoard* board){
     int dim = board->blockColumns * board->blockRows;
     char *vtype = (char*)calloc((size_t) pow3(dim), sizeof(char));
     double *lb = (double*)calloc((size_t) pow3(dim), sizeof(double));
@@ -16,16 +16,16 @@ int createModel(GRBenv* env, GRBmodel* model, SudokuBoard* board){
         for (column = 0; column < dim; column++) {
             for (value = 1; value <= dim; value++) {
                 if (board->cells[row * (dim) + column]->value == value){
-                    lb[row*dim*dim+column*dim+value-1] = 1;
+                    lb[row*dim*dim + column*dim +value - 1] = 1;
                 }
                 else{
-                    lb[row*dim*dim+column*dim+value-1] = 0;
+                    lb[row*dim*dim + column*dim + value - 1] = 0;
                 }
-                vtype[row*dim*dim+column*dim+value-1] = GRB_BINARY;
+                vtype[row*dim*dim + column*dim + value-1] = GRB_BINARY;
             }
         }
     }
-    return GRBnewmodel(env, &model, NULL, pow3(dim), NULL, lb, NULL, vtype, NULL);
+    return GRBnewmodel(env, model, NULL, pow3(dim), NULL, lb, NULL, vtype, NULL);
 }
 
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
@@ -181,7 +181,7 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
         return NULL;
     }
 
-    errorCode = createModel(env, model, board);
+    errorCode = createModel(env, &model, board);
     if (errorCode) {
         freeResources(env, model, solvedBoard, solutionMatrix);
         *resultCode = ERROR;
