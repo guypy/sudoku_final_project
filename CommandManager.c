@@ -47,9 +47,9 @@ int* getValidModesForAction(const char *action, int *validModes){
         validModes[EDIT] = 1;
     }
     if (strcmp(action, ACTION_REDO) == 0) {
-        validModes[INIT] = 1;
-        validModes[SOLVE] = 0;
-        validModes[EDIT] = 0;
+        validModes[INIT] = 0;
+        validModes[SOLVE] = 1;
+        validModes[EDIT] = 1;
     }
     if (strcmp(action, ACTION_SAVE) == 0) {
         validModes[INIT] = 0;

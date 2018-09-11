@@ -30,9 +30,12 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
 int getPossValueForCell(int *impossibleValues, int size);
 void autoFillValues(LinkedList* valuesToFill, Game* game);
 void undoSetCmd(Game* game);
-void printUndoStep(int currentValue, int prevValue, int column, int row);
+void printUndoStep(int oldValue, int newValue, int column, int row);
 void undoAutofillCmd(Game* game);
 void destroyNextNodesBeforeAppend(const Game *game);
-bool isNaN(char *arg);
+void printRedoStep(int newValue, int oldValue, int column, int row);
+void redoSetCmd(Game* game, Node* nodeToRedo);
+Node* getNodeToRedo(Game* game, Node* currentNode);
+void redoAutofillCmd(Game* game, Node* nodeToRedo);
 
 #endif
