@@ -4,26 +4,29 @@
 #include "FileHandler.h"
 
 SudokuBoard* fileHandler_readBoardFromFile(char* path) {
+    SudokuBoard* board;
     FILE *file = fopen(path, "r");
     if (file == NULL) {
         return NULL;
     }
-    SudokuBoard* board = parseFile(file);
+    board = parseFile(file);
     fclose(file);
     return board;
 }
 
 bool fileHandler_saveBoardToFile(SudokuBoard* board, char* path, bool allFixed) {
+    int i;
+    int n = board->blockRows;
+    int m = board->blockColumns;
+    Cell* cell;
     FILE *file = fopen(path, "w");
     if (file == NULL) {
         return false;
     }
 
-    int n = board->blockRows;
-    int m = board->blockColumns;
     fprintf(file, "%d %d\n", n, m);
-    for (int i = 0; i < n * n * m * m; i++) {
-        Cell* cell = board->cells[i];
+    for (i = 0; i < n * n * m * m; i++) {
+        cell = board->cells[i];
         fprintf(file, "%d", cell->value);
         if (cell->value != 0 && (allFixed || cell->fixed)){
             fprintf(file, ".");
@@ -39,14 +42,15 @@ bool fileHandler_saveBoardToFile(SudokuBoard* board, char* path, bool allFixed) 
 }
 
 SudokuBoard *parseFile(FILE *file) {
-    int n, m;
+    int n = 0, m = 0, i = 0, c = 0;
+    SudokuBoard* board = sb_create(n, m);
+    Cell* cell;
     fscanf(file, "%d", &n);
     fscanf(file, "%d", &m);
-    SudokuBoard* board = sb_create(n, m);
-    for (int i = 0; i < n * n * m * m; i++) {
-        Cell* cell = board->cells[i];
+    for (i = 0; i < n * n * m * m; i++) {
+        cell = board->cells[i];
         fscanf(file, "%d", &cell->value);
-        int c = getc(file);
+        c = getc(file);
         if (c == '.'){
             cell->fixed = true;
         }

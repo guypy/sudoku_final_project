@@ -18,26 +18,27 @@ void setAllFilledCellsAsFixed(SudokuBoard* board){
 }
 
 int BT_numberOfSolutions(SudokuBoard* board){
-    int i = 0;
-    int numOfSolutions = 0;
+    int i = 0, numOfSolutions = 0, value;
+    const int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
+    Stack * stack = stack_create();
+    StackItem* popped;
+    Cell* cell;
     board = sb_deepCloneBoard(board);
     setAllFilledCellsAsFixed(board);
-    Stack * stack = stack_create();
 
-    const int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
 
     while (i < boardSize && board->cells[i]->fixed != 0){
         ++i;
     }
 
     while (true) {
-        Cell* cell = board->cells[i];
+        cell = board->cells[i];
 
         if (i == boardSize){
             ++numOfSolutions;
         } else {
-            //Pushing all non-exhausted values of the cell to the stack.
-            for (int value = 1; value < board->blockRows * board->blockColumns + 1; value++) {
+            /*Pushing all non-exhausted values of the cell to the stack.*/
+            for (value = 1; value < board->blockRows * board->blockColumns + 1; value++) {
                 if (cell->exhaustedValues[value - 1] == true) {
                     continue;
                 }
@@ -48,7 +49,7 @@ int BT_numberOfSolutions(SudokuBoard* board){
             }
         }
 
-        StackItem* popped = stack_pop(stack);
+        popped = stack_pop(stack);
 
         if (popped == NULL)
             break;

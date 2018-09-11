@@ -66,11 +66,12 @@ void executeSet(Game* game, Command* cmd) {
 
 void executeValidate(Game* game, Command __unused * cmd) {
     int resultCode = 0;
+    SudokuBoard* solved;
     if (sb_isErroneous(game->board)) {
         errPrinter_erroneousValues();
         return;
     }
-    SudokuBoard* solved = ILP_solve(game->board, &resultCode);
+    solved = ILP_solve(game->board, &resultCode);
     switch (resultCode) {
         case SOLVED:
             game->solvedBoard = solved;
@@ -85,7 +86,7 @@ void executeValidate(Game* game, Command __unused * cmd) {
 }
 
 void executeGenerate(Game* game, Command* cmd) {
-    //Here we will execute Generate..
+    /*//Here we will execute Generate..*/
 }
 
 void executeUndo(Game* game, Command* cmd) {
@@ -175,10 +176,11 @@ void printUndoStep(int currentValue, int prevValue, int column, int row){
 }
 
 void executeRedo(Game* game, Command* cmd) {
-    //Here we will execute Redo..
+    /*Here we will execute Redo..*/
 }
 
 void executeSave(Game* game, Command* cmd) {
+    char* path = cmd->args[0];
     if (game->mode == EDIT) {
         if (sb_isErroneous(game->board)) {
             errPrinter_erroneousValues();
@@ -188,14 +190,13 @@ void executeSave(Game* game, Command* cmd) {
             errPrinter_boardValidationFailed();
         }
     }
-    char* path = cmd->args[0];
     if (!fileHandler_saveBoardToFile(game->board, path, game->mode == EDIT)){
         errPrinter_cannotCreateOrModifyFile();
     }
 }
 
 void executeHint(Game* game, Command* cmd) {
-    //Here we will execute Hint..
+    /*Here we will execute Hint..*/
 }
 
 void executeNumSolutions(Game* game, Command __unused * cmd) {
@@ -215,7 +216,7 @@ void executeNumSolutions(Game* game, Command __unused * cmd) {
 
 void executeAutofill(Game* game, Command* cmd) {
     int i, numOfCells, blockRows, blockColumns,value;
-    int* impossibleValues;  // list of bool values, 1 in index x means x is an impssible value for a cell
+    int* impossibleValues;  /*list of bool values, 1 in index x means x is an impssible value for a cell*/
     LinkedList* valuesToFill = createList();
     Command* valueToSetCmd;
     char** args;
@@ -235,7 +236,7 @@ void executeAutofill(Game* game, Command* cmd) {
         assert(impossibleValues);
         updateImpossibleValuesForCell(game, game->board->cells[i], i, impossibleValues);
         value = getPossValueForCell(impossibleValues, (blockRows * blockColumns));
-        if (value != -1) { // there is only one possible value
+        if (value != -1) { /*there is only one possible value*/
             args = malloc(1024 * sizeof(char));
             assert(args);
             args[0] =(char*)malloc(snprintf(NULL, 0, "%d", (i % (blockRows * blockColumns))));
@@ -309,7 +310,7 @@ int getPossValueForCell(int *impossibleValues, int size){
     num = 0;
     possValue = -1;
     for (i = 0; i < size; ++i){
-        if (impossibleValues[i] == 0){ // value is possible
+        if (impossibleValues[i] == 0){ /*value is possible*/
             num += 1;
             possValue = i + 1;
             if (num > 1){
@@ -371,5 +372,7 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
 }
 
 void executeReset(Game* game, Command* cmd) {
-    //Here we will execute Reset..
+    /*Here we will execute Reset..*/
 }
+
+#pragma clang diagnostic pop

@@ -32,8 +32,8 @@ bool addVariablesToModel(GRBmodel *model, int boardSize) {
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
     int i, j, k;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
-    assert(indexes);
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
+    assert(indexes);
     assert(values);
 
     for (i = 0; i < blockRows * blockColumns; i++) {
@@ -55,8 +55,8 @@ bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) 
 bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
     int i, j, k;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
-    assert(indexes);
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
+    assert(indexes);
     assert(values);
 
     for (k = 0; k < blockRows * blockColumns; k++) {
@@ -79,8 +79,8 @@ bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
 int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
     int i, j, k;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
-    assert(indexes);
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
+    assert(indexes);
     assert(values);
 
     for (k = 0; k < blockRows * blockColumns; k++) {
@@ -103,8 +103,8 @@ int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
 bool addBlockConstraint(GRBmodel *model, int blockRows, int blockColumns){
     int m, n, i, j, k, count;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
-    assert(indexes);
     double* values = calloc((size_t) blockRows * blockColumns, sizeof(double));
+    assert(indexes);
     assert(values);
 
     for (i = 0; i < blockRows * blockColumns; i++) {
