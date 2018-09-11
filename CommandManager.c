@@ -114,7 +114,7 @@ Command* cmdMngr_fetchCommand() {
     /* Setting args to hold the rest of the input */
     arg = strtok(NULL, " \t\r\n");
     while (arg != NULL) {
-        args[numOfArgs] = (char*) malloc(strlen(arg) * sizeof(char));
+        args[numOfArgs] = (char*) malloc((strlen(arg) + 1) * sizeof(char));
         strcpy(args[numOfArgs], arg);
         arg = strtok(NULL, " \t\r\n");
         numOfArgs++;
