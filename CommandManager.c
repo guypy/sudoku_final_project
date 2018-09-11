@@ -119,7 +119,9 @@ Command* cmdMngr_fetchCommand() {
         arg = strtok(NULL, " \t\r\n");
         numOfArgs++;
     }
-
+    printf("args[0] is %s\n", args[0]);
+    printf("args[1] is %s\n", args[1]);
+    printf("args[2] is %s\n", args[2]);
     validModes = (int*)calloc(3, sizeof(int));
     cmd = cmd_createCommand(args, action, getValidModesForAction(action, &validModes[0]), numOfArgs);
 
