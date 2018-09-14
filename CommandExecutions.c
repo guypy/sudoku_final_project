@@ -94,7 +94,7 @@ void executeGenerate(Game* game, Command* cmd) {
     int valuesToFillCount = atoi(cmd->args[0]);
     int valueToRemoveCount = atoi(cmd->args[1]);
     int tryCount = 0, resultCode = 0;
-    SudokuBoard* solved;
+    SudokuBoard* solved = NULL;
     do {
         tryCount++;
 
