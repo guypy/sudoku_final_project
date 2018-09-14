@@ -109,6 +109,7 @@ void sb_destroyBoard(SudokuBoard* sb) {
     for (i = 0; i < BOARD_SIZE(sb->blockRows, sb->blockColumns); i++) {
         destroyCell(sb->cells[i]);
     }
+    free(sb->cells);
     free(sb);
 }
 
