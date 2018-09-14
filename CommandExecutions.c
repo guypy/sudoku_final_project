@@ -452,6 +452,7 @@ void executeAutofill(Game* game, Command* cmd) {
     int* impossibleValues;  /*list of bool values, 1 in index x means x is an impssible value for a cell*/
     LinkedList* valuesToFill = createList();
     Command* valueToSetCmd;
+    char* action;
     char** args;
 
     if (sb_isErroneous(game->board)){
@@ -481,7 +482,10 @@ void executeAutofill(Game* game, Command* cmd) {
             numOfChars = getNumOfChars(value);
             args[2] = (char*)calloc((size_t) (numOfChars + 1), sizeof(char));
             sprintf(args[2], "%d", value);
-            valueToSetCmd = cmd_createCommand(args, "SET", NULL, 3);
+
+            action = malloc(sizeof(char) * 4);
+            sprintf(action, "%s", ACTION_SET);
+            valueToSetCmd = cmd_createCommand(args, action, NULL, 3);
             append(valuesToFill, valueToSetCmd);
         }
         free(impossibleValues);
