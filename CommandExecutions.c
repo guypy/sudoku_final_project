@@ -96,7 +96,7 @@ void executeGenerate(Game* game, Command* cmd) {
     SudokuBoard* solved;
     do {
         tryCount++;
-        sb_empty(game->board);
+
         if (!fillBoardWithRandValues(game->board, valuesToFillCount))
             continue;
         solved = ILP_solve(game->board, &resultCode);
@@ -104,7 +104,6 @@ void executeGenerate(Game* game, Command* cmd) {
     
     if (tryCount == 1000) {
         errPrinter_puzzleGeneratorFailed();
-        sb_empty(game->board);
         return;
     }
 
@@ -127,6 +126,7 @@ bool fillBoardWithRandValues(SudokuBoard* board, int valueToFillCount){
         do { /* Find a legal value for the cell */
             val = rand() % (board->blockRows * board->blockColumns) + 1;
         } while (!cell_isValid(board, val, idx));
+
         board->cells[idx]->value = val;
         valueToFillCount--;
     }

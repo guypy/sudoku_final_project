@@ -97,6 +97,7 @@ SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb){
 }
 
 void destroyCell(Cell* c) {
+    free(c->exhaustedValues);
     free(c);
 }
 

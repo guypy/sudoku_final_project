@@ -26,6 +26,8 @@ int createModel(GRBenv* env, GRBmodel** model, SudokuBoard* board){
             }
         }
     }
+    free(vtype);
+    free(lb);
     return GRBnewmodel(env, model, NULL, pow3(dim), NULL, lb, NULL, vtype, NULL);
 }
 
@@ -51,6 +53,8 @@ bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) 
             }
         }
     }
+    free(indexes);
+    free(values);
     return true;
 }
 
@@ -76,6 +80,8 @@ bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
             }
         }
     }
+    free(indexes);
+    free(values);
     return true;
 }
 
@@ -101,6 +107,8 @@ int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
             }
         }
     }
+    free(indexes);
+    free(values);
     return true;
 }
 
@@ -132,6 +140,8 @@ bool addBlockConstraint(GRBmodel *model, int blockRows, int blockColumns){
             }
         }
     }
+    free(indexes);
+    free(values);
     return true;
 }
 
