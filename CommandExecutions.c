@@ -443,7 +443,7 @@ void executeNumSolutions(Game* game) {
     printf("Number of solutions: %d\n", numOfSolutions);
     if (numOfSolutions == 1) {
         printf("This is a good board!\n");
-    } else {
+    } else if (numOfSolutions > 1) {
         printf("The puzzle has more than 1 solution, try to edit it further\n");
     }
 }

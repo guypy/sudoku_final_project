@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "BTSolver.h"
 
 void clearExhaustedValues(Cell* cell, int len){
@@ -31,6 +32,7 @@ int BT_numberOfSolutions(SudokuBoard* board){
     }
 
     while (true) {
+        printf("%d", i);
         cell = board->cells[i];
 
         if (i == boardSize){
