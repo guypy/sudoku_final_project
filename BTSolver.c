@@ -74,6 +74,5 @@ int BT_numberOfSolutions(SudokuBoard* board){
 
     stack_destroy(stack);
     sb_destroyBoard(board);
-    return board;
-    /*return numOfSolutions;*/
+    return numOfSolutions;
 }
