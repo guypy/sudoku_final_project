@@ -130,9 +130,12 @@ int sb_isFull(SudokuBoard *sb){
 
 bool sb_isSolvable(SudokuBoard* board) {
     int resultCode = 0;
-    ILP_solve(board, &resultCode);
-    if (resultCode == SOLVED)
+    SudokuBoard* solved;
+    solved = ILP_solve(board, &resultCode);
+    if (resultCode == SOLVED) {
+        free(solved);
         return true;
+    }
     return false;
 }
 
