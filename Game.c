@@ -19,7 +19,6 @@ Game* createGame(){
 void destroyGame(Game* game) {
     destroyList(game->undoRedoList);
     if (game->board != NULL) sb_destroyBoard(game->board);
-    if (game->solvedBoard != NULL) sb_destroyBoard(game->solvedBoard);
     free(game);
 }
 
