@@ -400,11 +400,11 @@ void executeAutofill(Game* game, Command* cmd) {
         if (value != -1) { /*there is only one possible value*/
             args = malloc(1024 * sizeof(char));
             assert(args);
-            args[0] =(char*)malloc(snprintf(NULL, 0, "%d", (i % (blockRows * blockColumns))));
+            args[0] =(char*)malloc(snprintf(NULL, 0, "%d", (i % (blockRows * blockColumns)) + 1));
             sprintf(args[0], "%d", (i % (blockRows * blockColumns)));
-            args[1] = (char*)malloc(snprintf(NULL, 0, "%d", i / (blockRows * blockColumns)));
+            args[1] = (char*)malloc(snprintf(NULL, 0, "%d", (i / (blockRows * blockColumns)) + 1));
             sprintf(args[1], "%d", i / (blockRows * blockColumns));
-            args[2] = (char*)malloc(snprintf(NULL, 0, "%d", value));
+            args[2] = (char*)malloc(snprintf(NULL, 0, "%d", value + 1));
             sprintf(args[2], "%d", value);
             valueToSetCmd = cmd_createCommand(args, "SET", NULL, 3);
             append(valuesToFill, valueToSetCmd);
