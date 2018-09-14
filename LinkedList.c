@@ -17,6 +17,8 @@ void append(LinkedList * lst, Command * cmd) {
     node->data = cmd;
     node->prev = lst->tail;
     node->autoFillList = NULL;
+    node->generatedBoard = NULL;
+
     if (lst->head == NULL)
         lst->head = node;
     if (lst->tail != NULL) {
@@ -46,6 +48,7 @@ void destroyNode(LinkedList *lst, Node *node) {
     destroyList(node->autoFillList);
 
     if (node->data != NULL) cmd_freeCommand(node->data);
+    if (node->generatedBoard != NULL) sb_destroyBoard(node->generatedBoard);
 
     free(node);
 }

@@ -33,14 +33,16 @@ void updateImpValuesInCol(int *impossibleValues, int cellCol, int blockRows, int
 void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, int blockRows, int blockColumns, Cell** cells);
 int getPossValueForCell(int *impossibleValues, int size);
 void autoFillValues(LinkedList* valuesToFill, Game* game);
-void undoSetCmd(Game* game, bool shouldPrint);
+void undoSet(Game *game, bool shouldPrint);
 void printUndoStep(int oldValue, int newValue, int column, int row);
-void undoAutofillCmd(Game* game, bool shouldPrint);
+void undoAutofill(Game *game, bool shouldPrint);
+void undoGenerate(Game *game, bool shouldPrint);
 void destroyNextNodesBeforeAppend(const Game *game);
 void printRedoStep(int newValue, int oldValue, int column, int row);
-void redoSetCmd(Game* game, Node* nodeToRedo);
+void redoSet(Game *game, Node *nodeToRedo);
 Node* getNodeToRedo(Game* game, Node* currentNode);
-void redoAutofillCmd(Game* game, Node* nodeToRedo);
+void redoAutofill(Game *game, Node *nodeToRedo);
+void redoGenerate(Game *game, Node *nodeToRedo);
 int getNumOfChars(int num);
 
 #endif

@@ -88,6 +88,7 @@ SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb){
     for (i = 0; i < BOARD_SIZE(template_sb->blockRows, template_sb->blockColumns); ++i){
         new_sb->cells[i]->value = template_sb->cells[i]->value;
         new_sb->cells[i]->fixed = template_sb->cells[i]->fixed;
+        new_sb->cells[i]->valid = template_sb->cells[i]->valid;
         /* clone impossible values array of cell */
         for (j = 0; j < (template_sb->blockRows * template_sb->blockColumns); ++j){
             new_sb->cells[i]->exhaustedValues[j] = template_sb->cells[i]->exhaustedValues[j];

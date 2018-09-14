@@ -4,6 +4,8 @@
 #include <string.h>
 #include "CommandExecutions.h"
 #include "Game.h"
+#include "SudokuBoard.h"
+#include "Command.h"
 
 void executeSolve(Game* game, Command* cmd) {
     restartGame(game);
@@ -55,9 +57,16 @@ void executeSet(Game* game, Command* cmd) {
 
     cell->valid = cell_isValid(game->board, valueToSet, idx);
     oldValue = game->board->cells[idx]->value;
+
+    if (oldValue == valueToSet) {
+        cmd_freeCommand(cmd);
+        return;
+    }
+
     cmd->prevValue = oldValue;
     game->board->cells[idx]->value = valueToSet;
     sb_cellValidations(game->board);
+
     destroyNextNodesBeforeAppend(game);
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
@@ -65,8 +74,7 @@ void executeSet(Game* game, Command* cmd) {
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
-        }
-        else{
+        } else{
             printf("Puzzle solved successfully\n");
             game->mode = INIT;
         }
@@ -96,7 +104,7 @@ void executeValidate(Game* game) {
 
 void executeGenerate(Game* game, Command* cmd) {
     int valuesToFillCount = atoi(cmd->args[0]);
-    int valueToRemoveCount = atoi(cmd->args[1]);
+    int valueToRemoveCount = BOARD_SIZE(game->board->blockColumns, game->board->blockRows) - atoi(cmd->args[1]);
     int tryCount = 0, resultCode = 0;
     SudokuBoard* solved = NULL;
     do {
@@ -117,6 +125,12 @@ void executeGenerate(Game* game, Command* cmd) {
     game->board = solved;
 
     removeValuesFromBoard(game->board, valueToRemoveCount);
+    sb_print(game->board, game->markErrors || game->mode == EDIT);
+
+    destroyNextNodesBeforeAppend(game);
+    append(game->undoRedoList, cmd);
+    game->undoRedoListPointer = game->undoRedoList->tail;
+    game->undoRedoListPointer->generatedBoard = sb_deepCloneBoard(game->board);
 }
 
 bool fillBoardWithRandValues(SudokuBoard* board, int valueToFillCount){
@@ -175,14 +189,18 @@ void executeUndo(Game *game, bool shouldPrint) {
     }
     action = currentNode->data->action;
     if (strcmp(action, ACTION_SET) == 0){
-        undoSetCmd(game, shouldPrint);
+        undoSet(game, shouldPrint);
     }
     if (strcmp(action, ACTION_AUTOFILL) == 0){
-        undoAutofillCmd(game, shouldPrint);
+        undoAutofill(game, shouldPrint);
     }
+    if (strcmp(action, ACTION_GENERATE) == 0) {
+        undoGenerate(game, shouldPrint);
+    }
+    game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
 
-void undoAutofillCmd(Game* game, bool shouldPrint){
+void undoAutofill(Game *game, bool shouldPrint){
     int currentValue, prevValue, column, row, blockRows, blockColumns, idxToUndo;
     Node* nodeToUndo, *currentAutoFillNode;
     LinkedList* autoFillList;
@@ -218,10 +236,9 @@ void undoAutofillCmd(Game* game, bool shouldPrint){
 
         currentAutoFillNode = currentAutoFillNode->next;
     }
-    game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
 
-void undoSetCmd(Game* game, bool shouldPrint){
+void undoSet(Game *game, bool shouldPrint){
     int currentValue, prevValue, column, row, idxToUndo, blockColumns, blockRows;
     Node* nodeToUndo;
     nodeToUndo = game->undoRedoListPointer;
@@ -241,8 +258,14 @@ void undoSetCmd(Game* game, bool shouldPrint){
 
         printUndoStep(currentValue, prevValue, column, row);
     }
+}
 
-    game->undoRedoListPointer = game->undoRedoListPointer->prev;
+void undoGenerate(Game *game, bool shouldPrint) {
+    sb_empty(game->board);
+    if(shouldPrint) {
+        printf("Undo Generate, board is empty");
+        sb_print(game->board, game->markErrors || game->mode == EDIT);
+    }
 }
 
 void printUndoStep(int oldValue, int newValue, int column, int row){
@@ -287,10 +310,19 @@ void executeRedo(Game* game) {
 
     action = nodeToRedo->data->action;
     if (strcmp(action, ACTION_SET) == 0){
-        redoSetCmd(game, nodeToRedo);
+        redoSet(game, nodeToRedo);
     }
     if (strcmp(action, ACTION_AUTOFILL) == 0){
-        redoAutofillCmd(game, nodeToRedo);
+        redoAutofill(game, nodeToRedo);
+    }
+    if (strcmp(action, ACTION_GENERATE) == 0) {
+        redoGenerate(game, nodeToRedo);
+    }
+
+    if (game->undoRedoListPointer != NULL){
+        game->undoRedoListPointer = game->undoRedoListPointer->next;
+    } else {
+        game->undoRedoListPointer = game->undoRedoList->head;
     }
 }
 
@@ -307,7 +339,7 @@ Node* getNodeToRedo(Game* game, Node* currentNode){
     return nodeToRedo;
 }
 
-void redoAutofillCmd(Game* game, Node* nodeToRedo){
+void redoAutofill(Game *game, Node *nodeToRedo){
     int blockRows, blockColumns, oldValue, newValue, row, column, idxToRedo;
     LinkedList* autoFillList;
     Node* currentAutoFillNode;
@@ -339,14 +371,9 @@ void redoAutofillCmd(Game* game, Node* nodeToRedo){
 
         currentAutoFillNode = currentAutoFillNode->next;
     }
-    if (game->undoRedoListPointer != NULL){
-        game->undoRedoListPointer = game->undoRedoListPointer->next;
-    }else{
-        game->undoRedoListPointer = game->undoRedoList->head;
-    }
 }
 
-void redoSetCmd(Game* game, Node* nodeToRedo){
+void redoSet(Game *game, Node *nodeToRedo){
     int currentValue, newValue, row, column, idxToSet, blockRows, blockColumns;
     newValue = atoi(nodeToRedo->data->args[2]);
     currentValue = nodeToRedo->data->prevValue;
@@ -363,12 +390,13 @@ void redoSetCmd(Game* game, Node* nodeToRedo){
     sb_print(game->board, game->markErrors || game->mode == EDIT);
 
     printRedoStep(newValue, currentValue,column, row);
+}
 
-    if (game->undoRedoListPointer != NULL){
-        game->undoRedoListPointer = game->undoRedoListPointer->next;
-    }else{
-        game->undoRedoListPointer = game->undoRedoList->head;
-    }
+void redoGenerate(Game *game, Node *nodeToRedo) {
+    sb_destroyBoard(game->board);
+    game->board = sb_deepCloneBoard(nodeToRedo->generatedBoard);
+    sb_print(game->board, game->markErrors || game->mode == EDIT);
+    printf("Redo: Generated board");
 }
 
 void printRedoStep(int newValue, int oldValue, int column, int row){
