@@ -95,7 +95,7 @@ void executeGenerate(Game* game, Command* cmd) {
     SudokuBoard* solved = NULL;
     do {
         tryCount++;
-
+        sb_empty(game->board);
         if (!fillBoardWithRandValues(game->board, valuesToFillCount))
             continue;
         solved = ILP_solve(game->board, &resultCode);
@@ -103,6 +103,7 @@ void executeGenerate(Game* game, Command* cmd) {
     
     if (tryCount == 1000) {
         errPrinter_puzzleGeneratorFailed();
+        sb_empty(game->board);
         return;
     }
 
