@@ -16,7 +16,7 @@ SudokuBoard* sb_create(int blockRows, int blockColumns){
     res->cells = malloc(sizeof(Cell*) * BOARD_SIZE(blockRows, blockColumns));
     for (i = 0; i < BOARD_SIZE(blockRows, blockColumns); ++i){
         res->cells[i] = (Cell*)calloc(1, sizeof(Cell));
-        res->cells[i]->exhaustedValues = calloc(1, sizeof(int) * BOARD_SIZE(blockRows, blockColumns));
+        res->cells[i]->exhaustedValues = calloc(1, sizeof(int) * (blockRows * blockColumns));
         if(!res->cells[i]){ /* allocation failed */
             printf("Error: %s has failed\n", "sb_create");
             exit(1);
@@ -109,6 +109,7 @@ void sb_destroyBoard(SudokuBoard* sb) {
     for (i = 0; i < BOARD_SIZE(sb->blockRows, sb->blockColumns); i++) {
         destroyCell(sb->cells[i]);
     }
+    free(sb->cells);
     free(sb);
 }
 
