@@ -77,13 +77,13 @@ void executeCommand(Game* game, Command * cmd){
         executeMarkErrors(game, cmd);
     }
     if (strcmp(cmd->action, ACTION_PRINT_BOARD) == 0) {
-        executePrintBoard(game, cmd);
+        executePrintBoard(game);
     }
     if (strcmp(cmd->action, ACTION_SET) == 0) {
         executeSet(game, cmd);
     }
     if (strcmp(cmd->action, ACTION_VALIDATE) == 0) {
-        executeValidate(game, cmd);
+        executeValidate(game);
     }
     if (strcmp(cmd->action, ACTION_GENERATE) == 0) {
         executeGenerate(game, cmd);
@@ -92,7 +92,7 @@ void executeCommand(Game* game, Command * cmd){
         executeUndo(game, true);
     }
     if (strcmp(cmd->action, ACTION_REDO) == 0) {
-        executeRedo(game, cmd);
+        executeRedo(game);
     }
     if (strcmp(cmd->action, ACTION_SAVE) == 0) {
         executeSave(game, cmd);
@@ -101,13 +101,13 @@ void executeCommand(Game* game, Command * cmd){
         executeHint(game, cmd);
     }
     if (strcmp(cmd->action, ACTION_NUM_SOLUTIONS) == 0) {
-        executeNumSolutions(game, cmd);
+        executeNumSolutions(game);
     }
     if (strcmp(cmd->action, ACTION_AUTOFILL) == 0) {
         executeAutofill(game, cmd);
     }
     if (strcmp(cmd->action, ACTION_RESET) == 0) {
-        executeReset(game, cmd);
+        executeReset(game);
     }
 }
 

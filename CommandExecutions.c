@@ -33,7 +33,7 @@ void executeMarkErrors(Game* game, Command* cmd) {
     game->markErrors = (bool) atoi(cmd->args[0]);
 }
 
-void executePrintBoard(Game* game, Command* cmd) {
+void executePrintBoard(Game* game) {
     sb_print(game->board, (game->markErrors || game->mode == EDIT));
 }
 
@@ -69,7 +69,7 @@ void executeSet(Game* game, Command* cmd) {
     }
 }
 
-void executeValidate(Game* game, Command * cmd) {
+void executeValidate(Game* game) {
     int resultCode = 0;
     SudokuBoard* solved;
     if (sb_isErroneous(game->board)) {
@@ -263,7 +263,7 @@ void printUndoStep(int oldValue, int newValue, int column, int row){
  * undoRedoListPointer.
  *
  * */
-void executeRedo(Game* game, Command* cmd) {
+void executeRedo(Game* game) {
     Node* currentNode, *nodeToRedo;
     char* action;
     currentNode = game->undoRedoListPointer;
@@ -426,7 +426,7 @@ void executeHint(Game* game, Command* cmd) {
     }
 }
 
-void executeNumSolutions(Game* game, Command * cmd) {
+void executeNumSolutions(Game* game) {
     int numOfSolutions;
     if (sb_isErroneous(game->board)) {
         errPrinter_erroneousValues();
@@ -599,7 +599,7 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
     }
 }
 
-void executeReset(Game* game, Command* cmd) {
+void executeReset(Game* game) {
     bool shouldPrint = false;
     Node* currentNode = game->undoRedoListPointer;
     while (currentNode != NULL){
