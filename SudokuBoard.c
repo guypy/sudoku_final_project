@@ -4,8 +4,6 @@
 #include "Game.h"
 #include "ILPSolver.h"
 
-#define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
-
 SudokuBoard* sb_create(int blockRows, int blockColumns){
     int i;
     SudokuBoard* res = (SudokuBoard*) malloc(sizeof(SudokuBoard));
@@ -23,7 +21,8 @@ SudokuBoard* sb_create(int blockRows, int blockColumns){
             printf("Error: %s has failed\n", "sb_create");
             exit(1);
         }
-        res->cells[i]->valid = 1;
+        res->cells[i]->valid = true;
+        res->cells[i]->fixed = false;
     }
 
     return res;
@@ -148,6 +147,23 @@ void sb_cellValidations(SudokuBoard *board){
         Cell* cell = board->cells[i];
         cell->valid = cell_isValid(board, cell->value, i);
     }
+}
+
+bool sb_isEmpty(SudokuBoard* board){
+    int i;
+    for (i = 0; i < BOARD_SIZE(board->blockColumns, board->blockRows); i++) {
+        if (board->cells[i]->value)
+            return false;
+    }
+    return true;
+}
+
+void sb_empty(SudokuBoard* board){
+    int i;
+    for (i = 0; i < BOARD_SIZE(board->blockColumns, board->blockRows); i++) {
+        board->cells[i]->value = 0;
+    }
+
 }
 
 bool cell_isValid(SudokuBoard *sb, int cellValue, int idxInBoard){

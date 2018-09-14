@@ -77,7 +77,6 @@ void executeValidate(Game* game, Command * cmd) {
     solved = ILP_solve(game->board, &resultCode);
     switch (resultCode) {
         case SOLVED:
-            game->solvedBoard = solved;
             printf("Validation passed: board is solvable\n");
             break;
         case NO_SOLUTION:
@@ -89,7 +88,77 @@ void executeValidate(Game* game, Command * cmd) {
 }
 
 void executeGenerate(Game* game, Command* cmd) {
-    /*//Here we will execute Generate..*/
+    int valuesToFillCount = atoi(cmd->args[0]);
+    int valueToRemoveCount = atoi(cmd->args[1]);
+    int tryCount = 0, resultCode = 0;
+    SudokuBoard* solved;
+    do {
+        tryCount++;
+        sb_empty(game->board);
+        if (!fillBoardWithRandValues(game->board, valuesToFillCount))
+            continue;
+        solved = ILP_solve(game->board, &resultCode);
+        if (resultCode != SOLVED)
+            sb_destroyBoard(solved);
+        if (resultCode == SOLVED)
+            sb_print(solved, false);
+    } while (resultCode != SOLVED && tryCount < 1000);
+    printf("out of loop");
+    if (tryCount == 1000) {
+        errPrinter_puzzleGeneratorFailed();
+        sb_empty(game->board);
+        return;
+    }
+
+    sb_destroyBoard(game->board);
+    game->board = solved;
+
+    removeValuesFromBoard(game->board, valueToRemoveCount);
+}
+
+bool fillBoardWithRandValues(SudokuBoard* board, int valueToFillCount){
+    int idx, val;
+    while (valueToFillCount > 0) {
+        do { /* Find an empty cell */
+            idx = rand() % BOARD_SIZE(board->blockColumns, board->blockRows);
+        } while (board->cells[idx]->value != 0);
+
+        if (!isCellSolvable(board, idx))
+            return false;
+
+        do { /* Find a legal value for the cell */
+            val = rand() % (board->blockRows * board->blockColumns) + 1;
+        } while (!cell_isValid(board, val, idx));
+        board->cells[idx]->value = val;
+        valueToFillCount--;
+    }
+    return true;
+}
+
+void removeValuesFromBoard(SudokuBoard* board, int valueToRemoveCount){
+    int idx;
+    while (valueToRemoveCount > 0) {
+        do { /* Find a filled cell */
+            idx = rand() % BOARD_SIZE(board->blockColumns, board->blockRows);
+        } while (board->cells[idx]->value == 0);
+
+        board->cells[idx]->value = 0;
+        valueToRemoveCount--;
+    }
+}
+
+bool isCellSolvable(SudokuBoard* board, int idx) {
+    int i;
+    int* impossibleValues = (int*) calloc(board->blockColumns * board->blockRows, sizeof(int));
+    updateImpossibleValuesForCell(board, idx, impossibleValues);
+    for (i = 0; i < board->blockRows * board->blockColumns; i++){
+        if (impossibleValues[i] == 0) {
+            free(impossibleValues);
+            return true;
+        }
+    }
+    free(impossibleValues);
+    return false;
 }
 
 void executeUndo(Game* game, Command* cmd) {
@@ -387,7 +456,7 @@ void executeAutofill(Game* game, Command* cmd) {
         }
         impossibleValues = (int*)calloc((size_t) (blockColumns * blockRows), sizeof(int));
         assert(impossibleValues);
-        updateImpossibleValuesForCell(game, game->board->cells[i], i, impossibleValues);
+        updateImpossibleValuesForCell(game->board, i, impossibleValues);
         value = getPossValueForCell(impossibleValues, (blockRows * blockColumns));
         if (value != -1) { /*there is only one possible value*/
             args = malloc(1024 * sizeof(char));
@@ -475,15 +544,17 @@ int getPossValueForCell(int *impossibleValues, int size){
     return possValue;
 }
 
-void updateImpossibleValuesForCell(Game *game, Cell *cell, int index, int *impossibleValues){
+void updateImpossibleValuesForCell(SudokuBoard *board, int index, int *impossibleValues){
     int blockRows, blockColumns, cellRow, cellCol;
-    blockRows = game->board->blockRows;
-    blockColumns = game ->board->blockColumns;
+    blockRows = board->blockRows;
+    blockColumns = board->blockColumns;
+
     cellRow = index / (blockRows*blockColumns);
-    updateImpValuesInRow(impossibleValues, cellRow, blockRows, blockColumns, game->board->cells);
     cellCol = index % (blockRows * blockColumns);
-    updateImpValuesInCol(impossibleValues, cellCol, blockRows, blockColumns, game->board->cells);
-    updateImpValuesInBlock(impossibleValues, cellRow, cellCol, blockRows, blockColumns, game->board->cells);
+
+    updateImpValuesInRow(impossibleValues, cellRow, blockRows, blockColumns, board->cells);
+    updateImpValuesInCol(impossibleValues, cellCol, blockRows, blockColumns, board->cells);
+    updateImpValuesInBlock(impossibleValues, cellRow, cellCol, blockRows, blockColumns, board->cells);
 }
 
 void updateImpValuesInCol(int *impossibleValues, int cellCol, int blockRows, int blockColumns, Cell** cells) {

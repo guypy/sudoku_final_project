@@ -37,7 +37,7 @@ bool validateCommand(Command *cmd, Game* game) {
         return validateValidate(cmd);
     }
     if (strcmp(cmd->action, ACTION_GENERATE) == 0) {
-        return validateGenerate(cmd);
+        return validateGenerate(cmd, game);
     }
     if (strcmp(cmd->action, ACTION_UNDO) == 0) {
         return validateUndo(cmd);

@@ -17,7 +17,7 @@ void setAllFilledCellsAsFixed(SudokuBoard* board){
     }
 }
 
-SudokuBoard* BT_numberOfSolutions(SudokuBoard* board){
+int BT_numberOfSolutions(SudokuBoard* board){
 /*int BT_numberOfSolutions(SudokuBoard* board){*/
     int i = 0, numOfSolutions = 0, value;
     const int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
@@ -35,8 +35,7 @@ SudokuBoard* BT_numberOfSolutions(SudokuBoard* board){
         cell = board->cells[i];
 
         if (i == boardSize){
-            return board;
-            /*++numOfSolutions;*/
+            ++numOfSolutions;
         } else {
             /*Pushing all non-exhausted values of the cell to the stack.*/
             for (value = 1; value < board->blockRows * board->blockColumns + 1; value++) {

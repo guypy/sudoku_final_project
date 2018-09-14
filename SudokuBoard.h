@@ -2,6 +2,7 @@
 #define SUDOKU_CONSOLE_SUDOKUBOARD_H
 
 #include <stdbool.h>
+#define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
 
 typedef struct {
     int value;
@@ -25,10 +26,12 @@ int sb_isFull(SudokuBoard *sb);
 bool sb_isSolvable(SudokuBoard *board);
 bool sb_isErroneous(SudokuBoard *board);
 void sb_cellValidations(SudokuBoard *sb);
-bool cell_isValid(SudokuBoard *sb, int cell_value, int idxInBoard);
+void sb_empty(SudokuBoard* board);
+bool sb_isEmpty(SudokuBoard* board);
 bool checkRow(SudokuBoard* sb, int cell_value, int idxInBoard);
 bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard);
 bool checkBlock(SudokuBoard* sb, int cell_value, int idxInBoard);
 bool isCellFixed(Cell *cell);
+bool cell_isValid(SudokuBoard *sb, int cell_value, int idxInBoard);
 
 #endif

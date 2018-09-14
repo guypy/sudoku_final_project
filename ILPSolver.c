@@ -171,8 +171,6 @@ void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* sol
 }
 
 SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
-    *resultCode = SOLVED;
-    return BT_numberOfSolutions(board);
     SudokuBoard* solvedBoard = sb_deepCloneBoard(board);
     GRBenv   *env   = NULL;
     GRBmodel *model = NULL;
