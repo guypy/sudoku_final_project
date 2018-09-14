@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include "CommandExecutions.h"
+#include "Game.h"
 
 void executeSolve(Game* game, Command* cmd) {
     restartGame(game);
@@ -12,6 +13,7 @@ void executeSolve(Game* game, Command* cmd) {
         return;
     }
     game->mode = SOLVE;
+    sb_print(game->board, game->markErrors);
 }
 
 void executeEdit(Game* game, Command* cmd) {
@@ -20,10 +22,14 @@ void executeEdit(Game* game, Command* cmd) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
         if (game->board == NULL)
             errPrinter_cannotOpenFile();
+        else
+            sb_print(game->board, true);
     } else {
         game->board = sb_create(DEFAULT_BLOCK_SIZE, DEFAULT_BLOCK_SIZE);
+        sb_print(game->board, true);
     }
     game->mode = EDIT;
+
 }
 
 void executeMarkErrors(Game* game, Command* cmd) {
@@ -55,7 +61,7 @@ void executeSet(Game* game, Command* cmd) {
     destroyNextNodesBeforeAppend(game);
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
-    sb_print(game->board, game->markErrors);
+    sb_print(game->board, game->markErrors || game->mode == EDIT);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
@@ -197,7 +203,7 @@ void undoAutofillCmd(Game* game, bool shouldPrint){
     sb_cellValidations(game->board);
 
     if (shouldPrint == true){
-        sb_print(game->board, game->markErrors);
+        sb_print(game->board, game->markErrors || game->mode == EDIT);
     }
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
@@ -231,7 +237,7 @@ void undoSetCmd(Game* game, bool shouldPrint){
     sb_cellValidations(game->board);
 
     if (shouldPrint == true){
-        sb_print(game->board, game->markErrors);
+        sb_print(game->board, game->markErrors || game->mode == EDIT);
 
         printUndoStep(currentValue, prevValue, column, row);
     }
@@ -320,7 +326,7 @@ void redoAutofillCmd(Game* game, Node* nodeToRedo){
     }
     sb_cellValidations(game->board);
 
-    sb_print(game->board, game->markErrors);
+    sb_print(game->board, game->markErrors || game->mode == EDIT);
 
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
@@ -354,7 +360,7 @@ void redoSetCmd(Game* game, Node* nodeToRedo){
     game->board->cells[idxToSet]->valid = cell_isValid(game->board, newValue, idxToSet);
     sb_cellValidations(game->board);
 
-    sb_print(game->board, game->markErrors);
+    sb_print(game->board, game->markErrors || game->mode == EDIT);
 
     printRedoStep(newValue, currentValue,column, row);
 
@@ -500,7 +506,7 @@ void executeAutofill(Game* game, Command* cmd) {
         game->undoRedoList->tail->autoFillList = valuesToFill; /* make the 'autofill node' in the undoRedoList have a valuesToFill list */
         game->undoRedoListPointer = game->undoRedoList->tail;
     }
-    sb_print(game->board, game->markErrors);
+    sb_print(game->board, game->markErrors || game->mode == EDIT);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();

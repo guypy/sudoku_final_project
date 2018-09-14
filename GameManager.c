@@ -2,6 +2,7 @@
 #include <string.h>
 #include "stdio.h"
 #include "GameManager.h"
+#include "Command.h"
 
 int startGame() {
     Game* game = createGame();
