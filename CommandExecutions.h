@@ -19,7 +19,6 @@ void executeGenerate(Game* game, Command* cmd);
 bool fillBoardWithRandValues(SudokuBoard* board, int valueToFillCount);
 void removeValuesFromBoard(SudokuBoard* board, int valueToRemoveCount);
 bool isCellSolvable(SudokuBoard* board, int idx);
-void executeUndo(Game* game, Command* cmd);
 void executeUndo(Game *game, bool shouldPrint);
 void executeRedo(Game* game, Command* cmd);
 void executeSave(Game* game, Command* cmd);
