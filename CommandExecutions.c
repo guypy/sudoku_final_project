@@ -79,8 +79,8 @@ void executeValidate(Game* game) {
     solved = ILP_solve(game->board, &resultCode);
     switch (resultCode) {
         case SOLVED:
+            sb_destroyBoard(solved);
             printf("Validation passed: board is solvable\n");
-            free(solved);
             break;
         case NO_SOLUTION:
             printf("Validation failed: board is unsolvable\n");
