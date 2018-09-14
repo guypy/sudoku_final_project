@@ -21,5 +21,6 @@ typedef struct {
 
 Game* createGame();
 void destroyGame(Game * game);
+void restartGame(Game* game);
 
 #endif

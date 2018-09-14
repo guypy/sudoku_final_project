@@ -89,7 +89,7 @@ void executeCommand(Game* game, Command * cmd){
         executeGenerate(game, cmd);
     }
     if (strcmp(cmd->action, ACTION_UNDO) == 0) {
-        executeUndo(game, cmd);
+        executeUndo(game, true);
     }
     if (strcmp(cmd->action, ACTION_REDO) == 0) {
         executeRedo(game, cmd);

@@ -20,3 +20,12 @@ void destroyGame(Game* game) {
     if (game->board != NULL) sb_destroyBoard(game->board);
     free(game);
 }
+
+void restartGame(Game* game){
+    game->mode = INIT;
+    destroyList(game->undoRedoList);
+    game->undoRedoList = createList();
+    game->markErrors = true;
+    game->undoRedoListPointer = game->undoRedoList->tail;
+    sb_destroyBoard(game->board);
+}
