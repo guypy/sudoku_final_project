@@ -133,7 +133,7 @@ void gameLoop(Game* game) {
         executeCommand(game, cmd);
 
         if (strcmp(cmd->action, ACTION_AUTOFILL) != 0 &&
-            strcmp(cmd->action, ACTION_SET)      != 0 &&
+            strcmp(cmd->action, ACTION_SET) != 0 &&
             strcmp(cmd->action, ACTION_GENERATE) != 0) {
             cmd_freeCommand(cmd);
         }

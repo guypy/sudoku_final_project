@@ -59,7 +59,7 @@ void executeSet(Game* game, Command* cmd) {
     oldValue = game->board->cells[idx]->value;
 
     if (oldValue == valueToSet) {
-        cmd_freeCommand(cmd);
+        sprintf(cmd->action, "redundant_set");
         return;
     }
 
