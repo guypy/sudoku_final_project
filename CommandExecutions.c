@@ -98,10 +98,6 @@ void executeGenerate(Game* game, Command* cmd) {
         if (!fillBoardWithRandValues(game->board, valuesToFillCount))
             continue;
         solved = ILP_solve(game->board, &resultCode);
-        if (resultCode != SOLVED)
-            sb_destroyBoard(solved);
-        if (resultCode == SOLVED)
-            sb_print(solved, false);
     } while (resultCode != SOLVED && tryCount < 1000);
     printf("out of loop");
     if (tryCount == 1000) {

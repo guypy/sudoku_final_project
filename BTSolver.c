@@ -18,7 +18,6 @@ void setAllFilledCellsAsFixed(SudokuBoard* board){
 }
 
 int BT_numberOfSolutions(SudokuBoard* board){
-/*int BT_numberOfSolutions(SudokuBoard* board){*/
     int i = 0, numOfSolutions = 0, value;
     const int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
     Stack * stack = stack_create();
