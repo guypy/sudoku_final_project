@@ -23,7 +23,6 @@ int BT_numberOfSolutions(SudokuBoard* board){
     const int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
     Stack * stack = stack_create();
     StackItem* popped;
-    Cell* cell;
     board = sb_deepCloneBoard(board);
     setAllFilledCellsAsFixed(board);
 
