@@ -3,9 +3,6 @@
 #include <assert.h>
 #include <string.h>
 #include "CommandExecutions.h"
-#include "Game.h"
-#include "SudokuBoard.h"
-#include "Command.h"
 
 void executeSolve(Game* game, Command* cmd) {
     restartGame(game);
@@ -54,6 +51,7 @@ void executeSet(Game* game, Command* cmd) {
     oldValue = game->board->cells[idx]->value;
     cmd->prevValue = oldValue;
     game->board->cells[idx]->value = valueToSet;
+    sb_cellValidations(game->board);
     destroyNextNodesBeforeAppend(game);
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
@@ -195,6 +193,8 @@ void undoAutofillCmd(Game* game, bool shouldPrint){
         game->board->cells[idxToUndo]->valid = cell_isValid(game->board, prevValue, idxToUndo);
         currentAutoFillNode = currentAutoFillNode->next;
     }
+    sb_cellValidations(game->board);
+
     if (shouldPrint == true){
         sb_print(game->board, game->markErrors);
     }
@@ -227,6 +227,7 @@ void undoSetCmd(Game* game, bool shouldPrint){
     idxToUndo = row * (blockColumns*blockRows) + column;
     game->board->cells[idxToUndo]->value = prevValue;
     game->board->cells[idxToUndo]->valid = cell_isValid(game->board, prevValue, idxToUndo);
+    sb_cellValidations(game->board);
 
     if (shouldPrint == true){
         sb_print(game->board, game->markErrors);
@@ -276,11 +277,12 @@ void executeRedo(Game* game) {
         errPrinter_noMovesToRedo();
         return;
     }
+
     action = nodeToRedo->data->action;
-    if (strcmp(action, "set") == 0){
+    if (strcmp(action, ACTION_SET) == 0){
         redoSetCmd(game, nodeToRedo);
     }
-    if (strcmp(action, "autofill") == 0){
+    if (strcmp(action, ACTION_AUTOFILL) == 0){
         redoAutofillCmd(game, nodeToRedo);
     }
 }
@@ -315,7 +317,10 @@ void redoAutofillCmd(Game* game, Node* nodeToRedo){
         game->board->cells[idxToRedo]->valid = cell_isValid(game->board, newValue, idxToRedo);
         currentAutoFillNode = currentAutoFillNode->next;
     }
+    sb_cellValidations(game->board);
+
     sb_print(game->board, game->markErrors);
+
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
         newValue = atoi(currentAutoFillNode->data->args[2]);;
@@ -346,6 +351,7 @@ void redoSetCmd(Game* game, Node* nodeToRedo){
 
     game->board->cells[idxToSet]->value = newValue;
     game->board->cells[idxToSet]->valid = cell_isValid(game->board, newValue, idxToSet);
+    sb_cellValidations(game->board);
 
     sb_print(game->board, game->markErrors);
 
@@ -482,6 +488,7 @@ void executeAutofill(Game* game, Command* cmd) {
     }
     if (valuesToFill->size > 0){
         autoFillValues(valuesToFill, game);
+        sb_cellValidations(game->board);
         destroyNextNodesBeforeAppend(game);
         append(game->undoRedoList, cmd);
         game->undoRedoList->tail->autoFillList = valuesToFill; /* make the 'autofill node' in the undoRedoList have a valuesToFill list */

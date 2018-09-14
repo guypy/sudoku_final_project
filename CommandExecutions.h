@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #include "Command.h"
+#include "CommandManager.h"
 #include "FileHandler.h"
 #include "ErrorPrinter.h"
 #include "SudokuBoard.h"
