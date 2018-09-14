@@ -32,15 +32,12 @@ int BT_numberOfSolutions(SudokuBoard* board){
     }
 
     while (true) {
-        printf("%d", i);
-        cell = board->cells[i];
-
         if (i == boardSize){
             ++numOfSolutions;
         } else {
             /*Pushing all non-exhausted values of the cell to the stack.*/
             for (value = 1; value < board->blockRows * board->blockColumns + 1; value++) {
-                if (cell->exhaustedValues[value - 1] == true) {
+                if (board->cells[i]->exhaustedValues[value - 1] == true) {
                     continue;
                 }
                 if (!cell_isValid(board, value, i)){
