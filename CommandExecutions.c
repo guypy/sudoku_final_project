@@ -263,7 +263,7 @@ void undoSet(Game *game, bool shouldPrint){
 void undoGenerate(Game *game, bool shouldPrint) {
     sb_empty(game->board);
     if(shouldPrint) {
-        printf("Undo Generate, board is empty");
+        printf("Undo Generate, board is empty\n");
         sb_print(game->board, game->markErrors || game->mode == EDIT);
     }
 }
@@ -396,7 +396,7 @@ void redoGenerate(Game *game, Node *nodeToRedo) {
     sb_destroyBoard(game->board);
     game->board = sb_deepCloneBoard(nodeToRedo->generatedBoard);
     sb_print(game->board, game->markErrors || game->mode == EDIT);
-    printf("Redo: Generated board");
+    printf("Redo: Generated board\n");
 }
 
 void printRedoStep(int newValue, int oldValue, int column, int row){
