@@ -80,6 +80,7 @@ void executeValidate(Game* game, Command * cmd) {
     switch (resultCode) {
         case SOLVED:
             printf("Validation passed: board is solvable\n");
+            free(solved);
             break;
         case NO_SOLUTION:
             printf("Validation failed: board is unsolvable\n");
