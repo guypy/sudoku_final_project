@@ -12,6 +12,7 @@ Game* createGame(){
     game->undoRedoList = createList();
     game->markErrors = true;
     game->undoRedoListPointer = game->undoRedoList->tail;
+    game->solvedBoard = NULL;
     return game;
 }
 
@@ -23,6 +24,9 @@ void destroyGame(Game* game) {
 }
 
 void restartGame(Game* game){
+    if (game == NULL){
+        return;
+    }
     game->mode = INIT;
     destroyList(game->undoRedoList);
     game->undoRedoList = createList();
