@@ -55,6 +55,9 @@ void destroyFromNode(LinkedList *lst, Node *node) {
 }
 
 void destroyList(LinkedList * lst) {
+    if (lst == NULL){
+        return;
+    }
     destroyFromNode(lst, lst->head);
     free(lst);
 }
