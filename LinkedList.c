@@ -32,6 +32,9 @@ void destroyNode(LinkedList *lst, Node *node) {
     if(lst->head == node){
         lst->head = node->next;
     }
+    if(lst->tail == node) {
+        lst->tail = node->prev;
+    }
     if(node->next != NULL){
         node->next->prev = node->prev;
     }

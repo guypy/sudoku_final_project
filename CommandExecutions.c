@@ -514,12 +514,12 @@ void executeAutofill(Game* game, Command* cmd) {
 void destroyNextNodesBeforeAppend(const Game *game) {
     if (game->undoRedoListPointer != NULL){
             destroyFromNode(game->undoRedoList, game->undoRedoListPointer->next);
-        } else{
-        /* if we undid all moves in the list, the undoRedoListPointer == NULL but there are still nodes in the list */
-            if (game->undoRedoList->head != NULL){
-                destroyFromNode(game->undoRedoList, game->undoRedoList->head);
-            }
+    } else{
+    /* if we undid all moves in the list, the undoRedoListPointer == NULL but there are still nodes in the list */
+        if (game->undoRedoList->head != NULL){
+            destroyFromNode(game->undoRedoList, game->undoRedoList->head);
         }
+    }
 }
 
 void autoFillValues(LinkedList* valuesToFill, Game* game){
