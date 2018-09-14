@@ -159,15 +159,10 @@ void copySolution(SudokuBoard* board, const double *solutionMatrix) {
 }
 
 void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* solutionMatrix) {
-    printf("1\n");
     if (solutionMatrix != NULL) free(solutionMatrix);
-    printf("2\n");
     if (model != NULL)           GRBfreemodel(model);
-    printf("3\n");
     if (env != NULL)             GRBfreeenv(env);
-    printf("4\n");
     if (board != NULL)           sb_destroyBoard(board);
-    printf("5\n");
 }
 
 SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
@@ -186,6 +181,8 @@ SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
         errPrinter_puzzleGurobiFailure("Load env", errorCode);
         return NULL;
     }
+
+    GRBsetintparam(env, GRB_INT_PAR_LOGTOCONSOLE, 0);
 
     errorCode = createModel(env, &model, board);
     if (errorCode) {

@@ -101,7 +101,7 @@ void executeGenerate(Game* game, Command* cmd) {
             continue;
         solved = ILP_solve(game->board, &resultCode);
     } while (resultCode != SOLVED && tryCount < 1000);
-    printf("out of loop");
+    
     if (tryCount == 1000) {
         errPrinter_puzzleGeneratorFailed();
         sb_empty(game->board);
