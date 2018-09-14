@@ -12,7 +12,7 @@ Game* createGame(){
     game->undoRedoList = createList();
     game->markErrors = true;
     game->undoRedoListPointer = game->undoRedoList->tail;
-    game->solvedBoard = NULL;
+    game->board = NULL;
     return game;
 }
 
