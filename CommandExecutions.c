@@ -423,6 +423,7 @@ void executeHint(Game* game, Command* cmd) {
     switch (resultCode) {
         case SOLVED:
             printf("Hint: set cell to %d\n", solved->cells[cellIdx]->value);
+            sb_destroyBoard(solved);
             break;
         case NO_SOLUTION:
             errPrinter_unsolvableBoard();

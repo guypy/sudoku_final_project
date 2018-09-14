@@ -133,7 +133,7 @@ bool sb_isSolvable(SudokuBoard* board) {
     SudokuBoard* solved;
     solved = ILP_solve(board, &resultCode);
     if (resultCode == SOLVED) {
-        free(solved);
+        sb_destroyBoard(solved);
         return true;
     }
     return false;
