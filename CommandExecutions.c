@@ -167,10 +167,10 @@ void executeUndo(Game *game, bool shouldPrint) {
         return;
     }
     action = currentNode->data->action;
-    if (strcmp(action, "set") == 0){
+    if (strcmp(action, ACTION_SET) == 0){
         undoSetCmd(game, shouldPrint);
     }
-    if (strcmp(action, "autofill") == 0){
+    if (strcmp(action, ACTION_AUTOFILL) == 0){
         undoAutofillCmd(game, shouldPrint);
     }
 }

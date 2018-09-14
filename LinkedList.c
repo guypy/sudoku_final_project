@@ -43,6 +43,7 @@ void destroyNode(LinkedList *lst, Node *node) {
     if (node->autoFillList != NULL){
         destroyList(node->autoFillList);
     }
+    if (node->data != NULL) cmd_freeCommand(node->data);
     free(node);
 }
 
