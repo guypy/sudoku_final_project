@@ -122,6 +122,7 @@ void gameLoop(Game* game) {
         }
         if (validateCommand(cmd, game) == false){
             errPrinter_invalidCommand();
+            cmd_freeCommand(cmd);
             continue;
         }
         if (strcmp(cmd->action, ACTION_EXIT) == 0) {
