@@ -40,5 +40,6 @@ void printRedoStep(int newValue, int oldValue, int column, int row);
 void redoSetCmd(Game* game, Node* nodeToRedo);
 Node* getNodeToRedo(Game* game, Node* currentNode);
 void redoAutofillCmd(Game* game, Node* nodeToRedo);
+int getNumOfChars(int num);
 
 #endif
