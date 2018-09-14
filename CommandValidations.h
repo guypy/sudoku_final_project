@@ -13,7 +13,7 @@ bool validateMarkErrors(Command* cmd);
 bool validatePrintBoard(Command* cmd);
 bool validateSet(Command *cmd, Game* game);
 bool validateValidate(Command* cmd);
-bool validateGenerate(Command* cmd);
+bool validateGenerate(Command* cmd, Game* game);
 bool validateUndo(Command* cmd);
 bool validateRedo(Command* cmd);
 bool validateSave(Command* cmd);

@@ -4,6 +4,6 @@
 #include "Stack.h"
 #include "SudokuBoard.h"
 
-SudokuBoard* BT_numberOfSolutions(SudokuBoard* board);
+int BT_numberOfSolutions(SudokuBoard* board);
 
 #endif

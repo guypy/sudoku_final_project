@@ -15,7 +15,6 @@ typedef struct {
     int mode;
     bool markErrors;
     SudokuBoard* board;
-    SudokuBoard* solvedBoard;
     LinkedList* undoRedoList;
     Node* undoRedoListPointer;
 } Game;
