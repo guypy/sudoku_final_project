@@ -442,7 +442,7 @@ void executeNumSolutions(Game* game) {
 }
 
 void executeAutofill(Game* game, Command* cmd) {
-    int i, numOfCells, blockRows, blockColumns,value;
+    int i, numOfCells, blockRows, blockColumns,value, numOfChars;
     int* impossibleValues;  /*list of bool values, 1 in index x means x is an impssible value for a cell*/
     LinkedList* valuesToFill = createList();
     Command* valueToSetCmd;
@@ -466,11 +466,14 @@ void executeAutofill(Game* game, Command* cmd) {
         if (value != -1) { /*there is only one possible value*/
             args = malloc(1024 * sizeof(char));
             assert(args);
-            args[0] =(char*)malloc(snprintf(NULL, 0, "%d", (i % (blockRows * blockColumns)) + 1));
+            numOfChars = getNumOfChars(i % (blockRows * blockColumns));
+            args[0] = (char*)calloc((size_t) (numOfChars + 1), sizeof(char));
             sprintf(args[0], "%d", (i % (blockRows * blockColumns)));
-            args[1] = (char*)malloc(snprintf(NULL, 0, "%d", (i / (blockRows * blockColumns)) + 1));
+            numOfChars = getNumOfChars(i / (blockRows * blockColumns));
+            args[1] = (char*)calloc((size_t) (numOfChars + 1), sizeof(char));
             sprintf(args[1], "%d", i / (blockRows * blockColumns));
-            args[2] = (char*)malloc(snprintf(NULL, 0, "%d", value + 1));
+            numOfChars = getNumOfChars(value);
+            args[2] = (char*)calloc((size_t) (numOfChars + 1), sizeof(char));
             sprintf(args[2], "%d", value);
             valueToSetCmd = cmd_createCommand(args, "SET", NULL, 3);
             append(valuesToFill, valueToSetCmd);
@@ -597,6 +600,18 @@ void updateImpValuesInBlock(int *impossibleValues, int cellRow, int cellcCol, in
             }
         }
     }
+}
+
+int getNumOfChars(int num){
+    int count = 0;
+    if (num == 0){
+        return 1;
+    }
+    while (num != 0){
+        num = num / 10;
+        count += 1;
+    }
+    return count;
 }
 
 void executeReset(Game* game) {
