@@ -103,7 +103,12 @@ void sb_destroyBoard(SudokuBoard* sb) {
     free(sb);
 }
 
-
+void sb_setAllCellsUnfixed(SudokuBoard* board) {
+    int i;
+    for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i){
+        board->cells[i]->fixed = false;
+    }
+}
 /*
  * This functions checks if the sudoku board is full, i.e there are no cells with value '0'.
  * @return: 1 if full, 0 if not full

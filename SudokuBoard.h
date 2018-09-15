@@ -26,6 +26,7 @@ SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb);
 int sb_isFull(SudokuBoard *sb);
 bool sb_isSolvable(SudokuBoard *board);
 bool sb_isErroneous(SudokuBoard *board);
+void sb_setAllCellsUnfixed(SudokuBoard* board);
 void sb_cellValidations(SudokuBoard *sb);
 void sb_empty(SudokuBoard* board);
 bool sb_isEmpty(SudokuBoard* board);

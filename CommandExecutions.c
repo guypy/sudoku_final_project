@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 #include "CommandExecutions.h"
+#include "Game.h"
 
 void executeSolve(Game* game, Command* cmd) {
     restartGame(game);
@@ -19,6 +20,7 @@ void executeEdit(Game* game, Command* cmd) {
     restartGame(game);
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
+        sb_setAllCellsUnfixed(game->board);
         if (game->board == NULL){
             errPrinter_cannotOpenFile();
             return;
