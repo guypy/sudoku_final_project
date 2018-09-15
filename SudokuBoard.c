@@ -48,7 +48,7 @@ bool isCellFixed(Cell *cell){
 
 void printDashes(int n, int m) {
     int i;
-    for (i = 0; i < 4 * n * n + m + 1; i++)
+    for (i = 0; i < 4 * n * m + m + 1; i++)
         printf("-");
 }
 
