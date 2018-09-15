@@ -152,6 +152,10 @@ void sb_destroyBoard(SudokuBoard* sb) {
     free(sb);
 }
 
+/**
+ * This function sets all cell in a given board as not fixed.
+ * @param board - pointer to sudoku board struct.
+ */
 void sb_setAllCellsUnfixed(SudokuBoard* board) {
     int i;
     for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i){
