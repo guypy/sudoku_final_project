@@ -10,7 +10,7 @@ void errPrinter_erroneousValues(){
 }
 
 void errPrinter_valueNotInRange(int min, int max){
-    printf("Error: value not in range %d-%d \n", min, max);
+    printf("Error: value not in range %d-%d\n", min, max);
 }
 
 void errPrinter_fixedCell(){

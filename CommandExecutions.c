@@ -428,7 +428,9 @@ void executeSave(Game* game, Command* cmd) {
     }
     if (!fileHandler_saveBoardToFile(game->board, path, game->mode == EDIT)){
         errPrinter_cannotCreateOrModifyFile();
+        return;
     }
+    printf("Saved to: %s\n", path);
 }
 
 void executeHint(Game* game, Command* cmd) {

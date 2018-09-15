@@ -55,7 +55,7 @@ bool validatePrintBoard() {
 
 bool validateSet(Command *cmd, Game* game) {
     Cell* cell;
-    int i, column, row, idx, blockColumns, blockRows;
+    int i, column, row, idx, blockColumns, blockRows, value;
 
     if(cmd->numOfArgs < 3) {
         errPrinter_invalidCommand();
@@ -70,9 +70,20 @@ bool validateSet(Command *cmd, Game* game) {
             return false;
         }
     }
-    /* validate cell is not fixed */
     column = atoi(cmd->args[0]) - 1;
     row = atoi(cmd->args[1]) - 1;
+    value = atoi(cmd->args[2]);
+
+    /* validate column and row are in correct range*/
+    if (column < 0 || column > (blockColumns * blockRows) - 1 ||
+            row < 0 || row > (blockColumns * blockRows) - 1 ||
+            value < 0 || value > (blockColumns * blockRows)){
+
+        errPrinter_valueNotInRange(0, blockColumns*blockRows);
+        return false;
+    }
+
+    /* validate cell is not fixed */
     idx = row * (blockColumns*blockRows) + column;
     cell = game->board->cells[idx];
     if (isCellFixed(cell)){
