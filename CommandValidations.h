@@ -8,19 +8,19 @@
 
 bool isNaN(char *arg);
 bool validateSolve(Command* cmd);
-bool validateEdit(Command* cmd);
+bool validateEdit();
 bool validateMarkErrors(Command* cmd);
-bool validatePrintBoard(Command* cmd);
+bool validatePrintBoard();
 bool validateSet(Command *cmd, Game* game);
-bool validateValidate(Command* cmd);
+bool validateValidate();
 bool validateGenerate(Command* cmd, Game* game);
-bool validateUndo(Command* cmd);
-bool validateRedo(Command* cmd);
+bool validateUndo();
+bool validateRedo();
 bool validateSave(Command* cmd);
 bool validateHint(Command* cmd, Game* game);
-bool validateNumSolutions(Command* cmd);
-bool validateAutofill(Command* cmd, Game* game);
-bool validateReset(Command* cmd);
-bool validateExit(Command* cmd);
+bool validateNumSolutions();
+bool validateAutofill();
+bool validateReset();
+bool validateExit();
 
 #endif

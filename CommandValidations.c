@@ -13,7 +13,7 @@ bool validateSolve(Command* cmd) {
     return true;
 }
 
-bool validateEdit(Command* cmd) {
+bool validateEdit() {
     return true;
 }
 
@@ -34,7 +34,7 @@ bool validateMarkErrors(Command* cmd) {
     return true;
 }
 
-bool validatePrintBoard(Command* cmd) {
+bool validatePrintBoard() {
     return true;
 }
 
@@ -77,7 +77,7 @@ bool validateSet(Command *cmd, Game* game) {
     return true;
 }
 
-bool validateValidate(Command* cmd) {
+bool validateValidate() {
     return true;
 }
 
@@ -108,11 +108,11 @@ bool validateGenerate(Command* cmd, Game* game) {
     return true;
 }
 
-bool validateUndo(Command* cmd) {
+bool validateUndo() {
     return true;
 }
 
-bool validateRedo(Command* cmd) {
+bool validateRedo() {
     return true;
 }
 
@@ -145,19 +145,19 @@ bool validateHint(Command* cmd, Game* game) {
     return true;
 }
 
-bool validateNumSolutions(Command* cmd) {
+bool validateNumSolutions() {
     return true;
 }
 
-bool validateAutofill(Command* cmd, Game* game) {
+bool validateAutofill() {
     return true;
 }
 
-bool validateReset(Command* cmd) {
+bool validateReset() {
     return true;
 }
 
-bool validateExit(Command* cmd) {
+bool validateExit() {
     return true;
 }
 
