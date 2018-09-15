@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "SudokuBoard.h"
-#include "Game.h"
-#include "ILPSolver.h"
 
 SudokuBoard* sb_create(int blockRows, int blockColumns){
     int i;
@@ -42,7 +40,7 @@ void printCell(Cell *cell, bool markErrors) {
     }
 }
 
-bool isCellFixed(Cell *cell){
+bool cell_isFixed(Cell *cell){
     return cell->fixed;
 }
 
@@ -71,15 +69,6 @@ void sb_print(SudokuBoard* sb, bool markErrors) {
     printf("|\n");
     printDashes(sb->blockRows, sb->blockColumns);
     printf("\n");
-}
-
-void sb_removeUnfixedCells(SudokuBoard *sb){
-    int i;
-    for (i = 0; i < BOARD_SIZE(sb->blockRows, sb->blockColumns); ++i){
-        if (sb->cells[i]->fixed == 0){
-            sb->cells[i]->value = 0;
-        }
-    }
 }
 
 SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb){

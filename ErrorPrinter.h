@@ -1,5 +1,6 @@
 #ifndef SUDOKU_CONSOLE_ERRORPRINTER_H
 #define SUDOKU_CONSOLE_ERRORPRINTER_H
+
 void errPrinter_invalidCommand();
 void errPrinter_erroneousValues();
 void errPrinter_valueNotInRange(int min, int max);

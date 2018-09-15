@@ -11,7 +11,5 @@
 #include "SudokuBoard.h"
 
 int startGame();
-void gameLoop(Game* game);
-void executeCommand(Game* game, Command * cmd);
 
 #endif

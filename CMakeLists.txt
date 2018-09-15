@@ -29,6 +29,6 @@ add_executable(sudoku_console
         Stack.h
         BTSolver.c
         BTSolver.h ILPSolver.c ILPSolver.h
-        gurobi_c.h)
+        gurobi_c.h ExecutionHelpers.c ExecutionHelpers.h)
 
 target_link_libraries(sudoku_console /Library/gurobi702/mac64/lib/libgurobi70.so)

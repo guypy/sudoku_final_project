@@ -3,9 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "CommandValidations.h"
-#include "Command.h"
-#include "Game.h"
-#include "SudokuBoard.h"
 
 bool isNaN(char *arg){
     int i;
@@ -86,7 +83,7 @@ bool validateSet(Command *cmd, Game* game) {
     /* validate cell is not fixed */
     idx = row * (blockColumns*blockRows) + column;
     cell = game->board->cells[idx];
-    if (isCellFixed(cell)){
+    if (cell_isFixed(cell)){
         errPrinter_fixedCell();
         return false;
     }

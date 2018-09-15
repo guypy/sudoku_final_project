@@ -20,7 +20,6 @@ typedef struct LinkedList {
 
 LinkedList* createList();
 void append(LinkedList * lst, Command * cmd);
-void destroyNode(LinkedList *lst, Node *node);
 void destroyFromNode(LinkedList *lst, Node *node);
 void destroyList(LinkedList * lst);
 

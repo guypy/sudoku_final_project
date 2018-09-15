@@ -4,14 +4,6 @@
 #include "GameManager.h"
 #include "Command.h"
 
-int startGame() {
-    Game* game = createGame();
-    printf("Sudoku\n------\n");
-    gameLoop(game);
-    destroyGame(game);
-    return 0;
-}
-
 static bool validateMode(Game *game, Command *cmd) {
     if (cmd->validModes[game->mode] == 0)
         return false;
@@ -138,4 +130,12 @@ void gameLoop(Game* game) {
             cmd_freeCommand(cmd);
         }
     }
+}
+
+int startGame() {
+    Game* game = createGame();
+    printf("Sudoku\n------\n");
+    gameLoop(game);
+    destroyGame(game);
+    return 0;
 }

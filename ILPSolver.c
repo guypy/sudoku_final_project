@@ -2,8 +2,6 @@
 #include <assert.h>
 #include "stdio.h"
 #include "ILPSolver.h"
-#include "SudokuBoard.h"
-#include "BTSolver.h"
 
 #define pow3(x) x*x*x
 

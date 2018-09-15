@@ -2,6 +2,7 @@
 #define SUDOKU_CONSOLE_SUDOKUBOARD_H
 
 #include <stdbool.h>
+#include "ILPSolver.h"
 #define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
 
 typedef struct {
@@ -19,7 +20,6 @@ typedef struct{
 
 SudokuBoard* sb_create(int blockRows, int blockColumns);
 void sb_print(SudokuBoard* sb, bool markErrors);
-void sb_removeUnfixedCells(SudokuBoard *sb);
 void sb_destroyBoard(SudokuBoard* sb);
 SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb);
 int sb_isFull(SudokuBoard *sb);
@@ -28,10 +28,7 @@ bool sb_isErroneous(SudokuBoard *board);
 void sb_cellValidations(SudokuBoard *sb);
 void sb_empty(SudokuBoard* board);
 bool sb_isEmpty(SudokuBoard* board);
-bool checkRow(SudokuBoard* sb, int cell_value, int idxInBoard);
-bool checkColumn(SudokuBoard* sb, int cell_value, int idxInBoard);
-bool checkBlock(SudokuBoard* sb, int cell_value, int idxInBoard);
-bool isCellFixed(Cell *cell);
+bool cell_isFixed(Cell *cell);
 bool cell_isValid(SudokuBoard *sb, int cell_value, int idxInBoard);
 
 #endif

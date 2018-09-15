@@ -66,5 +66,5 @@ void errPrinter_puzzleSolutionErroneous(){
 }
 
 void errPrinter_puzzleGurobiFailure(char* error, int errorCode){
-    printf("Puzzle solving failed due to gurobi failure: %s, %d\n", error, errorCode);
+    printf("Puzzle solving failed due to Gurobi failure: %s, %d\n", error, errorCode);
 }
