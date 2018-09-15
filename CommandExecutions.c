@@ -328,7 +328,7 @@ void executeAutofill(Game* game, Command* cmd) {
         destroyList(valuesToFill);
     }
     executePrintBoard(game);
-    if (game->mode == SOLVED && sb_isFull(game->board)){
+    if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
         }
