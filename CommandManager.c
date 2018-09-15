@@ -98,9 +98,9 @@ Command* cmdMngr_fetchCommand() {
     assert(args);
     assert(action);
 
-    printf("Enter your command:\n");
     /* Split input into tokens, cmdpt pointing to the first token. */
     while (cmdpt == NULL) {
+        printf("Enter your command:\n");
         if (fgets(cmd_str, 1024, stdin) == NULL) {
             strcpy(cmdpt, ACTION_EXIT);
             break;
