@@ -9,8 +9,8 @@ void errPrinter_erroneousValues(){
     printf("Error: board contains erroneous values\n");
 }
 
-void errPrinter_valueNotInRange(int n){
-    printf("Error: value not in range 0-%d \n", n);
+void errPrinter_valueNotInRange(int min, int max){
+    printf("Error: value not in range %d-%d \n", min, max);
 }
 
 void errPrinter_fixedCell(){

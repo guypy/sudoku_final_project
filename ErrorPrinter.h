@@ -2,7 +2,7 @@
 #define SUDOKU_CONSOLE_ERRORPRINTER_H
 void errPrinter_invalidCommand();
 void errPrinter_erroneousValues();
-void errPrinter_valueNotInRange(int n);
+void errPrinter_valueNotInRange(int min, int max);
 void errPrinter_fixedCell();
 void errPrinter_unsolvableBoard();
 void errPrinter_cellContainsValue();

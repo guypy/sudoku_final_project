@@ -50,7 +50,7 @@ bool validateSet(Command *cmd, Game* game) {
     /* validate arguments are valid integers */
     for (i = 0; i < cmd->numOfArgs; ++i){
         if (isNaN(cmd->args[i])){
-            errPrinter_valueNotInRange(blockColumns*blockRows);
+            errPrinter_valueNotInRange(0, blockColumns*blockRows);
             return false;
         }
     }
@@ -78,7 +78,7 @@ bool validateGenerate(Command* cmd, Game* game) {
     }
     for (i = 0; i < cmd->numOfArgs; ++i){
         if (isNaN(cmd->args[i])){
-            errPrinter_valueNotInRange(boardSize);
+            errPrinter_valueNotInRange(0, boardSize);
             return false;
         }
     }
@@ -86,7 +86,7 @@ bool validateGenerate(Command* cmd, Game* game) {
     y = atoi(cmd->args[1]);
 
     if (x > boardSize || x < 0 || y > boardSize || y < 0) {
-        errPrinter_valueNotInRange(boardSize);
+        errPrinter_valueNotInRange(0, boardSize);
         return false;
     }
     if(!sb_isEmpty(game->board)) {
@@ -120,7 +120,7 @@ bool validateHint(Command* cmd, Game* game) {
         return false;
 
     if (isNaN(cmd->args[0]) || isNaN(cmd->args[1])){
-        errPrinter_valueNotInRange(blockColumns * blockRows);
+        errPrinter_valueNotInRange(1, blockColumns * blockRows);
         return false;
     }
 
@@ -128,7 +128,7 @@ bool validateHint(Command* cmd, Game* game) {
     cellRow = atoi(cmd->args[1]);
 
     if (cellColumn > blockColumns * blockRows || cellColumn < 1 || cellRow > blockColumns * blockRows || cellRow < 1) {
-        errPrinter_valueNotInRange(blockColumns * blockRows);
+        errPrinter_valueNotInRange(1, blockColumns * blockRows);
         return false;
     }
     return true;

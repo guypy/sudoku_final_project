@@ -127,6 +127,7 @@ void gameLoop(Game* game) {
             continue;
         }
         if (strcmp(cmd->action, ACTION_EXIT) == 0) {
+            printf("Exiting...\n");
             cmd_freeCommand(cmd);
             break;
         }
