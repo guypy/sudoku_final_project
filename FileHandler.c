@@ -16,8 +16,8 @@ SudokuBoard* fileHandler_readBoardFromFile(char* path) {
 
 bool fileHandler_saveBoardToFile(SudokuBoard* board, char* path, bool allFixed) {
     int i;
-    int n = board->blockRows;
-    int m = board->blockColumns;
+    int n = board->blockColumns;
+    int m = board->blockRows;
     Cell* cell;
     FILE *file = fopen(path, "w");
     if (file == NULL) {
