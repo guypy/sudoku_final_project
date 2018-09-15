@@ -32,4 +32,4 @@ bool fillBoardWithRandValues(SudokuBoard* board, int valueToFillCount);
 void removeValuesFromBoard(SudokuBoard* board, int valueToRemoveCount);
 bool isCellSolvable(SudokuBoard* board, int idx);
 
-#endif //SUDOKU_CONSOLE_EXECUTIONHELPERS_H
+#endif
