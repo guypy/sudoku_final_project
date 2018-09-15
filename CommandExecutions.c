@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "CommandExecutions.h"
+#include "Game.h"
 
 /**
  *
@@ -42,6 +43,7 @@ void executeEdit(Game* game, Command* cmd) {
     restartGame(game);
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
+        sb_setAllCellsUnfixed(game->board);
         if (game->board == NULL){
             errPrinter_cannotOpenFile();
             return;
@@ -112,7 +114,7 @@ void executeSet(Game* game, Command* cmd) {
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
     executePrintBoard(game);
-    if (sb_isFull(game->board)){
+    if (game->mode == SOLVE && sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
         } else{
@@ -284,6 +286,7 @@ void executeSave(Game* game, Command* cmd) {
         }
         if (!sb_isSolvable(game->board)) {
             errPrinter_boardValidationFailed();
+            return;
         }
     }
     if (!fileHandler_saveBoardToFile(game->board, path, game->mode == EDIT)){
