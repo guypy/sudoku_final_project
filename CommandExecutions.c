@@ -543,6 +543,8 @@ void executeAutofill(Game* game, Command* cmd) {
         append(game->undoRedoList, cmd);
         game->undoRedoList->tail->autoFillList = valuesToFill; /* make the 'autofill node' in the undoRedoList have a valuesToFill list */
         game->undoRedoListPointer = game->undoRedoList->tail;
+    } else {
+        sprintf(cmd->action, "redundant_autofill");
     }
     executePrintBoard(game);
     if (sb_isFull(game->board)){
