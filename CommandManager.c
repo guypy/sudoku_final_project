@@ -84,6 +84,12 @@ int* getValidModesForAction(const char *action, int *validModes){
     return validModes;
 }
 
+void emptyBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {
+    }
+}
+
 Command* cmdMngr_fetchCommand() {
     char* cmd_str = malloc(1024 * sizeof(char));
     char** args = malloc(1024 * sizeof(char*));
@@ -105,9 +111,10 @@ Command* cmdMngr_fetchCommand() {
             cmdpt = ACTION_EXIT;
             break;
         }
+        if(strlen(cmd_str) > 256)
+            emptyBuffer();
         cmdpt = strtok(cmd_str, " \t\r\n");
     }
-
     /* action holds the Command action name */
     strcpy(action, cmdpt);
 
