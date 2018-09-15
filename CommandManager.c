@@ -108,9 +108,7 @@ Command* cmdMngr_fetchCommand() {
     while (cmdpt == NULL) {
         printf("Enter your command:\n");
         if (fgets(cmd_str, 1024, stdin) == NULL) {
-            strtok(cmd_str, " \t\r\n");
-            cmdpt = ACTION_EXIT;
-            break;
+            sprintf(cmd_str, "%s\n", ACTION_EXIT);
         }
         if(strlen(cmd_str) > 256)
             emptyBuffer();
