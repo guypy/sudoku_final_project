@@ -110,6 +110,7 @@ void executeGenerate(Game* game, Command* cmd) {
     SudokuBoard* solved = NULL;
 
     if (valueToRemoveCount == BOARD_SIZE(game->board->blockColumns, game->board->blockRows)) {
+        sprintf(cmd->action, "redundant_generate");
         executePrintBoard(game);
         return;
     }
