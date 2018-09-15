@@ -6,7 +6,6 @@
 #include "SudokuBoard.h"
 #include "Game.h"
 
-bool isNaN(char *arg);
 bool validateSolve(Command* cmd);
 bool validateEdit();
 bool validateMarkErrors(Command* cmd);

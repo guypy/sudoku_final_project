@@ -7,9 +7,23 @@
 #include "Game.h"
 #include "SudokuBoard.h"
 
+bool isNaN(char *arg){
+    int i;
+    char c;
+    for (i = 0; i < strlen(arg); ++i){
+        c = arg[i];
+        if (c < 48 || c > 57){
+            return true;
+        }
+    }
+    return false;
+}
+
 bool validateSolve(Command* cmd) {
-    if (cmd->numOfArgs < 1)
+    if (cmd->numOfArgs < 1) {
+        errPrinter_invalidCommand();
         return false;
+    }
     return true;
 }
 
@@ -20,6 +34,7 @@ bool validateEdit() {
 bool validateMarkErrors(Command* cmd) {
     int arg;
     if (cmd->numOfArgs < 1) {
+        errPrinter_invalidCommand();
         return false;
     }
     if (isNaN(cmd->args[0])) {
@@ -43,6 +58,7 @@ bool validateSet(Command *cmd, Game* game) {
     int i, column, row, idx, blockColumns, blockRows;
 
     if(cmd->numOfArgs < 3) {
+        errPrinter_invalidCommand();
         return false;
     }
     blockColumns = game->board->blockColumns;
@@ -74,6 +90,7 @@ bool validateGenerate(Command* cmd, Game* game) {
     int i, x, y;
     int boardSize = BOARD_SIZE(game->board->blockColumns, game->board->blockRows);
     if (cmd->numOfArgs < 2) {
+        errPrinter_invalidCommand();
         return false;
     }
     for (i = 0; i < cmd->numOfArgs; ++i){
@@ -106,8 +123,10 @@ bool validateRedo() {
 }
 
 bool validateSave(Command* cmd) {
-    if (cmd->numOfArgs < 1)
+    if (cmd->numOfArgs < 1) {
+        errPrinter_invalidCommand();
         return false;
+    }
     return true;
 }
 
@@ -116,8 +135,10 @@ bool validateHint(Command* cmd, Game* game) {
     int blockColumns = game->board->blockColumns;
     int blockRows = game->board->blockRows;
 
-    if (cmd->numOfArgs < 2)
+    if (cmd->numOfArgs < 2) {
+        errPrinter_invalidCommand();
         return false;
+    }
 
     if (isNaN(cmd->args[0]) || isNaN(cmd->args[1])){
         errPrinter_valueNotInRange(1, blockColumns * blockRows);
@@ -148,16 +169,4 @@ bool validateReset() {
 
 bool validateExit() {
     return true;
-}
-
-bool isNaN(char *arg){
-    int i;
-    char c;
-    for (i = 0; i < strlen(arg); ++i){
-        c = arg[i];
-        if (c < 48 || c > 57){
-            return true;
-        }
-    }
-    return false;
 }
