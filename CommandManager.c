@@ -102,7 +102,7 @@ Command* cmdMngr_fetchCommand() {
     while (cmdpt == NULL) {
         printf("Enter your command:\n");
         if (fgets(cmd_str, 1024, stdin) == NULL) {
-            strcpy(cmdpt, ACTION_EXIT);
+            cmdpt = ACTION_EXIT;
             break;
         }
         cmdpt = strtok(cmd_str, " \t\r\n");
