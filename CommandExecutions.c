@@ -545,6 +545,7 @@ void executeAutofill(Game* game, Command* cmd) {
         game->undoRedoListPointer = game->undoRedoList->tail;
     } else {
         sprintf(cmd->action, "redundant_autofill");
+        destroyList(valuesToFill);
     }
     executePrintBoard(game);
     if (sb_isFull(game->board)){
