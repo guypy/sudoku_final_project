@@ -3,6 +3,15 @@
 
 #include <stdbool.h>
 
+/**
+ *
+ * SudokuBoard Header File
+ *
+ * This interface contains the declaration of Cell and SudokuBoard structs, as well as the functions that can be
+ * performed on them.
+ *
+ */
+
 #define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
 typedef struct {
     int value;

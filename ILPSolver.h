@@ -5,6 +5,15 @@
 #include "ErrorPrinter.h"
 #include "SudokuBoard.h"
 
+/**
+ *
+ * ILPSolver Header File
+ *
+ * This interface declares functions needed to solve a sudokuboard using the Gurobi ILP solver.
+ * It also declares constants for the state of a solution.
+ *
+ */
+
 #define SOLVED 2
 #define NO_SOLUTION 1
 #define ERROR 0

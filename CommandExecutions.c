@@ -1,9 +1,24 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <assert.h>
 #include <string.h>
 #include "CommandExecutions.h"
 
+/**
+ *
+ *  Command Executions Source File
+ *
+ *  This file contains the implementation of functions that carry out the execution of all possible commands throughout the game.
+ *  Some functions may use helper methods defined in ExecutionHelpers.c.
+ *
+ */
+
+/**
+ * This function executes the "solve" command, which parses a file according to the path given by the user, and creates
+ * the game board accordingly. The mode of the game is switched to "solve".
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to the "solve" command being executed.
+ */
 void executeSolve(Game* game, Command* cmd) {
     restartGame(game);
     game->board = fileHandler_readBoardFromFile(cmd->args[0]);
@@ -15,6 +30,14 @@ void executeSolve(Game* game, Command* cmd) {
     executePrintBoard(game);
 }
 
+/**
+ * This function executes the "edit" command. This command can either create an empty game board, or parse a file
+ * according to the path given by the user and create the game board accordingly. The mode of the game is switched to
+ * "edit".
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to the "edit" command being executed.
+ */
 void executeEdit(Game* game, Command* cmd) {
     restartGame(game);
     if (cmd->numOfArgs > 0) {
@@ -30,14 +53,35 @@ void executeEdit(Game* game, Command* cmd) {
     executePrintBoard(game);
 }
 
+/**
+ * This function executes the "mark_errors" command, which changes the state of the "markErrors" attribute of the
+ * current game to 0 or 1 according to input of the user.
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to the "mark_errors" command being executed.
+ */
 void executeMarkErrors(Game* game, Command* cmd) {
     game->markErrors = (bool) atoi(cmd->args[0]);
 }
 
+/**
+ * This command executes the "print_board" command, which prints the current game board.
+ * @param game - pointer to current game struct.
+ */
 void executePrintBoard(Game* game) {
     sb_print(game->board, (game->markErrors || game->mode == EDIT));
 }
 
+/**
+ * This function executes the "set" command, which updates the value of a cell in the game board.
+ * Column, row, and new value of cell are stored as arguments of the command.
+ * If the command changes the board it is stored in the undoRedo list of the game.
+ * In solve mode, if the board is full and valid after the command is executed, the mode of the game is switched
+ * to "init".
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to the "set" command being executed.
+ */
 void executeSet(Game* game, Command* cmd) {
     Cell* cell;
     int valueToSet, blockColumns, blockRows, idx, column, row, oldValue;
@@ -78,6 +122,12 @@ void executeSet(Game* game, Command* cmd) {
     }
 }
 
+/**
+ * This function executes the "validate" command, which determines whether the current game board is solvable, by
+ * using an external ILP solver to solve it. It is only executed if the current board is valid.
+ *
+ * @param game -pointer to current game struct.
+ */
 void executeValidate(Game* game) {
     int resultCode = 0;
     SudokuBoard* solved;
@@ -99,6 +149,15 @@ void executeValidate(Game* game) {
     }
 }
 
+/**
+ * This function executes the "generate" command, which randomly generates a game board.
+ * The command randomly enters X valid values in the board, solves it using an external ILP solver, and deltes all but
+ * Y values. X and Y are arguments of the command.
+ * If the command changes the board it is stored in the undoRedo list of the game.
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to the "generate" command being executed.
+ */
 void executeGenerate(Game* game, Command* cmd) {
     int valuesToFillCount = atoi(cmd->args[0]);
     int valueToRemoveCount = BOARD_SIZE(game->board->blockColumns, game->board->blockRows) - atoi(cmd->args[1]);
@@ -137,6 +196,16 @@ void executeGenerate(Game* game, Command* cmd) {
     game->undoRedoListPointer->generatedBoard = sb_deepCloneBoard(game->board);
 }
 
+/**
+ * This function executes the "undo" command which reverts the last move that changed the board.
+ *
+ * The command undone is the command that the undoRedoListPointer is currently pointing to.
+ * The undoRedoListPointer is moved one command back.
+ *
+ * @param game - pointer to current game struct.
+ * @param shouldPrint - boolean deciding whether the moves that are being undone and the board are printed at the end
+ * of this command.
+ */
 void executeUndo(Game *game, bool shouldPrint) {
     Node* currentNode;
     char* action;
@@ -158,17 +227,15 @@ void executeUndo(Game *game, bool shouldPrint) {
     game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
 
-/*
- * When we perform a set/autofill command we add the command to the undoRedoList, and the undoRedoList pointer
- * points to the move we had just done.
+/**
+ * This function executes the "redo" command, which performs the last move that has been undone by the user.
  *
- * When we undo a command, we undo the command the undoRedoList pointer is pointing to, and set the undoRedoListPointer
- * one command back.
+ * The command "redone" is the command next to the one pointed to by the undoRedoListPointer, since this is the last
+ * command that was undone.
+ * The undoRedoListPointer is moved one command forward.
  *
- * Therefore, when we redo a command that has been undone, we redo the command NEXT to the one pointed to by the
- * undoRedoListPointer.
- *
- * */
+ * @param game - pointer to current game struct.
+ */
 void executeRedo(Game* game) {
     Node* currentNode, *nodeToRedo;
     char* action;
@@ -201,6 +268,13 @@ void executeRedo(Game* game) {
     }
 }
 
+/**
+ * This function executes the "save" command, which saves the board to a file according to the path entered by the user.
+ * In "edit" mode the board is saved only if it does not contain erroneous values and is solvable.
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to "save" command being executed.
+ */
 void executeSave(Game* game, Command* cmd) {
     char* path = cmd->args[0];
     if (game->mode == EDIT) {
@@ -219,6 +293,13 @@ void executeSave(Game* game, Command* cmd) {
     printf("Saved to: %s\n", path);
 }
 
+/**
+ * This function executes the "hint" command, which tells the user what value to set in the column and row they entered,
+ * by solving the board using an external ILP solver.
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to "hint" command being executed.
+ */
 void executeHint(Game* game, Command* cmd) {
     int blockColumns, blockRows, cellIdx, cellColumn, cellRow, resultCode;
     SudokuBoard* solved;
@@ -257,6 +338,12 @@ void executeHint(Game* game, Command* cmd) {
     }
 }
 
+/**
+ * This function executes the "num_solutions" command, which uses exhaustive backtracking to compute the number of
+ * solutions for the given board. It is only executed if the board contains valid values.
+ *
+ * @param game - pointer to current game struct.
+ */
 void executeNumSolutions(Game* game) {
     int numOfSolutions;
     if (sb_isErroneous(game->board)) {
@@ -272,6 +359,17 @@ void executeNumSolutions(Game* game) {
     }
 }
 
+/**
+ * This function executes the "autofill" command, which fills the board with "obvious" values - cells that have only one
+ * valid value that can be filled by the rules of the game "sudoku".
+ * It is only executed if the board contains valid values.
+ * If the board has been changed, the command is added to the undoRedoList of the game.
+ * In solve mode, if the board is full and valid after the command is executed, the mode of the game is switched
+ * to "init".
+ *
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to "autofill" command being executed.
+ */
 void executeAutofill(Game* game, Command* cmd) {
     int i, numOfCells, blockRows, blockColumns,value, numOfChars;
     int* impossibleValues;  /*list of bool values, 1 in index x means x is an impssible value for a cell*/
@@ -338,6 +436,12 @@ void executeAutofill(Game* game, Command* cmd) {
     }
 }
 
+/**
+ * This function executes the "reset" command which reverts the board to its initial state by undoing all commands
+ * in the undoRedoList of the game.
+ *
+ * @param game - pointer to current game struct.
+ */
 void executeReset(Game* game) {
     bool shouldPrint = false;
     Node* currentNode = game->undoRedoListPointer;

@@ -6,6 +6,13 @@
 #include "SudokuBoard.h"
 #include "Game.h"
 
+/**
+ * Command Validations Header File
+ *
+ *  This interface contains the declaration of functions that validate the commands entered by the user.
+ *
+ */
+
 bool validateSolve(Command* cmd);
 bool validateEdit();
 bool validateMarkErrors(Command* cmd);

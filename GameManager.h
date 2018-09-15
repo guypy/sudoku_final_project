@@ -10,6 +10,14 @@
 #include "CommandValidations.h"
 #include "SudokuBoard.h"
 
+/**
+ *
+ * GameManager Header File
+ *
+ * This interface contains a declaration of the functions needed to manage the initiatioin of a game.
+ *
+ */
+
 int startGame();
 
 #endif

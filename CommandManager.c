@@ -1,10 +1,25 @@
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <assert.h>
 #include "stdio.h"
 #include "CommandManager.h"
 
+/**
+ * Command Manager Source File
+ *
+ * This file implements managing the fetching of commands entered by the user, as well as converting the to the
+ * relevant command structs.
+ *
+ */
+
+/**
+ * This function returns a boolean array of valid game modes for a given "action". Indeces of the array correspond
+ * to game modes.
+ *
+ * @param action - String, describing what the command that is being created "does". E.g. "set"
+ * @param validModes - boolean array of valid game modes. Indeces correspond to game modes.
+ * @return validModes
+ */
 int* getValidModesForAction(const char *action, int *validModes){
     if (strcmp(action, ACTION_SOLVE) == 0) {
         validModes[INIT] = 1;
@@ -84,12 +99,22 @@ int* getValidModesForAction(const char *action, int *validModes){
     return validModes;
 }
 
+/**
+ * This function advances the current character pointer in the file until a newline marker or an EOF is reached.
+ * It is used in case a fetched command expands across more than the given buffer size in the function
+ * cmdMngr_fetchCommand().
+ */
 void emptyBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF) {
     }
 }
 
+/**
+ * This function fetches a command from the user, and creates the corresponding command struct.
+ *
+ * @return - command struct corresponding to the information entered by the user.
+ */
 Command* cmdMngr_fetchCommand() {
     char* cmd_str = malloc(1024 * sizeof(char));
     char** args = malloc(1024 * sizeof(char*));

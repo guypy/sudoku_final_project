@@ -4,6 +4,13 @@
 #include "Command.h"
 #include "SudokuBoard.h"
 
+/**
+ * LinkedList Header File
+ *
+ * This file declares LinkedList and Node structs, as well as the functions that can be performed on them.
+ *
+ */
+
 typedef struct Node  {
     Command * data;
     struct Node* next;

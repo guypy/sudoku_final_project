@@ -1,6 +1,12 @@
 #ifndef SUDOKU_CONSOLE_ERRORPRINTER_H
 #define SUDOKU_CONSOLE_ERRORPRINTER_H
 
+/**
+ * ErrorPrinter Header File
+ *
+ * This interface contains the declaration of functions that print various errors throughout the game.
+ */
+
 void errPrinter_invalidCommand();
 void errPrinter_erroneousValues();
 void errPrinter_valueNotInRange(int min, int max);

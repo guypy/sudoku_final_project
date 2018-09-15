@@ -1,6 +1,13 @@
 #include "ErrorPrinter.h"
 #include "stdio.h"
 
+/**
+ * ErrorPrinter Source File
+ *
+ * This file contains the implementation of functions that print various errors throughout the game.
+ */
+
+
 void errPrinter_invalidCommand(){
     printf("ERROR: invalid command\n");
 }

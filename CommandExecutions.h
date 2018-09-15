@@ -11,6 +11,15 @@
 #include "ILPSolver.h"
 #include "ExecutionHelpers.h"
 
+/**
+ *
+ * CommandExecutions Header File
+ *
+ * This interface contains declaration of functions that carry out the execution of all possible commands throughout the game.
+ * Some methods may be assisted by helper methods defined in ExecutionHelpers.c.
+ *
+ */
+
 void executeSolve(Game* game, Command* cmd);
 void executeEdit(Game* game, Command* cmd);
 void executeMarkErrors(Game* game, Command* cmd);

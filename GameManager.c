@@ -2,14 +2,33 @@
 #include <string.h>
 #include "stdio.h"
 #include "GameManager.h"
-#include "Command.h"
 
+/**
+ *
+ * GameManager Source File
+ *
+ * This file contains the implementation of the functions needed to run a game.
+ *
+ */
+
+/**
+ * This function validates the given command is allowed in the current mode of the game.
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to current command that had been fetched and is about to be executed.
+ * @return - true if command is valid in the current mode of the game, false otherwise
+ */
 static bool validateMode(Game *game, Command *cmd) {
     if (cmd->validModes[game->mode] == 0)
         return false;
     return true;
 }
 
+/**
+ * This function handles the validation of a command before it is executed.
+ * @param cmd - pointer to current command.
+ * @param game - pointer to current game struct.
+ * @return - true if validation of command passed, false otherwise
+ */
 bool validateCommand(Command *cmd, Game* game) {
     if (strcmp(cmd->action, ACTION_SOLVE) == 0) {
         return validateSolve(cmd);
@@ -59,6 +78,11 @@ bool validateCommand(Command *cmd, Game* game) {
     return false;
 }
 
+/**
+ * This functions handles the execution of a given command.
+ * @param game - pointer to current game struct.
+ * @param cmd - pointer to the command that is about to be executed
+ */
 void executeCommand(Game* game, Command * cmd){
     if (strcmp(cmd->action, ACTION_SOLVE) == 0) {
         executeSolve(game, cmd);
@@ -104,6 +128,12 @@ void executeCommand(Game* game, Command * cmd){
     }
 }
 
+/**
+ * This function handles the flow of the game - fetching a command from the user, validating it can be executed in
+ * the given mode, validating the command itself, executing the command, freeing its memory if needed, and doing so
+ * repeatedly until the game is stopped.
+ * @param game - pointer to current game struct.
+ */
 void gameLoop(Game* game) {
     Command* cmd;
     while(true) {
@@ -132,6 +162,10 @@ void gameLoop(Game* game) {
     }
 }
 
+/**
+ * This function controls the initiation of a game -  its creation, it's execution, and its conclusion
+ * @return - 0 if the game had been carried out correctly, 1 in case of unexpected errors.
+ */
 int startGame() {
     Game* game = createGame();
     printf("Sudoku\n------\n");

@@ -2,6 +2,21 @@
 #include <stdio.h>
 #include "SudokuBoard.h"
 
+/**
+ *
+ * SudokuBoard Source File
+ *
+ * This file contains the implementation of the functions that can be performed on a SudokuBoard struct and a Cell
+ * struct.
+ *
+ */
+
+/**
+ * This function creats an empty sudoku board, according to the given block dimensions.
+ * @param blockRows - number of rows in one block in the board.
+ * @param blockColumns - number of columns in one block in the board.
+ * @return - pointer to the created sudoku board.
+ */
 SudokuBoard* sb_create(int blockRows, int blockColumns){
     int i;
     SudokuBoard* res = (SudokuBoard*) malloc(sizeof(SudokuBoard));
@@ -26,6 +41,11 @@ SudokuBoard* sb_create(int blockRows, int blockColumns){
     return res;
 }
 
+/**
+ * This function prints a given cell, considering if it is fixed or valid. Fixed cells are always valid.
+ * @param cell - pointer to cell to be printed.
+ * @param markErrors - boolean representing whether or not invalid values should be marked with a "*".
+ */
 void printCell(Cell *cell, bool markErrors) {
     if (cell->value) {
         printf(" %2d", cell->value);
@@ -40,16 +60,32 @@ void printCell(Cell *cell, bool markErrors) {
     }
 }
 
+/**
+ * This function determines whether or not a given cell is fixed.
+ * @param cell - pointer to cell.
+ * @return - true if cell is fixed, false otherwise.
+ */
 bool cell_isFixed(Cell *cell){
     return cell->fixed;
 }
 
+/**
+ * This function handles printing dashes as part of printing the game board.
+ * @param n - columns
+ * @param m - rows
+ */
 void printDashes(int n, int m) {
     int i;
     for (i = 0; i < 4 * n * m + m + 1; i++)
         printf("-");
 }
 
+/**
+ * This function handles printing the given sudoku board, considering whether or not invalid values shoudl be
+ * printed with a "*".
+ * @param sb - pointer to sudoku board to print.
+ * @param markErrors - boolean deciding whether to add a "*" next to invalid values while printing.
+ */
 void sb_print(SudokuBoard* sb, bool markErrors) {
     int i;
     printDashes(sb->blockRows, sb->blockColumns);
@@ -71,6 +107,11 @@ void sb_print(SudokuBoard* sb, bool markErrors) {
     printf("\n");
 }
 
+/**
+ * This functions deep clones a given board.
+ * @param template_sb - pointer to sudoku board to deep clone
+ * @return - pointer to new, deep cloned board.
+ */
 SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb){
     int i,j;
     SudokuBoard* new_sb = sb_create(template_sb->blockRows, template_sb->blockColumns);
@@ -86,11 +127,19 @@ SudokuBoard* sb_deepCloneBoard(SudokuBoard *template_sb){
     return new_sb;
 }
 
+/**
+ * This function destroys a given cell
+ * @param c - pointer to cell.
+ */
 void destroyCell(Cell* c) {
     free(c->exhaustedValues);
     free(c);
 }
 
+/**
+ * This function destroys a given board
+ * @param sb - pointer to board.
+ */
 void sb_destroyBoard(SudokuBoard* sb) {
     int i;
     if (sb == NULL){
@@ -104,7 +153,7 @@ void sb_destroyBoard(SudokuBoard* sb) {
 }
 
 
-/*
+/**
  * This functions checks if the sudoku board is full, i.e there are no cells with value '0'.
  * @return: 1 if full, 0 if not full
  */
@@ -118,6 +167,11 @@ int sb_isFull(SudokuBoard *sb){
     return 1;
 }
 
+/**
+ * This function checks if the given board has a valid solution by using an external ILP solver.
+ * @param board - pointer to sudoku board
+ * @return - true if board has a solution, false otherwise
+ */
 bool sb_isSolvable(SudokuBoard* board) {
     int resultCode = 0;
     SudokuBoard* solved;
@@ -129,6 +183,11 @@ bool sb_isSolvable(SudokuBoard* board) {
     return false;
 }
 
+/**
+ * This function checks if the board contains invalid values.
+ * @param board - pointer to board.
+ * @return - true if board contains invalid values, false otherwise.
+ */
 bool sb_isErroneous(SudokuBoard *board) {
     int i;
     sb_cellValidations(board);
@@ -139,6 +198,10 @@ bool sb_isErroneous(SudokuBoard *board) {
     return false;
 }
 
+/**
+ * This function updates the "valid" attribute of all cells in a given board.
+ * @param board - pointer to sudoku board.
+ */
 void sb_cellValidations(SudokuBoard *board){
     int i;
     for (i = 0; i < BOARD_SIZE(board->blockRows, board->blockColumns); ++i){
@@ -147,6 +210,11 @@ void sb_cellValidations(SudokuBoard *board){
     }
 }
 
+/**
+ * This function determines whether the given board is empty. i.e. all cells are of valves 0.
+ * @param board - pointer to sudoku board.
+ * @return - true if board is empty, false otherwise.
+ */
 bool sb_isEmpty(SudokuBoard* board){
     int i;
     for (i = 0; i < BOARD_SIZE(board->blockColumns, board->blockRows); i++) {
@@ -156,6 +224,10 @@ bool sb_isEmpty(SudokuBoard* board){
     return true;
 }
 
+/**
+ * This function empties the given board, meaning sets the value of all of its cells to 0.
+ * @param board - pointer to sudoku board.
+ */
 void sb_empty(SudokuBoard* board){
     int i;
     for (i = 0; i < BOARD_SIZE(board->blockColumns, board->blockRows); i++) {
@@ -164,6 +236,14 @@ void sb_empty(SudokuBoard* board){
 
 }
 
+/**
+ * This function checks the row of the cell in a given index, and determines if the given value can be entered as
+ * a valid one for that cell accordingly.
+ * @param sb - pointer to sudoku board,
+ * @param cellValue - value to be checked.
+ * @param idxInBoard - index of cell whose row will be checked
+ * @return - true if given value is valid according to row, false otherwise (it exists in the given row)
+ */
 bool checkRow(SudokuBoard* sb, int cellValue, int idxInBoard){
     int value, i, cellRow, checkedCellIdx;
     int n = sb->blockRows;
@@ -181,6 +261,14 @@ bool checkRow(SudokuBoard* sb, int cellValue, int idxInBoard){
     return true;
 }
 
+/**
+ * This function checks the column of the cell in the given index, and determines if the given value can be entered
+ * as a valid one for that cell accordingly.
+ * @param sb - pointer to sudoku board,
+ * @param cellValue - value to be checked
+ * @param idxInBoard - index of cell whose column will be checked
+ * @return - true if given value is valid according to column, false otherwise (it exits in given column)
+ */
 bool checkColumn(SudokuBoard* sb, int cellValue, int idxInBoard) {
     int value, i, cellColumn;
     int n = sb->blockRows;
@@ -198,6 +286,14 @@ bool checkColumn(SudokuBoard* sb, int cellValue, int idxInBoard) {
     return true;
 }
 
+/**
+ * Thisfunction checkes the block of the cell in the given index, and determines if the given value can be entered
+ * as a valid one for that cell accordingly.
+ * @param sb - pointer to sudoku board,
+ * @param cellValue - value to be checked
+ * @param idxInBoard - index of cell whose column will be checked
+ * @return - true if given value is valid according to block, false otherwise (it exits in given block)
+ */
 bool checkBlock(SudokuBoard* sb, int cellValue, int idxInBoard) {
     int value, i, j;
     int n = sb->blockRows;
@@ -220,6 +316,14 @@ bool checkBlock(SudokuBoard* sb, int cellValue, int idxInBoard) {
     return true;
 }
 
+/**
+ * This function returns whether or not a given value can be entered in the cell in the given index, accordign to
+ * the rules of sudoku (i.e. value does not already exist in row, column, or block).
+ * @param sb - pointer to sudoku board
+ * @param cellValue - value to be checked
+ * @param idxInBoard - index of cell to check
+ * @return - true if value can be entered, false otherwise.
+ */
 bool cell_isValid(SudokuBoard *sb, int cellValue, int idxInBoard){
     return cellValue == 0 ||
            (checkRow(sb, cellValue, idxInBoard)    &&

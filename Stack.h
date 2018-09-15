@@ -1,6 +1,13 @@
 #ifndef SUDOKU_CONSOLE_STACK_H
 #define SUDOKU_CONSOLE_STACK_H
 
+/**
+ * Stack Header File
+ *
+ * This interface declares a Stack and StackItem structs, as well as the functions that can be performed on them.
+ *
+ */
+
 typedef struct StackItem{
     int cellIdx;
     int cellValue;

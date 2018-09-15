@@ -15,6 +15,15 @@
 #include "ILPSolver.h"
 #include "CommandExecutions.h"
 
+/**
+ *
+ * ExecutionHelpers Header File
+ *
+ * This interface contains the declarations of functions that assist with the execution of commands entered by the user.
+ * They are used by functions in CommandExecutions.c
+ *
+ */
+
 void updateImpossibleValuesForCell(SudokuBoard* board, int index, int *impossibleValues);
 int getPossValueForCell(int *impossibleValues, int size);
 void autoFillValues(LinkedList* valuesToFill, Game* game);

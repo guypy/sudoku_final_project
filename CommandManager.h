@@ -5,6 +5,13 @@
 #include "Game.h"
 #include "CommandValidations.h"
 
+/**
+ *  CommandManager Header File
+ *
+ *  This interface manages fetching commands entered by the user and creating their relevant command structs.
+ *  It defines constants for the possible actions that the user can enter.
+ */
+
 #define ACTION_SOLVE "solve"
 #define ACTION_EDIT "edit"
 #define ACTION_MARK_ERRORS "mark_errors"

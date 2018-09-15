@@ -1,10 +1,21 @@
 #include <stdlib.h>
 #include <assert.h>
-#include "stdio.h"
 #include "ILPSolver.h"
+
+/**
+ *
+ * ILPSolver Source File
+ *
+ * This file contains the implementation of functions needed to solve a sudokuboard using the Gurobi ILP solver.
+ *
+ */
 
 #define pow3(x) x*x*x
 
+/**
+ * This function creates a GRB model according to size of given sudoku board.
+ * @return - returns error code of GRBnewmodel - function in Gurobi that creates model.
+ */
 int createModel(GRBenv* env, GRBmodel** model, SudokuBoard* board){
     int dim = board->blockColumns * board->blockRows;
     char *vtype = (char*)calloc((size_t) pow3(dim), sizeof(char));
@@ -30,6 +41,10 @@ int createModel(GRBenv* env, GRBmodel** model, SudokuBoard* board){
     return errorCode;
 }
 
+/**
+ * This function adds a constraint to the given model - the solution cannot contain empty cells.
+ * @return - true if constraint was added successfully, false otherwise.
+ */
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
     int i, j, k, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
@@ -57,6 +72,10 @@ bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) 
     return true;
 }
 
+/**
+ * This function adds a constraint to the given model - one row should contain all values from 1-N, each value once only.
+ * @return - true if constraint was added successfully, false otherwise.
+ */
 bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
     int i, j, k, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
@@ -84,6 +103,10 @@ bool addRowConstraint(GRBmodel *model, int blockRows, int blockColumns){
     return true;
 }
 
+/**
+ * This function adds a constraint to the given model - one column should contain all values from 1-N, each value once only.
+ * @return - true if constraint was added successfully, false otherwise.
+ */
 int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
     int i, j, k, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
@@ -111,6 +134,10 @@ int addColumnConstraint(GRBmodel *model, int blockRows, int blockColumns){
     return true;
 }
 
+/**
+ * This function adds a constraint to the given model - one block should contain all values from 1-N, each value once only.
+ * @return - true if constraint was added successfully, false otherwise.
+ */
 bool addBlockConstraint(GRBmodel *model, int blockRows, int blockColumns){
     int m, n, i, j, k, count, errorCode;
     int* indexes = calloc((size_t) blockRows * blockColumns, sizeof(int));
@@ -144,6 +171,10 @@ bool addBlockConstraint(GRBmodel *model, int blockRows, int blockColumns){
     return true;
 }
 
+/**
+ * This function adds all constraints to a given model, according to a given sudoku board and the rules of sudoku.
+ * @return - true if all constraints were added successfully, false otherwise.
+ */
 bool addConstraints(GRBmodel *model, SudokuBoard* board) {
     if (addNoEmptyCellConstraint(model, board->blockRows, board->blockColumns) &&
         addRowConstraint(model, board->blockRows, board->blockColumns)         &&
@@ -154,6 +185,11 @@ bool addConstraints(GRBmodel *model, SudokuBoard* board) {
     return false;
 }
 
+/**
+ * This function copies solution from Gurobi's matrix to a sudoku board struct.
+ * @param board - pointer to sudoku board.
+ * @param solutionMatrix - ponter to solution matrix
+ */
 void copySolution(SudokuBoard* board, const double *solutionMatrix) {
     int row, column, k;
     for (row = 0; row < board->blockRows * board->blockColumns; row++) {
@@ -167,6 +203,9 @@ void copySolution(SudokuBoard* board, const double *solutionMatrix) {
     }
 }
 
+/**
+ * This function frees all external resources used by Gurobi to determine solution.
+ */
 void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* solutionMatrix) {
     if (solutionMatrix != NULL) free(solutionMatrix);
     if (model != NULL)           GRBfreemodel(model);
@@ -174,6 +213,13 @@ void freeResources(GRBenv* env, GRBmodel* model, SudokuBoard* board, double* sol
     if (board != NULL)           sb_destroyBoard(board);
 }
 
+/**
+ * This function solves the given board using the Gurobi ILP optimizer.
+ * @param board - pointer to sudoku board to solve.
+ * @param resultCode - pointer to integer representing whether the board was solved successfully or not (or an error
+ * occurred)
+ * @return - pointer to a new solved board.
+ */
 SudokuBoard* ILP_solve(SudokuBoard* board, int* resultCode) {
     SudokuBoard* solvedBoard = sb_deepCloneBoard(board);
     GRBenv   *env   = NULL;

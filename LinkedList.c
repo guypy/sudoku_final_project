@@ -1,7 +1,18 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include "LinkedList.h"
 
+/**
+ *
+ * LinkedList Source File
+ *
+ * This file contains the implementation of functions that can be performed on a linked list struct.
+ *
+ */
+
+/**
+ * This function createes an emply linked list.
+ * @return - pointer to struct of an empty LinkedList.
+ */
 LinkedList* createList() {
     LinkedList* list = (LinkedList*) malloc(sizeof(LinkedList));
     list->head = NULL;
@@ -11,6 +22,11 @@ LinkedList* createList() {
     return list;
 }
 
+/**
+ * This functon appends a new node containing a given command in the game to a given LinkedList.
+ * @param lst - pointer to LinkedList struct
+ * @param cmd - pointer to command to be added within a Node to the LinkedList struct.
+ */
 void append(LinkedList * lst, Command * cmd) {
     Node *node = (Node *) malloc(sizeof(Node));
     node->next = NULL;
@@ -28,6 +44,11 @@ void append(LinkedList * lst, Command * cmd) {
     lst->size++;
 }
 
+/**
+ * This function destroys a node within a LinkedList and updates the list accordingly.
+ * @param lst - pointer to LinkedList struct.
+ * @param node - pointer to node to remove from the list.
+ */
 void destroyNode(LinkedList *lst, Node *node) {
     if(lst->head == NULL || node == NULL)
         return;
@@ -53,6 +74,11 @@ void destroyNode(LinkedList *lst, Node *node) {
     free(node);
 }
 
+/**
+ * This function destroys all nodes starting from a given node within a LinkedList.
+ * @param lst - pointer to LinkedList struct.
+ * @param node - pointer to node from which to desetroy all ndoes in the list.
+ */
 void destroyFromNode(LinkedList *lst, Node *node) {
     if (node == NULL) {
         return;
@@ -61,6 +87,10 @@ void destroyFromNode(LinkedList *lst, Node *node) {
     destroyNode(lst, node);
 }
 
+/**
+ * This function destroys a given LinkedList and all its memory allocations.
+ * @param lst - pointer to LinkedList struct to destroy.
+ */
 void destroyList(LinkedList * lst) {
     if (lst == NULL){
         return;
