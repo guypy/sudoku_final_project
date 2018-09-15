@@ -1,3 +1,4 @@
+all: sudoku-console
 CC = gcc
 OBJS = main.o GameManager.o Game.o CommandManager.o Command.o ErrorPrinter.o CommandExecutions.o ExecutionHelpers.o CommandValidations.o SudokuBoard.o FileHandler.o BTSolver.o ILPSolver.o Stack.o LinkedList.o
 EXEC = sudoku-console
