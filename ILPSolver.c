@@ -11,7 +11,7 @@ int createModel(GRBenv* env, GRBmodel** model, SudokuBoard* board){
     int dim = board->blockColumns * board->blockRows;
     char *vtype = (char*)calloc((size_t) pow3(dim), sizeof(char));
     double *lb = (double*)calloc((size_t) pow3(dim), sizeof(double));
-    int row, column, value;
+    int row, column, value, errorCode;
 
     for (row = 0; row < dim; row++) {
         for (column = 0; column < dim; column++) {
@@ -26,9 +26,10 @@ int createModel(GRBenv* env, GRBmodel** model, SudokuBoard* board){
             }
         }
     }
+    errorCode = GRBnewmodel(env, model, NULL, pow3(dim), NULL, lb, NULL, vtype, NULL);
     free(vtype);
     free(lb);
-    return GRBnewmodel(env, model, NULL, pow3(dim), NULL, lb, NULL, vtype, NULL);
+    return errorCode
 }
 
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
