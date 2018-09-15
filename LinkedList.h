@@ -2,12 +2,14 @@
 #define SUDOKU_CONSOLE_LINKEDLIST_H
 
 #include "Command.h"
+#include "SudokuBoard.h"
 
 typedef struct Node  {
     Command * data;
     struct Node* next;
     struct Node* prev;
     struct LinkedList* autoFillList;
+    SudokuBoard* generatedBoard;
 } Node;
 
 typedef struct LinkedList {

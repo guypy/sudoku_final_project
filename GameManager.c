@@ -2,6 +2,7 @@
 #include <string.h>
 #include "stdio.h"
 #include "GameManager.h"
+#include "Command.h"
 
 int startGame() {
     Game* game = createGame();
@@ -122,6 +123,7 @@ void gameLoop(Game* game) {
         }
         if (validateCommand(cmd, game) == false){
             errPrinter_invalidCommand();
+            cmd_freeCommand(cmd);
             continue;
         }
         if (strcmp(cmd->action, ACTION_EXIT) == 0) {
@@ -131,7 +133,8 @@ void gameLoop(Game* game) {
         executeCommand(game, cmd);
 
         if (strcmp(cmd->action, ACTION_AUTOFILL) != 0 &&
-            strcmp(cmd->action, ACTION_SET) != 0) {
+            strcmp(cmd->action, ACTION_SET) != 0 &&
+            strcmp(cmd->action, ACTION_GENERATE) != 0) {
             cmd_freeCommand(cmd);
         }
     }

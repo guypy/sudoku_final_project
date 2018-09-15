@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "BTSolver.h"
 
 void clearExhaustedValues(Cell* cell, int len){
@@ -22,7 +23,6 @@ int BT_numberOfSolutions(SudokuBoard* board){
     const int boardSize = board->blockColumns * board->blockColumns * board->blockRows * board->blockRows;
     Stack * stack = stack_create();
     StackItem* popped;
-    Cell* cell;
     board = sb_deepCloneBoard(board);
     setAllFilledCellsAsFixed(board);
 
@@ -31,14 +31,12 @@ int BT_numberOfSolutions(SudokuBoard* board){
     }
 
     while (true) {
-        cell = board->cells[i];
-
         if (i == boardSize){
             ++numOfSolutions;
         } else {
             /*Pushing all non-exhausted values of the cell to the stack.*/
             for (value = 1; value < board->blockRows * board->blockColumns + 1; value++) {
-                if (cell->exhaustedValues[value - 1] == true) {
+                if (board->cells[i]->exhaustedValues[value - 1] == true) {
                     continue;
                 }
                 if (!cell_isValid(board, value, i)){

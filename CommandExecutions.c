@@ -15,18 +15,23 @@ void executeSolve(Game* game, Command* cmd) {
         return;
     }
     game->mode = SOLVE;
+    executePrintBoard(game);
 }
 
 void executeEdit(Game* game, Command* cmd) {
     restartGame(game);
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
-        if (game->board == NULL)
+        if (game->board == NULL){
             errPrinter_cannotOpenFile();
+            return;
+        }
     } else {
         game->board = sb_create(DEFAULT_BLOCK_SIZE, DEFAULT_BLOCK_SIZE);
     }
     game->mode = EDIT;
+    executePrintBoard(game);
+
 }
 
 void executeMarkErrors(Game* game, Command* cmd) {
@@ -52,17 +57,25 @@ void executeSet(Game* game, Command* cmd) {
 
     cell->valid = cell_isValid(game->board, valueToSet, idx);
     oldValue = game->board->cells[idx]->value;
+
+    if (oldValue == valueToSet) {
+        sprintf(cmd->action, "redundant_set");
+        executePrintBoard(game);
+        return;
+    }
+
     cmd->prevValue = oldValue;
     game->board->cells[idx]->value = valueToSet;
+    sb_cellValidations(game->board);
+
     destroyNextNodesBeforeAppend(game);
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
-    sb_print(game->board, game->markErrors);
+    executePrintBoard(game);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
-        }
-        else{
+        } else{
             printf("Puzzle solved successfully\n");
             game->mode = INIT;
         }
@@ -92,12 +105,12 @@ void executeValidate(Game* game) {
 
 void executeGenerate(Game* game, Command* cmd) {
     int valuesToFillCount = atoi(cmd->args[0]);
-    int valueToRemoveCount = atoi(cmd->args[1]);
+    int valueToRemoveCount = BOARD_SIZE(game->board->blockColumns, game->board->blockRows) - atoi(cmd->args[1]);
     int tryCount = 0, resultCode = 0;
     SudokuBoard* solved = NULL;
     do {
         tryCount++;
-
+        sb_empty(game->board);
         if (!fillBoardWithRandValues(game->board, valuesToFillCount))
             continue;
         solved = ILP_solve(game->board, &resultCode);
@@ -105,6 +118,7 @@ void executeGenerate(Game* game, Command* cmd) {
     
     if (tryCount == 1000) {
         errPrinter_puzzleGeneratorFailed();
+        sb_empty(game->board);
         return;
     }
 
@@ -112,6 +126,12 @@ void executeGenerate(Game* game, Command* cmd) {
     game->board = solved;
 
     removeValuesFromBoard(game->board, valueToRemoveCount);
+    executePrintBoard(game);
+
+    destroyNextNodesBeforeAppend(game);
+    append(game->undoRedoList, cmd);
+    game->undoRedoListPointer = game->undoRedoList->tail;
+    game->undoRedoListPointer->generatedBoard = sb_deepCloneBoard(game->board);
 }
 
 bool fillBoardWithRandValues(SudokuBoard* board, int valueToFillCount){
@@ -169,15 +189,19 @@ void executeUndo(Game *game, bool shouldPrint) {
         return;
     }
     action = currentNode->data->action;
-    if (strcmp(action, "set") == 0){
-        undoSetCmd(game, shouldPrint);
+    if (strcmp(action, ACTION_SET) == 0){
+        undoSet(game, shouldPrint);
     }
-    if (strcmp(action, "autofill") == 0){
-        undoAutofillCmd(game, shouldPrint);
+    if (strcmp(action, ACTION_AUTOFILL) == 0){
+        undoAutofill(game, shouldPrint);
     }
+    if (strcmp(action, ACTION_GENERATE) == 0) {
+        undoGenerate(game, shouldPrint);
+    }
+    game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
 
-void undoAutofillCmd(Game* game, bool shouldPrint){
+void undoAutofill(Game *game, bool shouldPrint){
     int currentValue, prevValue, column, row, blockRows, blockColumns, idxToUndo;
     Node* nodeToUndo, *currentAutoFillNode;
     LinkedList* autoFillList;
@@ -195,8 +219,10 @@ void undoAutofillCmd(Game* game, bool shouldPrint){
         game->board->cells[idxToUndo]->valid = cell_isValid(game->board, prevValue, idxToUndo);
         currentAutoFillNode = currentAutoFillNode->next;
     }
+    sb_cellValidations(game->board);
+
     if (shouldPrint == true){
-        sb_print(game->board, game->markErrors);
+        executePrintBoard(game);
     }
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
@@ -211,10 +237,9 @@ void undoAutofillCmd(Game* game, bool shouldPrint){
 
         currentAutoFillNode = currentAutoFillNode->next;
     }
-    game->undoRedoListPointer = game->undoRedoListPointer->prev;
 }
 
-void undoSetCmd(Game* game, bool shouldPrint){
+void undoSet(Game *game, bool shouldPrint){
     int currentValue, prevValue, column, row, idxToUndo, blockColumns, blockRows;
     Node* nodeToUndo;
     nodeToUndo = game->undoRedoListPointer;
@@ -227,14 +252,21 @@ void undoSetCmd(Game* game, bool shouldPrint){
     idxToUndo = row * (blockColumns*blockRows) + column;
     game->board->cells[idxToUndo]->value = prevValue;
     game->board->cells[idxToUndo]->valid = cell_isValid(game->board, prevValue, idxToUndo);
+    sb_cellValidations(game->board);
 
     if (shouldPrint == true){
-        sb_print(game->board, game->markErrors);
+        executePrintBoard(game);
 
         printUndoStep(currentValue, prevValue, column, row);
     }
+}
 
-    game->undoRedoListPointer = game->undoRedoListPointer->prev;
+void undoGenerate(Game *game, bool shouldPrint) {
+    sb_empty(game->board);
+    if(shouldPrint) {
+        printf("Undo Generate, board is empty\n");
+        executePrintBoard(game);
+    }
 }
 
 void printUndoStep(int oldValue, int newValue, int column, int row){
@@ -276,12 +308,22 @@ void executeRedo(Game* game) {
         errPrinter_noMovesToRedo();
         return;
     }
+
     action = nodeToRedo->data->action;
-    if (strcmp(action, "set") == 0){
-        redoSetCmd(game, nodeToRedo);
+    if (strcmp(action, ACTION_SET) == 0){
+        redoSet(game, nodeToRedo);
     }
-    if (strcmp(action, "autofill") == 0){
-        redoAutofillCmd(game, nodeToRedo);
+    if (strcmp(action, ACTION_AUTOFILL) == 0){
+        redoAutofill(game, nodeToRedo);
+    }
+    if (strcmp(action, ACTION_GENERATE) == 0) {
+        redoGenerate(game, nodeToRedo);
+    }
+
+    if (game->undoRedoListPointer != NULL){
+        game->undoRedoListPointer = game->undoRedoListPointer->next;
+    } else {
+        game->undoRedoListPointer = game->undoRedoList->head;
     }
 }
 
@@ -298,7 +340,7 @@ Node* getNodeToRedo(Game* game, Node* currentNode){
     return nodeToRedo;
 }
 
-void redoAutofillCmd(Game* game, Node* nodeToRedo){
+void redoAutofill(Game *game, Node *nodeToRedo){
     int blockRows, blockColumns, oldValue, newValue, row, column, idxToRedo;
     LinkedList* autoFillList;
     Node* currentAutoFillNode;
@@ -315,7 +357,10 @@ void redoAutofillCmd(Game* game, Node* nodeToRedo){
         game->board->cells[idxToRedo]->valid = cell_isValid(game->board, newValue, idxToRedo);
         currentAutoFillNode = currentAutoFillNode->next;
     }
-    sb_print(game->board, game->markErrors);
+    sb_cellValidations(game->board);
+
+    executePrintBoard(game);
+
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
         newValue = atoi(currentAutoFillNode->data->args[2]);;
@@ -327,14 +372,9 @@ void redoAutofillCmd(Game* game, Node* nodeToRedo){
 
         currentAutoFillNode = currentAutoFillNode->next;
     }
-    if (game->undoRedoListPointer != NULL){
-        game->undoRedoListPointer = game->undoRedoListPointer->next;
-    }else{
-        game->undoRedoListPointer = game->undoRedoList->head;
-    }
 }
 
-void redoSetCmd(Game* game, Node* nodeToRedo){
+void redoSet(Game *game, Node *nodeToRedo){
     int currentValue, newValue, row, column, idxToSet, blockRows, blockColumns;
     newValue = atoi(nodeToRedo->data->args[2]);
     currentValue = nodeToRedo->data->prevValue;
@@ -346,16 +386,18 @@ void redoSetCmd(Game* game, Node* nodeToRedo){
 
     game->board->cells[idxToSet]->value = newValue;
     game->board->cells[idxToSet]->valid = cell_isValid(game->board, newValue, idxToSet);
+    sb_cellValidations(game->board);
 
-    sb_print(game->board, game->markErrors);
+    executePrintBoard(game);
 
     printRedoStep(newValue, currentValue,column, row);
+}
 
-    if (game->undoRedoListPointer != NULL){
-        game->undoRedoListPointer = game->undoRedoListPointer->next;
-    }else{
-        game->undoRedoListPointer = game->undoRedoList->head;
-    }
+void redoGenerate(Game *game, Node *nodeToRedo) {
+    sb_destroyBoard(game->board);
+    game->board = sb_deepCloneBoard(nodeToRedo->generatedBoard);
+    executePrintBoard(game);
+    printf("Redo: Generated board\n");
 }
 
 void printRedoStep(int newValue, int oldValue, int column, int row){
@@ -417,6 +459,7 @@ void executeHint(Game* game, Command* cmd) {
     switch (resultCode) {
         case SOLVED:
             printf("Hint: set cell to %d\n", solved->cells[cellIdx]->value);
+            sb_destroyBoard(solved);
             break;
         case NO_SOLUTION:
             errPrinter_unsolvableBoard();
@@ -436,7 +479,7 @@ void executeNumSolutions(Game* game) {
     printf("Number of solutions: %d\n", numOfSolutions);
     if (numOfSolutions == 1) {
         printf("This is a good board!\n");
-    } else {
+    } else if (numOfSolutions > 1) {
         printf("The puzzle has more than 1 solution, try to edit it further\n");
     }
 }
@@ -446,6 +489,7 @@ void executeAutofill(Game* game, Command* cmd) {
     int* impossibleValues;  /*list of bool values, 1 in index x means x is an impssible value for a cell*/
     LinkedList* valuesToFill = createList();
     Command* valueToSetCmd;
+    char* action;
     char** args;
 
     if (sb_isErroneous(game->board)){
@@ -475,19 +519,23 @@ void executeAutofill(Game* game, Command* cmd) {
             numOfChars = getNumOfChars(value);
             args[2] = (char*)calloc((size_t) (numOfChars + 1), sizeof(char));
             sprintf(args[2], "%d", value);
-            valueToSetCmd = cmd_createCommand(args, "SET", NULL, 3);
+
+            action = malloc(sizeof(char) * 4);
+            sprintf(action, "%s", ACTION_SET);
+            valueToSetCmd = cmd_createCommand(args, action, NULL, 3);
             append(valuesToFill, valueToSetCmd);
         }
         free(impossibleValues);
     }
     if (valuesToFill->size > 0){
         autoFillValues(valuesToFill, game);
+        sb_cellValidations(game->board);
         destroyNextNodesBeforeAppend(game);
         append(game->undoRedoList, cmd);
         game->undoRedoList->tail->autoFillList = valuesToFill; /* make the 'autofill node' in the undoRedoList have a valuesToFill list */
         game->undoRedoListPointer = game->undoRedoList->tail;
     }
-    sb_print(game->board, game->markErrors);
+    executePrintBoard(game);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
@@ -502,12 +550,12 @@ void executeAutofill(Game* game, Command* cmd) {
 void destroyNextNodesBeforeAppend(const Game *game) {
     if (game->undoRedoListPointer != NULL){
             destroyFromNode(game->undoRedoList, game->undoRedoListPointer->next);
-        } else{
-        /* if we undid all moves in the list, the undoRedoListPointer == NULL but there are still nodes in the list */
-            if (game->undoRedoList->head != NULL){
-                destroyFromNode(game->undoRedoList, game->undoRedoList->head);
-            }
+    } else{
+    /* if we undid all moves in the list, the undoRedoListPointer == NULL but there are still nodes in the list */
+        if (game->undoRedoList->head != NULL){
+            destroyFromNode(game->undoRedoList, game->undoRedoList->head);
         }
+    }
 }
 
 void autoFillValues(LinkedList* valuesToFill, Game* game){
