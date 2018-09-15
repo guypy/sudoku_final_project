@@ -29,7 +29,7 @@ int createModel(GRBenv* env, GRBmodel** model, SudokuBoard* board){
     errorCode = GRBnewmodel(env, model, NULL, pow3(dim), NULL, lb, NULL, vtype, NULL);
     free(vtype);
     free(lb);
-    return errorCode
+    return errorCode;
 }
 
 bool addNoEmptyCellConstraint(GRBmodel *model, int blockRows, int blockColumns) {
