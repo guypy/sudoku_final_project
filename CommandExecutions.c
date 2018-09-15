@@ -369,7 +369,7 @@ void printRedoStep(int newValue, int oldValue, int column, int row){
         printf("Redo %d,%d: from _ to %d\n", column + 1, row + 1, newValue);
     }
     if (newValue != 0 && oldValue != 0){
-        printf("Redo %d,%d: from %d to %d\n", column + 1, row + 1, newValue, oldValue);
+        printf("Redo %d,%d: from %d to %d\n", column + 1, row + 1, oldValue, newValue);
     }
 }
 
