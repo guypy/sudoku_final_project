@@ -15,22 +15,22 @@ void executeSolve(Game* game, Command* cmd) {
         return;
     }
     game->mode = SOLVE;
-    sb_print(game->board, game->markErrors);
+    executePrintBoard(game);
 }
 
 void executeEdit(Game* game, Command* cmd) {
     restartGame(game);
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
-        if (game->board == NULL)
+        if (game->board == NULL){
             errPrinter_cannotOpenFile();
-        else
-            sb_print(game->board, true);
+            return;
+        }
     } else {
         game->board = sb_create(DEFAULT_BLOCK_SIZE, DEFAULT_BLOCK_SIZE);
-        sb_print(game->board, true);
     }
     game->mode = EDIT;
+    executePrintBoard(game);
 
 }
 
@@ -60,6 +60,7 @@ void executeSet(Game* game, Command* cmd) {
 
     if (oldValue == valueToSet) {
         sprintf(cmd->action, "redundant_set");
+        executePrintBoard(game);
         return;
     }
 
@@ -70,7 +71,7 @@ void executeSet(Game* game, Command* cmd) {
     destroyNextNodesBeforeAppend(game);
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
-    sb_print(game->board, game->markErrors || game->mode == EDIT);
+    executePrintBoard(game);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
@@ -125,7 +126,7 @@ void executeGenerate(Game* game, Command* cmd) {
     game->board = solved;
 
     removeValuesFromBoard(game->board, valueToRemoveCount);
-    sb_print(game->board, game->markErrors || game->mode == EDIT);
+    executePrintBoard(game);
 
     destroyNextNodesBeforeAppend(game);
     append(game->undoRedoList, cmd);
@@ -221,7 +222,7 @@ void undoAutofill(Game *game, bool shouldPrint){
     sb_cellValidations(game->board);
 
     if (shouldPrint == true){
-        sb_print(game->board, game->markErrors || game->mode == EDIT);
+        executePrintBoard(game);
     }
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
@@ -254,7 +255,7 @@ void undoSet(Game *game, bool shouldPrint){
     sb_cellValidations(game->board);
 
     if (shouldPrint == true){
-        sb_print(game->board, game->markErrors || game->mode == EDIT);
+        executePrintBoard(game);
 
         printUndoStep(currentValue, prevValue, column, row);
     }
@@ -264,7 +265,7 @@ void undoGenerate(Game *game, bool shouldPrint) {
     sb_empty(game->board);
     if(shouldPrint) {
         printf("Undo Generate, board is empty\n");
-        sb_print(game->board, game->markErrors || game->mode == EDIT);
+        executePrintBoard(game);
     }
 }
 
@@ -358,7 +359,7 @@ void redoAutofill(Game *game, Node *nodeToRedo){
     }
     sb_cellValidations(game->board);
 
-    sb_print(game->board, game->markErrors || game->mode == EDIT);
+    executePrintBoard(game);
 
     currentAutoFillNode = autoFillList->head;
     while (currentAutoFillNode != NULL){
@@ -387,7 +388,7 @@ void redoSet(Game *game, Node *nodeToRedo){
     game->board->cells[idxToSet]->valid = cell_isValid(game->board, newValue, idxToSet);
     sb_cellValidations(game->board);
 
-    sb_print(game->board, game->markErrors || game->mode == EDIT);
+    executePrintBoard(game);
 
     printRedoStep(newValue, currentValue,column, row);
 }
@@ -395,7 +396,7 @@ void redoSet(Game *game, Node *nodeToRedo){
 void redoGenerate(Game *game, Node *nodeToRedo) {
     sb_destroyBoard(game->board);
     game->board = sb_deepCloneBoard(nodeToRedo->generatedBoard);
-    sb_print(game->board, game->markErrors || game->mode == EDIT);
+    executePrintBoard(game);
     printf("Redo: Generated board\n");
 }
 
@@ -534,7 +535,7 @@ void executeAutofill(Game* game, Command* cmd) {
         game->undoRedoList->tail->autoFillList = valuesToFill; /* make the 'autofill node' in the undoRedoList have a valuesToFill list */
         game->undoRedoListPointer = game->undoRedoList->tail;
     }
-    sb_print(game->board, game->markErrors || game->mode == EDIT);
+    executePrintBoard(game);
     if (sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
