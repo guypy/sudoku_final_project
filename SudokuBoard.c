@@ -92,10 +92,10 @@ void destroyCell(Cell* c) {
 }
 
 void sb_destroyBoard(SudokuBoard* sb) {
+    int i;
     if (sb == NULL){
         return;
     }
-    int i = 0;
     for (i = 0; i < BOARD_SIZE(sb->blockRows, sb->blockColumns); i++) {
         destroyCell(sb->cells[i]);
     }
@@ -164,13 +164,6 @@ void sb_empty(SudokuBoard* board){
 
 }
 
-bool cell_isValid(SudokuBoard *sb, int cellValue, int idxInBoard){
-    return cellValue == 0 ||
-           (checkRow(sb, cellValue, idxInBoard)    &&
-            checkColumn(sb, cellValue, idxInBoard) &&
-            checkBlock(sb, cellValue, idxInBoard));
-}
-
 bool checkRow(SudokuBoard* sb, int cellValue, int idxInBoard){
     int value, i, cellRow, checkedCellIdx;
     int n = sb->blockRows;
@@ -225,4 +218,11 @@ bool checkBlock(SudokuBoard* sb, int cellValue, int idxInBoard) {
         }
     }
     return true;
+}
+
+bool cell_isValid(SudokuBoard *sb, int cellValue, int idxInBoard){
+    return cellValue == 0 ||
+           (checkRow(sb, cellValue, idxInBoard)    &&
+            checkColumn(sb, cellValue, idxInBoard) &&
+            checkBlock(sb, cellValue, idxInBoard));
 }

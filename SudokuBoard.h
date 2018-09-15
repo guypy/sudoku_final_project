@@ -2,9 +2,8 @@
 #define SUDOKU_CONSOLE_SUDOKUBOARD_H
 
 #include <stdbool.h>
-#include "ILPSolver.h"
-#define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
 
+#define BOARD_SIZE(rows, columns) ((rows)*(rows)*(columns)*(columns))
 typedef struct {
     int value;
     bool fixed; /* boolean value depicting whether the cell on the board is fixed or not */
@@ -17,6 +16,8 @@ typedef struct{
     int blockColumns;
     Cell** cells;
 } SudokuBoard;
+
+#include "ILPSolver.h"
 
 SudokuBoard* sb_create(int blockRows, int blockColumns);
 void sb_print(SudokuBoard* sb, bool markErrors);

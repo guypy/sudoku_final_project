@@ -11,9 +11,11 @@ Stack* stack_create(){
 }
 
 StackItem* stack_pop(Stack* stack){
+    StackItem* removedItem;
     if (stack->size == 0)
         return NULL;
-    StackItem* removedItem = stack->ptr;
+
+    removedItem = stack->ptr;
     stack->ptr = removedItem->prev;
     stack->size--;
 

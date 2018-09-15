@@ -7,7 +7,7 @@
 bool isNaN(char *arg){
     int i;
     char c;
-    for (i = 0; i < strlen(arg); ++i){
+    for (i = 0; i < (int) strlen(arg); ++i){
         c = arg[i];
         if (c < 48 || c > 57){
             return true;
