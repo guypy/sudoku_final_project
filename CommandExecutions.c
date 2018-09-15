@@ -68,7 +68,7 @@ void executeSet(Game* game, Command* cmd) {
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
     executePrintBoard(game);
-    if (game->mode == SOLVED && sb_isFull(game->board)){
+    if (game->mode == SOLVE && sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
         } else{
