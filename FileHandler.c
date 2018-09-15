@@ -45,8 +45,8 @@ SudokuBoard *parseFile(FILE *file) {
     int n = 0, m = 0, i = 0, c = 0;
     SudokuBoard* board;
     Cell* cell;
-    fscanf(file, "%d", &n);
     fscanf(file, "%d", &m);
+    fscanf(file, "%d", &n);
     board = sb_create(n, m);
     for (i = 0; i < n * n * m * m; i++) {
         cell = board->cells[i];
