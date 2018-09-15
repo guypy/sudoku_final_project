@@ -68,7 +68,7 @@ void executeSet(Game* game, Command* cmd) {
     append(game->undoRedoList, cmd);
     game->undoRedoListPointer = game->undoRedoList->tail;
     executePrintBoard(game);
-    if (sb_isFull(game->board)){
+    if (game->mode == SOLVED && sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
         } else{
@@ -210,6 +210,7 @@ void executeSave(Game* game, Command* cmd) {
         }
         if (!sb_isSolvable(game->board)) {
             errPrinter_boardValidationFailed();
+            return;
         }
     }
     if (!fileHandler_saveBoardToFile(game->board, path, game->mode == EDIT)){
@@ -327,7 +328,7 @@ void executeAutofill(Game* game, Command* cmd) {
         destroyList(valuesToFill);
     }
     executePrintBoard(game);
-    if (sb_isFull(game->board)){
+    if (game->mode == SOLVED && sb_isFull(game->board)){
         if (sb_isErroneous(game->board)){
             errPrinter_puzzleSolutionErroneous();
         }
