@@ -43,11 +43,11 @@ void executeEdit(Game* game, Command* cmd) {
     restartGame(game);
     if (cmd->numOfArgs > 0) {
         game->board = fileHandler_readBoardFromFile(cmd->args[0]);
-        sb_setAllCellsUnfixed(game->board);
         if (game->board == NULL){
             errPrinter_cannotOpenFile();
             return;
         }
+        sb_setAllCellsUnfixed(game->board);
     } else {
         game->board = sb_create(DEFAULT_BLOCK_SIZE, DEFAULT_BLOCK_SIZE);
     }
