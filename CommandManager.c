@@ -102,8 +102,8 @@ Command* cmdMngr_fetchCommand() {
     /* Split input into tokens, cmdpt pointing to the first token. */
     while (cmdpt == NULL) {
         if (fgets(cmd_str, 1024, stdin) == NULL) {
-            errPrinter_invalidCommand();
-            return NULL;
+            strcpy(cmdpt, ACTION_EXIT);
+            break;
         }
         cmdpt = strtok(cmd_str, " \t\r\n");
     }
