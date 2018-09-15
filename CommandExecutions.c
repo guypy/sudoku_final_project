@@ -108,6 +108,12 @@ void executeGenerate(Game* game, Command* cmd) {
     int valueToRemoveCount = BOARD_SIZE(game->board->blockColumns, game->board->blockRows) - atoi(cmd->args[1]);
     int tryCount = 0, resultCode = 0;
     SudokuBoard* solved = NULL;
+
+    if (valueToRemoveCount == BOARD_SIZE(game->board->blockColumns, game->board->blockRows)) {
+        executePrintBoard(game);
+        return;
+    }
+
     do {
         tryCount++;
         sb_empty(game->board);
