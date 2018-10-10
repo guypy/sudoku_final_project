@@ -88,22 +88,22 @@ void printDashes(int n, int m) {
  */
 void sb_print(SudokuBoard* sb, bool markErrors) {
     int i;
-    printDashes(sb->blockRows, sb->blockColumns);
+    printDashes(sb->blockColumns, sb->blockRows);
     printf("\n");
     for (i = 0; i < BOARD_SIZE(sb->blockRows, sb->blockColumns); ++i){
-        if (i % (sb->blockRows * sb->blockColumns * sb->blockColumns) == 0 && i != 0) {
+        if (i % (sb->blockRows * sb->blockRows * sb->blockColumns) == 0 && i != 0) {
             printf("|\n");
-            printDashes(sb->blockRows, sb->blockColumns);
+            printDashes(sb->blockColumns, sb->blockRows);
             printf("\n|");
         } else if (i % (sb->blockColumns * sb->blockRows) == 0 && i != 0)
             printf("|\n|");
-        else if (i % sb->blockRows == 0) {
+        else if (i % sb->blockColumns == 0) {
             printf("|");
         }
         printCell(sb->cells[i], markErrors);
     }
     printf("|\n");
-    printDashes(sb->blockRows, sb->blockColumns);
+    printDashes(sb->blockColumns, sb->blockRows);
     printf("\n");
 }
 
